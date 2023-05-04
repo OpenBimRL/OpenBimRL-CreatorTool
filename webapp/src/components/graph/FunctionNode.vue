@@ -1,6 +1,7 @@
 <template>
   <div
-    class="border border-black rounded min-w-[12rem] bg-white"
+    class="border border-black rounded min-w-[12rem] bg-white shadow-black"
+    :class="{ 'shadow-lg': selected }"
     :style="`width: ${minWidth}rem`"
   >
     <div class="node-head px-2 bg-cyan-100 bg-opacity-60">

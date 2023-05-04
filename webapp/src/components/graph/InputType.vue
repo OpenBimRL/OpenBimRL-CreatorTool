@@ -1,5 +1,8 @@
 <template>
-  <div class="border border-black rounded min-w-[12rem] bg-white">
+  <div
+    class="border border-black rounded min-w-[12rem] bg-white shadow-black"
+    :class="{ 'shadow-lg': selected }"
+  >
     <div class="node-head px-2 bg-yellow-100 bg-opacity-60">
       <p class="heading text-center">
         <span>({{ data.name }})</span>
