@@ -1,7 +1,7 @@
 <!-- Flowchart.vue -->
 <script lang="ts" setup>
 import { VueFlow } from "@vue-flow/core";
-import { Controls } from '@vue-flow/controls'
+import { Controls } from "@vue-flow/controls";
 import { Background, BackgroundVariant } from "@vue-flow/background";
 import { nodeTypes } from "./graph";
 import { ref } from "vue";
