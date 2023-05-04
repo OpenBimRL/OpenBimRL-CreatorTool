@@ -4,11 +4,8 @@
     :style="`width: ${minWidth}rem`"
   >
     <div class="node-head px-2 bg-cyan-100 bg-opacity-60">
-      <p class="heading text-center">
+      <p class="heading text-center p-2">
         <span>({{ data.name }})</span>
-      </p>
-      <p class="text-center">
-        <span>{{ data.label }}</span>
       </p>
     </div>
     <div
