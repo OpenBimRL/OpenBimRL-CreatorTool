@@ -1,8 +1,9 @@
 <!-- Flowchart.vue -->
 <script lang="ts" setup>
 import { VueFlow } from "@vue-flow/core";
-import { nodeTypes } from "./graph";
+import { Controls } from '@vue-flow/controls'
 import { Background, BackgroundVariant } from "@vue-flow/background";
+import { nodeTypes } from "./graph";
 import { ref } from "vue";
 
 import json from "../assets/defaultGraphExample.json";
@@ -33,5 +34,6 @@ const elements = ref<Array<any>>(json.elements);
       :pattern-color="'#efefef'"
       :size="0.8"
     />
+    <Controls />
   </VueFlow>
 </template>
