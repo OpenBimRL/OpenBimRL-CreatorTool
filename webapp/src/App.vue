@@ -10,7 +10,9 @@ const showHelp = ref(false);
   <Navigation @showHelp="showHelp = !showHelp" />
   <SideOverlay />
   <Help v-show="showHelp" @close="showHelp = false" />
-  <Flowchart class="h-screen" />
+  <main>
+    <Flowchart class="h-screen" />
+  </main>
 </template>
 
 <style scoped></style>
