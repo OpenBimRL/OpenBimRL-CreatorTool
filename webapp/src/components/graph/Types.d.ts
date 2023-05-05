@@ -1,6 +1,6 @@
 import type { Node } from '@vue-flow/core';
 
-export interface NodeData<InputConnectorType, OutputConnectorType> {
+export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
     name: string;
     icon: string;
     description: string;
