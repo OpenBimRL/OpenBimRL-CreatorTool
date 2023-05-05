@@ -7,4 +7,5 @@ export const minHeight = (
     outputs: Array<unknown> = [], // here it doesn't matter which types are used cause it only needs the length
 ) => Math.max(inputs.length, outputs.length);
 
+export { default as CustomHandle } from './CustomHandle.vue';
 export { default as Flowchart } from './Flowchart.vue';

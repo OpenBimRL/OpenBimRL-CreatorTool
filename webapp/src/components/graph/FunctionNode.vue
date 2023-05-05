@@ -6,21 +6,20 @@
     >
         <div class="node-head bg-cyan-100 bg-opacity-60 px-2">
             <p class="heading p-2 text-center">
-                <span>({{ data.name }})</span>
+                <span>{{ data.name }}</span>
             </p>
         </div>
         <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
-            <Handle
+            <CustomHandle
                 v-for="(input, index) in data.inputs"
                 :id="input.index"
                 type="target"
-                class="flex items-center"
                 :position="Position.Left"
                 :style="calcTopOffsetStyle(index, data.inputs.length)"
             >
                 <span class="pl-2" style="display: ruby">{{ input.name }}</span>
-            </Handle>
-            <Handle
+            </CustomHandle>
+            <CustomHandle
                 v-for="(output, index) in data.outputs"
                 :id="output.index"
                 type="source"
@@ -29,14 +28,14 @@
                 :style="calcTopOffsetStyle(index, data.outputs.length)"
             >
                 <span class="pr-2" style="display: ruby">{{ output.name }}</span>
-            </Handle>
+            </CustomHandle>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Handle, NodeProps, Position } from '@vue-flow/core';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+import { NodeProps, Position } from '@vue-flow/core';
+import { calcTopOffsetStyle, CustomHandle, minHeight as heightFunction } from '.';
 import type { FunctionNodeData } from './Types';
 
 const props = defineProps<NodeProps<FunctionNodeData>>();

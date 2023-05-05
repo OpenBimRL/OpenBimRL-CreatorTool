@@ -5,14 +5,14 @@
     >
         <div class="node-head bg-yellow-100 bg-opacity-60 px-2">
             <p class="heading text-center">
-                <span>({{ data.name }})</span>
+                <span>{{ data.name }}</span>
             </p>
         </div>
         <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
             <p class="text-center">
                 <span>{{ data.label }}</span>
             </p>
-            <Handle
+            <CustomHandle
                 v-for="(output, index) in data.outputs"
                 :id="output.index"
                 type="source"
@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import { Handle, NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+import { NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
+import { calcTopOffsetStyle, CustomHandle, minHeight as heightFunction } from '.';
 import type { InputNodeData } from './Types';
 
 const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
