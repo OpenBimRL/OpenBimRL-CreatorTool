@@ -1,7 +1,7 @@
 <template>
     <div
         class="min-w-[12rem] rounded border border-black bg-white shadow-black"
-        :class="{ 'shadow-lg': selected }"
+        :class="{ 'shadow': selected }"
     >
         <div class="node-head bg-red-300 bg-opacity-60 px-2">
             <p class="heading text-center">
