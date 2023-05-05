@@ -1,4 +1,6 @@
-interface NodeData<InputConnectorType, OutputConnectorType> {
+import type { Node } from '@vue-flow/core';
+
+export interface NodeData<InputConnectorType, OutputConnectorType> {
     name: string;
     icon: string;
     description: string;
@@ -25,3 +27,5 @@ export type FunctionNodeData = NodeData<FunctionNodeConnectorType, FunctionNodeC
 export type InputNodeData = NodeData<never, InputNodeConnectorType>;
 
 export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorType>;
+
+export type CustomNode = Node<NodeData<unknown, unknown>>;
