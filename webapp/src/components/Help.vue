@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/solid';
 
-import GithubMark from '../assets/github-mark.svg';
-import LinkedInLogo from '../assets/linkedin_logo.png';
-import TwitterLogo from '../assets/twitter_logo.svg';
+import GithubMark from '@/assets/github-mark.svg';
+import LinkedInLogo from '@/assets/linkedin_logo.png';
+import TwitterLogo from '@/assets/twitter_logo.svg';
 
 const date = new Date();
 </script>
