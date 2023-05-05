@@ -22,43 +22,17 @@
             />
         </div>
     </div>
-    <Dialog ref="dialog" @close="onModalClose">
-        <template v-slot:title>Change Input</template>
-        <template v-slot:content>
-            <input
-                class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
-                type="text"
-                v-bind:value="data.name"
-            />
-        </template>
-        <template v-slot:accept_button_text>Change Input</template>
-        <template v-slot:reject_button_text>Revert</template>
-    </Dialog>
 </template>
 
 <script setup lang="ts">
     import { Handle, NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
-    import { ref } from 'vue';
     import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
-    import { Dialog, DialogReturnValue } from '../modals';
     import type { InputNodeData } from './Types';
 
     const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
 
-    const dialog = ref<typeof Dialog | null>(null);
-
-    props.events.doubleClick(() => {
-        dialog.value?.open();
-    });
-
     // theoretically are the inputs defined but I'd rather not include them - safety first
     const minHeight = heightFunction([], props.data.outputs);
-
-    const onModalClose = () => {
-        const value: DialogReturnValue | undefined = dialog.value?.returnValue();
-        if (!value) return;
-        
-    };
 </script>
 
 <style scoped></style>
