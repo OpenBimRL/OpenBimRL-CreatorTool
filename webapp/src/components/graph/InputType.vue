@@ -17,7 +17,6 @@
                 :id="output.index"
                 type="source"
                 :position="Position.Right"
-                class="flex items-center justify-end"
                 :style="calcTopOffsetStyle(index, data.outputs.length)"
             />
         </div>

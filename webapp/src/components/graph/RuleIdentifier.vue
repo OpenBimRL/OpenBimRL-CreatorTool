@@ -16,7 +16,6 @@
                 v-for="(input, index) in data.inputs"
                 :id="input.index"
                 type="target"
-                class="flex items-center"
                 :position="Position.Left"
                 :style="calcTopOffsetStyle(index, data.inputs.length)"
             />
@@ -25,7 +24,6 @@
                 :id="output.index"
                 type="source"
                 :position="Position.Right"
-                class="flex items-center justify-end"
                 :style="calcTopOffsetStyle(index, data.outputs.length)"
             />
         </div>
