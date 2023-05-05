@@ -10,4 +10,12 @@
 import { Handle } from '@vue-flow/core';
 </script>
 
-<style scoped></style>
+<style>
+div.vue-flow__handle-left {
+    left: -6px;
+}
+
+div.vue-flow__handle-right {
+    @apply justify-end
+}
+</style>
