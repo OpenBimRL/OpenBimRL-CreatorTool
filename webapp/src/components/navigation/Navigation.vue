@@ -22,14 +22,14 @@
                 <button class="nav-button" @click.prevent="dialog?.open()">
                     <span>New</span>
                 </button>
-                <Dialog ref="dialog" @close="">
+                <Dialog ref="dialog" accept_button_class="bg-red-600" reject_button_class="bg-gray-500" @close="">
                     <template v-slot:title>Creating new Project</template>
                     <template v-slot:content>
                         <p>Are you sure to create a new project?</p>
                         <p>Unsaved changes will be lost.</p>
                     </template>
-                    <template v-slot:accept_button_text>Go Back</template>
-                    <template v-slot:reject_button_text>Continue</template>
+                    <template v-slot:accept_button_text>Continue</template>
+                    <template v-slot:reject_button_text>Go Back</template>
                 </Dialog>
             </li>
             <li>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
     import { ref } from 'vue';
+    import { DialogReturnValue } from '.';
 
     interface Props {
         accept_button_class?: string;
@@ -7,7 +8,7 @@
     }
 
     const props = withDefaults(defineProps<Props>(), {
-        accept_button_class: 'bg-gray-500',
+        accept_button_class: 'bg-blue-600',
         reject_button_class: 'bg-red-600',
     });
 
@@ -17,7 +18,9 @@
         dialog.value?.showModal();
     };
 
-    defineExpose({ open });
+    const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undefined;
+
+    defineExpose({ open, returnValue });
 </script>
 
 <template>
@@ -32,14 +35,14 @@
             <slot name="content" />
         </div>
         <form method="dialog" class="mt-4 flex justify-end gap-4">
-            <button :class="accept_button_class" value="accepted">
-                <span class="text-lg text-white">
-                    <slot name="accept_button_text" />
-                </span>
-            </button>
-            <button :class="reject_button_class" value="cancel">
+            <button :class="reject_button_class" :value="DialogReturnValue.cancel">
                 <span class="text-lg text-white">
                     <slot name="reject_button_text" />
+                </span>
+            </button>
+            <button :class="accept_button_class" :value="DialogReturnValue.accept">
+                <span class="text-lg text-white">
+                    <slot name="accept_button_text" />
                 </span>
             </button>
         </form>

@@ -14,3 +14,8 @@ export function registerModal(): Ref<boolean> {
 export const closeAll = () => modals.forEach(e => (e.value = false));
 
 window.addEventListener('click', closeAll);
+
+export enum DialogReturnValue {
+    cancel = 'cancel',
+    accept = 'accept',
+}
