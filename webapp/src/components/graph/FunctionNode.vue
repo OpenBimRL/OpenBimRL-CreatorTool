@@ -17,7 +17,7 @@
                 :position="Position.Left"
                 :style="calcTopOffsetStyle(index, data.inputs.length)"
             >
-                <span class="pl-2" style="display: ruby">{{ input.name }}</span>
+                {{ input.name }}
             </CustomHandle>
             <CustomHandle
                 v-for="(output, index) in data.outputs"
@@ -27,7 +27,7 @@
                 class="flex items-center justify-end"
                 :style="calcTopOffsetStyle(index, data.outputs.length)"
             >
-                <span class="pr-2" style="display: ruby">{{ output.name }}</span>
+                {{ output.name }}
             </CustomHandle>
         </div>
     </div>
@@ -45,7 +45,7 @@ const minHeight = heightFunction(props.data.inputs, props.data.outputs) + 1;
 const minWidth =
     (Math.max(...props.data.inputs.map<number>(element => element.name.length)) +
         Math.max(...props.data.outputs.map<number>(element => element.name.length))) /
-    1.5;
+    1.45;
 </script>
 
 <style scoped></style>

@@ -1,6 +1,8 @@
 <template>
-    <Handle class="flex items-center w-2 h-2">
+    <Handle class="flex items-center w-3 h-3">
+        <span class="px-4 pointer-events-none" style="display: ruby">
             <slot />
+        </span>
     </Handle>
 </template>
 
