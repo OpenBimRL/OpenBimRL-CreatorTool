@@ -14,13 +14,13 @@
 </template>
 
 <script setup lang="ts">
-    import { registerModal } from '.';
-    import { DropdownProps } from '../navigation/Types';
+import { registerModal } from '.';
+import { DropdownProps } from '../navigation/Types';
 
-    const { modalItems } = defineProps<{ modalItems: DropdownProps }>();
+const { modalItems } = defineProps<{ modalItems: DropdownProps }>();
 
-    const active = registerModal();
-    defineExpose({ active });
+const active = registerModal();
+defineExpose({ active });
 </script>
 
 <style scoped></style>

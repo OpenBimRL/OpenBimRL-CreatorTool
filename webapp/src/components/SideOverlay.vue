@@ -16,14 +16,14 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
+import { ref } from 'vue';
 
-    const open = ref(false);
+const open = ref(false);
 
-    const handler = (event: Event) => (open.value = !open.value);
+const handler = (event: Event) => (open.value = !open.value);
 </script>
 <style scoped>
-    aside.open {
-        @apply w-1/2;
-    }
+aside.open {
+    @apply w-1/2;
+}
 </style>

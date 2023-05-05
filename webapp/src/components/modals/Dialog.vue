@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-    import { ref } from 'vue';
-    import { DialogReturnValue } from '.';
+import { ref } from 'vue';
+import { DialogReturnValue } from '.';
 
-    interface Props {
-        accept_button_class?: string;
-        reject_button_class?: string;
-    }
+interface Props {
+    accept_button_class?: string;
+    reject_button_class?: string;
+}
 
-    const props = withDefaults(defineProps<Props>(), {
-        accept_button_class: 'bg-blue-600',
-        reject_button_class: 'bg-red-600',
-    });
+const props = withDefaults(defineProps<Props>(), {
+    accept_button_class: 'bg-blue-600',
+    reject_button_class: 'bg-red-600',
+});
 
-    const dialog = ref<HTMLDialogElement | null>(null);
+const dialog = ref<HTMLDialogElement | null>(null);
 
-    const open = () => {
-        dialog.value?.showModal();
-    };
+const open = () => {
+    dialog.value?.showModal();
+};
 
-    const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undefined;
+const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undefined;
 
-    defineExpose({ open, returnValue });
+defineExpose({ open, returnValue });
 </script>
 
 <template>
@@ -50,7 +50,7 @@
 </template>
 
 <style scoped>
-    form button {
-        @apply rounded-sm px-3 py-[0.125rem];
-    }
+form button {
+    @apply rounded-sm px-3 py-[0.125rem];
+}
 </style>

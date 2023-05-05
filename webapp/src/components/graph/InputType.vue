@@ -25,14 +25,14 @@
 </template>
 
 <script setup lang="ts">
-    import { Handle, NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
-    import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
-    import type { InputNodeData } from './Types';
+import { Handle, NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
+import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+import type { InputNodeData } from './Types';
 
-    const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
+const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
 
-    // theoretically are the inputs defined but I'd rather not include them - safety first
-    const minHeight = heightFunction([], props.data.outputs);
+// theoretically are the inputs defined but I'd rather not include them - safety first
+const minHeight = heightFunction([], props.data.outputs);
 </script>
 
 <style scoped></style>

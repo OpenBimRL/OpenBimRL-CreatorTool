@@ -1,18 +1,18 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import { DropdownButton } from '.';
-    import { Dialog } from '../modals';
+import { ref } from 'vue';
+import { DropdownButton } from '.';
+import { Dialog } from '../modals';
 
-    const uploadModalItems = {
-        XML: () => console.log('XML'),
-        JSON: () => console.log('JSON'),
-    };
-    const downloadModalItems = {
-        XML: () => console.log('XML'),
-        JSON: () => console.log('JSON'),
-    };
+const uploadModalItems = {
+    XML: () => console.log('XML'),
+    JSON: () => console.log('JSON'),
+};
+const downloadModalItems = {
+    XML: () => console.log('XML'),
+    JSON: () => console.log('JSON'),
+};
 
-    const dialog = ref<typeof Dialog | null>(null);
+const dialog = ref<typeof Dialog | null>(null);
 </script>
 
 <template>
@@ -22,7 +22,12 @@
                 <button class="nav-button" @click.prevent="dialog?.open()">
                     <span>New</span>
                 </button>
-                <Dialog ref="dialog" accept_button_class="bg-red-600" reject_button_class="bg-gray-500" @close="">
+                <Dialog
+                    ref="dialog"
+                    accept_button_class="bg-red-600"
+                    reject_button_class="bg-gray-500"
+                    @close=""
+                >
                     <template v-slot:title>Creating new Project</template>
                     <template v-slot:content>
                         <p>Are you sure to create a new project?</p>
@@ -53,11 +58,11 @@
 </template>
 
 <style>
-    button.nav-button {
-        @apply rounded-sm px-2 py-1;
-    }
+button.nav-button {
+    @apply rounded-sm px-2 py-1;
+}
 
-    button.nav-button:not(.blue) {
-        @apply bg-gray-500;
-    }
+button.nav-button:not(.blue) {
+    @apply bg-gray-500;
+}
 </style>

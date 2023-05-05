@@ -35,18 +35,18 @@
 </template>
 
 <script setup lang="ts">
-    import { Handle, NodeProps, Position } from '@vue-flow/core';
-    import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
-    import type { FunctionNodeData } from './Types';
+import { Handle, NodeProps, Position } from '@vue-flow/core';
+import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+import type { FunctionNodeData } from './Types';
 
-    const props = defineProps<NodeProps<FunctionNodeData>>();
+const props = defineProps<NodeProps<FunctionNodeData>>();
 
-    const minHeight = heightFunction(props.data.inputs, props.data.outputs) + 1;
+const minHeight = heightFunction(props.data.inputs, props.data.outputs) + 1;
 
-    const minWidth =
-        (Math.max(...props.data.inputs.map<number>(element => element.name.length)) +
-            Math.max(...props.data.outputs.map<number>(element => element.name.length))) /
-        1.5;
+const minWidth =
+    (Math.max(...props.data.inputs.map<number>(element => element.name.length)) +
+        Math.max(...props.data.outputs.map<number>(element => element.name.length))) /
+    1.5;
 </script>
 
 <style scoped></style>

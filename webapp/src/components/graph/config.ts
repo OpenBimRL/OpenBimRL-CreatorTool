@@ -4,7 +4,7 @@ import { markRaw } from 'vue';
 import FunctionNodeVue from './FunctionNode.vue';
 import InputType from './InputType.vue';
 import RuleIdentifier from './RuleIdentifier.vue';
-import { CustomNode } from './Types';
+import type { CustomNode } from './Types';
 
 export const multiSelectKeys = ['Shift', 'Control'];
 const elements = json.elements as Array<CustomNode | Edge>;

@@ -35,13 +35,13 @@
 </template>
 
 <script setup lang="ts">
-    import { Handle, NodeProps, Position } from '@vue-flow/core';
-    import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
-    import type { RuleIdentifierNodeData } from './Types';
+import { Handle, NodeProps, Position } from '@vue-flow/core';
+import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+import type { RuleIdentifierNodeData } from './Types';
 
-    const props = defineProps<NodeProps<RuleIdentifierNodeData>>();
+const props = defineProps<NodeProps<RuleIdentifierNodeData>>();
 
-    const minHeight = heightFunction(props.data.inputs, props.data.outputs);
+const minHeight = heightFunction(props.data.inputs, props.data.outputs);
 </script>
 
 <style scoped></style>

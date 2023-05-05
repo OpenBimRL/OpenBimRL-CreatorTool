@@ -1,31 +1,26 @@
 <!-- Flowchart.vue -->
 <script lang="ts" setup>
-    import { Background, BackgroundVariant } from '@vue-flow/background';
-    import { Controls } from '@vue-flow/controls';
-    import { Edge, VueFlow } from '@vue-flow/core';
-    import { ref } from 'vue';
-    import { Dialog } from '../modals';
-    import {
-        edges as initialEdges,
-        multiSelectKeys,
-        nodes as initialNodes,
-        nodeTypes,
-    } from './config';
-    import type { CustomNode } from './Types';
+import { Background, BackgroundVariant } from '@vue-flow/background';
+import { Controls } from '@vue-flow/controls';
+import { Edge, VueFlow } from '@vue-flow/core';
+import { ref } from 'vue';
+import { Dialog } from '../modals';
+import { edges as initialEdges, multiSelectKeys, nodes as initialNodes, nodeTypes } from './config';
+import type { CustomNode } from './Types';
 
-    const dialog = ref<typeof Dialog | null>(null);
+const dialog = ref<typeof Dialog | null>(null);
 
-    const nodes = ref<Array<CustomNode>>(initialNodes);
-    const edges = ref<Array<Edge>>(initialEdges);
+const nodes = ref<Array<CustomNode>>(initialNodes);
+const edges = ref<Array<Edge>>(initialEdges);
 
-    nodes.value?.forEach(
-        element =>
-            (element.events = {
-                doubleClick: () => {
-                    console.log('double clicked');
-                },
-            }),
-    );
+nodes.value?.forEach(
+    element =>
+        (element.events = {
+            doubleClick: () => {
+                console.log('double clicked');
+            },
+        }),
+);
 </script>
 
 <template>
