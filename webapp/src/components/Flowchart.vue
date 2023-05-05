@@ -1,10 +1,10 @@
 <!-- Flowchart.vue -->
 <script lang="ts" setup>
-    import { VueFlow } from '@vue-flow/core';
-    import { Controls } from '@vue-flow/controls';
     import { Background, BackgroundVariant } from '@vue-flow/background';
-    import { nodeTypes } from './graph';
+    import { Controls } from '@vue-flow/controls';
+    import { VueFlow } from '@vue-flow/core';
     import { ref } from 'vue';
+    import { nodeTypes } from './graph';
 
     import json from '../assets/defaultGraphExample.json';
 

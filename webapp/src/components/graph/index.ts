@@ -1,8 +1,8 @@
+import type { NodeTypesObject } from '@vue-flow/core';
 import { markRaw } from 'vue';
 import FunctionNodeVue from './FunctionNode.vue';
 import InputType from './InputType.vue';
 import RuleIdentifier from './RuleIdentifier.vue';
-import type { NodeTypesObject } from '@vue-flow/core';
 
 export const nodeTypes = {
     functionType: markRaw(FunctionNodeVue),

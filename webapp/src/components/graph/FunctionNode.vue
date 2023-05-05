@@ -35,9 +35,9 @@
 </template>
 
 <script setup lang="ts">
-    import { NodeProps, Handle, Position } from '@vue-flow/core';
-    import type { FunctionNodeData } from './Types';
+    import { Handle, NodeProps, Position } from '@vue-flow/core';
     import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
+    import type { FunctionNodeData } from './Types';
 
     const props = defineProps<NodeProps<FunctionNodeData>>();
 

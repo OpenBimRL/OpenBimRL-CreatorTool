@@ -33,11 +33,11 @@
 </template>
 
 <script setup lang="ts">
-    import { NodeEventsOn, NodeProps, Handle, Position } from '@vue-flow/core';
-    import type { InputNodeData } from './Types';
+    import { Handle, NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
+    import { ref } from 'vue';
     import { calcTopOffsetStyle, minHeight as heightFunction } from '.';
     import { Dialog } from '../modals';
-    import { ref } from 'vue';
+    import type { InputNodeData } from './Types';
 
     const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
 
