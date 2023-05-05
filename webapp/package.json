@@ -7,7 +7,7 @@
         "dev": "vite",
         "build": "vue-tsc && vite build",
         "preview": "vite preview",
-        "format": "npx prettier --write ."
+        "format": "npx prettier --config ./prod.prettierrc.json --write ."
     },
     "dependencies": {
         "@heroicons/vue": "^2.0.17",
