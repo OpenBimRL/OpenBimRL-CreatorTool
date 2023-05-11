@@ -1,16 +1,14 @@
 import json from '@/assets/graph/defaultGraphExample.json';
 import { Edge, isEdge, isNode, NodeTypesObject } from '@vue-flow/core';
 import { markRaw } from 'vue';
-import FunctionNodeVue from './FunctionNode.vue';
-import InputType from './InputType.vue';
-import RuleIdentifier from './RuleIdentifier.vue';
+import { FunctionNode, InputType, RuleIdentifier } from './nodes';
 import type { CustomNode } from './Types';
 
 export const multiSelectKeys = ['Shift', 'Control'];
 const elements = json.elements as Array<CustomNode | Edge>;
 
 export const nodeTypes = {
-    functionType: markRaw(FunctionNodeVue),
+    functionType: markRaw(FunctionNode),
     inputType: markRaw(InputType),
     ruleIdentifier: markRaw(RuleIdentifier),
 } as NodeTypesObject;
