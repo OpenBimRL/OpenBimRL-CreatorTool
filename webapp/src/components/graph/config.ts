@@ -1,5 +1,5 @@
 import json from '@/assets/defaultGraphExample.json';
-import type { Edge, NodeTypesObject } from '@vue-flow/core';
+import { Edge, isEdge, isNode, NodeTypesObject } from '@vue-flow/core';
 import { markRaw } from 'vue';
 import FunctionNodeVue from './FunctionNode.vue';
 import InputType from './InputType.vue';
@@ -15,10 +15,6 @@ export const nodeTypes = {
     ruleIdentifier: markRaw(RuleIdentifier),
 } as NodeTypesObject;
 
-export const nodes = elements.filter(
-    element => element.type && Object.keys(nodeTypes).includes(element.type),
-) as Array<CustomNode>;
+export const nodes = elements.filter(element => isNode(element)) as Array<CustomNode>;
 
-export const edges = elements.filter(
-    element => (element as Edge).target && (element as Edge).source,
-) as Array<Edge>;
+export const edges = elements.filter(element => isEdge(element)) as Array<Edge>;
