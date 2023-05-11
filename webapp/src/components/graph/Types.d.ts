@@ -29,3 +29,25 @@ export type InputNodeData = NodeData<never, InputNodeConnectorType>;
 export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorType>;
 
 export type CustomNode = Node<NodeData<unknown, unknown>>;
+
+export type Operator = 'equals' | 'or' | 'and';
+
+export interface RulesOrRuleSet {
+    label: string;
+    type: string;
+    quantifier: string;
+    operator: Operator;
+    operand1: string;
+    operand2: string;
+    rulesOrRuleSets: RulesOrRuleSets;
+}
+
+export type RulesOrRuleSets = Array<RulesOrRuleSet>;
+
+export type SubChecks = Array<{
+    label: string;
+    name: string;
+    applicability: Array<any>;
+    rulesOrRuleSets: RulesOrRuleSets;
+    resultSets: [];
+}>;
