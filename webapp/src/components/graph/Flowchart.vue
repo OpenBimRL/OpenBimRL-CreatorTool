@@ -2,7 +2,7 @@
 <script lang="ts" setup>
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { GraphNode, NodeMouseEvent, useVueFlow, VueFlow } from '@vue-flow/core';
+import { useVueFlow, VueFlow } from '@vue-flow/core';
 import { ref } from 'vue';
 import { Dialog } from '../modals';
 import { edges as initialEdges, multiSelectKeys, nodes as initialNodes, nodeTypes } from './config';

@@ -1,4 +1,4 @@
-import json from '@/assets/defaultGraphExample.json';
+import json from '@/assets/graph/defaultGraphExample.json';
 import { Edge, isEdge, isNode, NodeTypesObject } from '@vue-flow/core';
 import { markRaw } from 'vue';
 import FunctionNodeVue from './FunctionNode.vue';
