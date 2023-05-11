@@ -16,8 +16,8 @@ const dialog = ref<typeof Dialog | null>(null);
 </script>
 
 <template>
-    <nav class="fixed z-10 w-full bg-gray-300 p-1 pl-8 text-white">
-        <ul class="mt-1 flex gap-4">
+    <nav class="fixed z-10 w-full bg-gray-300 py-2 pl-8 text-white">
+        <ul class="mt-1 flex gap-3">
             <li>
                 <button class="nav-button" @click.prevent="dialog?.open()">
                     <span>New</span>
@@ -48,7 +48,10 @@ const dialog = ref<typeof Dialog | null>(null);
                 </div>
             </li>
             <li>
-                <button class="blue nav-button bg-blue-600">Create Nodes</button>
+                <button class="colored nav-button bg-blue-600">Create Nodes</button>
+            </li>
+            <li>
+                <button class="colored nav-button bg-red-600">Create Group</button>
             </li>
             <li>
                 <button class="nav-button" @click="$emit('showHelp')">Help?</button>
@@ -59,10 +62,10 @@ const dialog = ref<typeof Dialog | null>(null);
 
 <style>
 button.nav-button {
-    @apply rounded-sm px-2 py-1;
+    @apply rounded px-2 py-1 text-lg;
 }
 
-button.nav-button:not(.blue) {
+button.nav-button:not(.colored) {
     @apply bg-gray-500;
 }
 </style>
