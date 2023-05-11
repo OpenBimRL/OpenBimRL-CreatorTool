@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="min-w-[12rem] rounded border border-black bg-white shadow-black"
-        :class="{ 'shadow': selected }"
-    >
+    <NodeBase :selected="selected">
         <div class="node-head bg-yellow-100 bg-opacity-60 px-2">
             <p class="heading text-center">
                 <span>{{ data.name }}</span>
@@ -20,12 +17,13 @@
                 :style="calcTopOffsetStyle(index, data.outputs.length)"
             />
         </div>
-    </div>
+    </NodeBase>
 </template>
 
 <script setup lang="ts">
 import { NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
 import { calcTopOffsetStyle, CustomHandle, minHeight as heightFunction } from '.';
+import NodeBase from './NodeBase.vue';
 import type { InputNodeData } from './Types';
 
 const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();

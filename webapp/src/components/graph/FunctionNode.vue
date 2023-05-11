@@ -1,9 +1,6 @@
 <template>
-    <div
-        class="min-w-[12rem] rounded border border-black bg-white shadow-black"
-        :class="{ 'shadow': selected }"
-        :style="`width: ${minWidth}rem`"
-    >
+
+    <NodeBase :selected="selected" :min-width="minWidth">
         <div class="node-head bg-cyan-100 bg-opacity-60 px-2">
             <p class="heading p-2 text-center">
                 <span>{{ data.name }}</span>
@@ -29,13 +26,15 @@
                 {{ output.name }}
             </CustomHandle>
         </div>
-    </div>
+
+    </NodeBase>
 </template>
 
 <script setup lang="ts">
 import { NodeProps, Position } from '@vue-flow/core';
 import { calcTopOffsetStyle, CustomHandle, minHeight as heightFunction } from '.';
 import type { FunctionNodeData } from './Types';
+import NodeBase from './NodeBase.vue';
 
 const props = defineProps<NodeProps<FunctionNodeData>>();
 
