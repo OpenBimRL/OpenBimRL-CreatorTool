@@ -51,3 +51,12 @@ export type SubChecks = Array<{
     rulesOrRuleSets: RulesOrRuleSets;
     resultSets: [];
 }>;
+
+export interface Rule {
+    id: string;
+    name: string;
+    color: string;
+    items: Array<CustomNode>;
+}
+
+export type RuleSet = Array<Rule>;
