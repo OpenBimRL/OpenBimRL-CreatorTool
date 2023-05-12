@@ -48,7 +48,7 @@ const dialog = ref<typeof Dialog | null>(null);
                 </div>
             </li>
             <li>
-                <button class="colored nav-button bg-blue-600">Create Nodes</button>
+                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">Create Nodes</button>
             </li>
             <li>
                 <button class="colored nav-button bg-red-600">Create Group</button>
