@@ -1,16 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { graphInjectionKey } from '@/keys';
+import Parser from '@/ParserOpenBIMRL';
+import { inject, Ref, ref } from 'vue';
 import { DropdownButton } from '.';
+import type { GraphInject } from '../graph/Types';
 import { Dialog } from '../modals';
+import { DropdownProps } from './Types';
 
-const uploadModalItems = {
+const { graph } = inject(graphInjectionKey) as GraphInject;
+
+const downloadFile = (filedata: string, filename: string) => {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(filedata));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+};
+
+const uploadModalItems: DropdownProps = {
     XML: () => console.log('XML'),
     JSON: () => console.log('JSON'),
 };
-const downloadModalItems = {
-    XML: () => console.log('XML'),
-    JSON: () => console.log('JSON'),
-};
+const downloadModalItems: Ref<DropdownProps> = ref({
+    XML: () =>
+        downloadFile(
+            new Parser().build(
+                graph.value.elements,
+                graph.value.subChecks,
+                graph.value.resultSets,
+                'graph.xml',
+            ),
+            'graph.xml',
+        ),
+    JSON: () => downloadFile(JSON.stringify(graph.value), 'graph.json'),
+});
 
 const dialog = ref<typeof Dialog | null>(null);
 </script>
@@ -48,7 +76,9 @@ const dialog = ref<typeof Dialog | null>(null);
                 </div>
             </li>
             <li>
-                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">Create Nodes</button>
+                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">
+                    Create Nodes
+                </button>
             </li>
             <li>
                 <button class="colored nav-button bg-red-600">Create Group</button>
