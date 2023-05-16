@@ -1,6 +1,18 @@
-import type { AddEdges, Connection, Edge, GraphNode, NodeMouseEvent } from '@vue-flow/core';
+import { createUniqueID } from '@/ParserOpenBIMRL';
+import {
+    AddEdges,
+    AddNodes,
+    Connection,
+    Edge,
+    GraphNode,
+    isNode,
+    Node,
+    NodeMouseEvent,
+    Project,
+} from '@vue-flow/core';
 import type { Ref } from 'vue';
 import { Dialog } from '../modals';
+import { CustomNode } from './Types';
 
 export function ConnectEvent(addEdges: AddEdges): (connection: Connection) => void {
     return connection => {
@@ -32,5 +44,42 @@ export function DoubleClickEvent(
         }
 
         dialog.value?.open();
+    };
+}
+
+export function DragOverEvent(): (event: DragEvent) => void {
+    return event => {
+        if (!event.dataTransfer) return;
+        event.dataTransfer.dropEffect = 'move';
+    };
+}
+
+export function DropEvent(
+    vueFlowRef: Ref<HTMLDivElement | null>,
+    project: Project,
+    addNodes: AddNodes,
+): (event: DragEvent) => void {
+    return event => {
+        if (!event.dataTransfer) return;
+        const nodeInfo = JSON.parse(
+            event.dataTransfer.getData('application/vueflow'),
+        ) as Node<CustomNode>;
+
+        // should never be false. Just there to make typescript happy
+        if (!vueFlowRef.value) return;
+
+        nodeInfo.id = createUniqueID();
+
+        // calculate new position
+        const { left, top } = vueFlowRef.value.getBoundingClientRect();
+        nodeInfo.position = project({
+            x: event.clientX - left,
+            y: event.clientY - top,
+        });
+
+        // just a check if the node is a valid node
+        if (!isNode(nodeInfo)) return;
+
+        addNodes([nodeInfo]);
     };
 }
