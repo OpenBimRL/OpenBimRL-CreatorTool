@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@vue-flow/core';
+import type { Edge,Node } from '@vue-flow/core';
 
 export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
     name: string;
@@ -47,9 +47,10 @@ export type RulesOrRuleSets = Array<RulesOrRuleSet>;
 export type SubChecks = Array<{
     label: string;
     name: string;
-    applicability: Array<any>;
+    applicability: Array<never>;
     rulesOrRuleSets: RulesOrRuleSets;
     resultSets: [];
+    [key: string]: any;
 }>;
 
 export interface Rule {
@@ -64,7 +65,7 @@ export type RuleSet = Array<Rule>;
 export type ResultSets = Array<any>;
 
 export interface GraphJSON {
-    elemets: Array<CustomNode | Edge>;
+    elements: Array<CustomNode | Edge>;
     subChecks: SubChecks;
-    resultChecks: ResultSets;
+    resultSets: ResultSets;
 }
