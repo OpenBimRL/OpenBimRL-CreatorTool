@@ -1,4 +1,5 @@
-import type { Edge,Node } from '@vue-flow/core';
+import type { Edge, Node } from '@vue-flow/core';
+import type { Ref } from 'vue';
 
 export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
     name: string;
@@ -68,4 +69,9 @@ export interface GraphJSON {
     elements: Array<CustomNode | Edge>;
     subChecks: SubChecks;
     resultSets: ResultSets;
+}
+
+export interface GraphInject {
+    graph: Ref<GraphJSON>;
+    updateGraph: (nodes: Array<CustomNode>, edges: Array<Edge>) => void;
 }

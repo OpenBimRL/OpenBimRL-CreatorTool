@@ -1,11 +1,10 @@
 import json from '@/assets/graph/defaultGraphExample.json';
-import { Edge, isEdge, isNode, NodeTypesObject } from '@vue-flow/core';
-import { markRaw } from 'vue';
-import { FunctionNode, InputType, RuleIdentifier } from './nodes';
-import type { CustomNode } from './Types';
+import { Edge,NodeTypesObject } from '@vue-flow/core';
+import { markRaw,Ref,ref } from 'vue';
+import { FunctionNode,InputType,RuleIdentifier } from './nodes';
+import type { CustomNode,GraphJSON } from './Types';
 
 export const multiSelectKeys = ['Shift', 'Control'];
-const elements = json.elements as Array<CustomNode | Edge>;
 
 export const nodeTypes = {
     functionType: markRaw(FunctionNode),
@@ -13,6 +12,13 @@ export const nodeTypes = {
     ruleIdentifier: markRaw(RuleIdentifier),
 } as NodeTypesObject;
 
-export const nodes = elements.filter(element => isNode(element)) as Array<CustomNode>;
 
-export const edges = elements.filter(element => isEdge(element)) as Array<Edge>;
+export function initialGraph() {
+    const graph: Ref<GraphJSON> = ref<GraphJSON>(json as GraphJSON);
+
+    const updateGraph = (nodes: Array<CustomNode>, edges: Array<Edge>) => {
+        graph.value.elements = [...nodes, ...edges];
+    };
+
+    return { graph, updateGraph };
+}

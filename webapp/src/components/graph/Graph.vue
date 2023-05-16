@@ -1,23 +1,30 @@
 <!-- Flowchart.vue -->
 <script lang="ts" setup>
+import { graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { useVueFlow, VueFlow } from '@vue-flow/core';
-import { ref } from 'vue';
+import { Edge, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
+import { inject, ref, watch } from 'vue';
 import { Dialog } from '../modals';
-import { edges as initialEdges, multiSelectKeys, nodes as initialNodes, nodeTypes } from './config';
+import { multiSelectKeys, nodeTypes } from './config';
 import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
+import type { CustomNode, GraphInject } from './Types';
 
 const dialog = ref<typeof Dialog | null>(null);
 const selectedNode = ref<number>(0);
 const nodeDataIndex = ref<string>('name');
 
+// injected from app level (main.ts)
+const { graph, updateGraph } = inject(graphInjectionKey) as GraphInject;
+
 const { nodes, edges, addEdges, addNodes, project, vueFlowRef } = useVueFlow({
-    edges: initialEdges,
-    nodes: initialNodes,
+    edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
+    nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
     nodeTypes: nodeTypes,
     multiSelectionKeyCode: multiSelectKeys,
 });
+
+watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
 
 const onConnect = ConnectEvent(addEdges);
 const onNodeDoubleClick = DoubleClickEvent(nodes, selectedNode, nodeDataIndex, dialog);
