@@ -60,3 +60,5 @@ export interface Rule {
 }
 
 export type RuleSet = Array<Rule>;
+
+export type ResultSets = Array<any>;

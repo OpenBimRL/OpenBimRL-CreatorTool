@@ -1,7 +1,7 @@
-import { Edge, isEdge, isNode, Position } from '@vue-flow/core';
-import dagre, { graphlib } from 'dagre';
+import { Edge,isEdge,isNode,Position } from '@vue-flow/core';
+import dagre,{ graphlib } from 'dagre';
 import { v4 as uuidv4 } from 'uuid';
-import { CustomNode, RulesOrRuleSets, SubChecks } from './components/graph/Types';
+import type { CustomNode, ResultSets, RulesOrRuleSets, SubChecks } from './components/graph/Types';
 
 type Elements = Array<CustomNode | Edge>;
 
@@ -18,7 +18,7 @@ export default class Parser {
      *
      * @param elements
      */
-    build(elements: Elements, subChecks: SubChecks, resultSets: Array<any>, name: string) {
+    build(elements: Elements, subChecks: SubChecks, resultSets: ResultSets, name: string) {
         let rootString =
             "<?xml version='1.0' encoding='utf-8'?>" +
             '<BIMRule ' +
