@@ -16,8 +16,7 @@ const props = defineProps<{
     minWidth?: number;
 }>();
 
-const widthStyle = computed(() => props.minWidth ? `width: ${props.minWidth}rem` : '');
+const widthStyle = computed(() => (props.minWidth ? `width: ${props.minWidth}rem` : ''));
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

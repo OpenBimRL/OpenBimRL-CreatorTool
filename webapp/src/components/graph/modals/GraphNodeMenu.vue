@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
+import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { ref } from 'vue';
 import type { RuleSet } from '../Types';
 import GraphItemGroup from './GraphItemGroup.vue';

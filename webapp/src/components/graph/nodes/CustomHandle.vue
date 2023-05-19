@@ -16,10 +16,10 @@ div.vue-flow__handle-left {
 }
 
 div.vue-flow__handle-right {
-    @apply justify-end
+    @apply justify-end;
 }
 
 div.vue-flow__handle:hover > span {
-    @apply text-blue-600
+    @apply text-blue-600;
 }
 </style>

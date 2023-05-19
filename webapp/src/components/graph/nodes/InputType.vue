@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import { NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '..';
 import { CustomHandle } from '.';
-import NodeBase from './NodeBase.vue';
+import { calcTopOffsetStyle, minHeight as heightFunction } from '..';
 import type { InputNodeData } from '../Types';
+import NodeBase from './NodeBase.vue';
 
 const props = defineProps<NodeProps<InputNodeData, NodeEventsOn>>();
 

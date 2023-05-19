@@ -1,7 +1,7 @@
-import { Edge,isEdge,isNode,Position } from '@vue-flow/core';
-import dagre,{ graphlib } from 'dagre';
+import { Edge, isEdge, isNode, Position } from '@vue-flow/core';
+import dagre, { graphlib } from 'dagre';
 import { v4 as uuidv4 } from 'uuid';
-import type { CustomNode,ResultSets,RulesOrRuleSets,SubChecks } from './components/graph/Types';
+import type { CustomNode, ResultSets, RulesOrRuleSets, SubChecks } from './components/graph/Types';
 
 type Elements = Array<CustomNode | Edge>;
 
