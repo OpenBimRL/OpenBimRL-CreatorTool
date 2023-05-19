@@ -4,22 +4,41 @@ import {
     AddNodes,
     Connection,
     Edge,
+    GraphEdge,
     GraphNode,
     isNode,
     Node,
     NodeMouseEvent,
     Project,
+    RemoveEdges,
 } from '@vue-flow/core';
 import type { Ref } from 'vue';
 import { Dialog } from '../modals';
 import { CustomNode } from './Types';
 
-export function ConnectEvent(addEdges: AddEdges): (connection: Connection) => void {
+export function ConnectEvent(
+    addEdges: AddEdges,
+    removeEdges: RemoveEdges,
+    edges: Ref<Array<GraphEdge>>,
+): (connection: Connection) => void {
     return connection => {
         const edge = connection as Edge;
         edge.style = {
             strokeWidth: 4,
         };
+
+        if (
+            !connection.source ||
+            !connection.sourceHandle ||
+            !connection.target ||
+            !connection.targetHandle
+        )
+            return;
+
+        const existingConnection = edges.value.find(element => element.target == edge.target);
+
+        if (existingConnection) removeEdges([existingConnection]);
+
         addEdges([edge]);
     };
 }

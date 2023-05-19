@@ -17,7 +17,7 @@ const nodeDataIndex = ref<string>('name');
 // injected from app level (main.ts)
 const { graph, updateGraph } = inject(graphInjectionKey) as GraphInject;
 
-const { nodes, edges, addEdges, addNodes, project, vueFlowRef } = useVueFlow({
+const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges } = useVueFlow({
     edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
     nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
     nodeTypes: nodeTypes,
@@ -26,7 +26,7 @@ const { nodes, edges, addEdges, addNodes, project, vueFlowRef } = useVueFlow({
 
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
 
-const onConnect = ConnectEvent(addEdges);
+const onConnect = ConnectEvent(addEdges, removeEdges, edges);
 const onNodeDoubleClick = DoubleClickEvent(nodes, selectedNode, nodeDataIndex, dialog);
 const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);
