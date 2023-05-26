@@ -620,17 +620,15 @@ export default class Parser {
             const isHorizontal = direction === 'LR';
             dagreGraph.setGraph({ rankdir: direction });
 
-            elements.forEach((el: any) => {
-                if (isNode(el)) {
-                    dagreGraph.setNode(el.id, { width: nodeWidth, height: nodeHeight });
-                } else {
-                    dagreGraph.setEdge(el.source, el.target);
-                }
+            elements.forEach(element => {
+                if (isNode(element))
+                    dagreGraph.setNode(element.id, { width: nodeWidth, height: nodeHeight });
+                else dagreGraph.setEdge((element as Edge).source, (element as Edge).target);
             });
 
             dagre.layout(dagreGraph);
 
-            return elements.map((el: any) => {
+            return elements.map(el => {
                 if (isNode(el)) {
                     const nodeWithPosition = dagreGraph.node(el.id);
                     el.targetPosition = isHorizontal ? Position.Left : Position.Top;
