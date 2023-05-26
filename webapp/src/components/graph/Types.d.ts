@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@vue-flow/core';
+import type { Edge,Node } from '@vue-flow/core';
 import type { Ref } from 'vue';
 
 export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
@@ -74,4 +74,8 @@ export interface GraphJSON {
 export interface GraphInject {
     graph: Ref<GraphJSON>;
     updateGraph: (nodes: Array<CustomNode>, edges: Array<Edge>) => void;
+    registerResetCallback: (callback: GraphResetCallback) => number;
+    resetGraph: (toGraph?: GraphJSON) => void;
 }
+
+export type GraphResetCallback = () => void;

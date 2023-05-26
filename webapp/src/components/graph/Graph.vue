@@ -3,7 +3,7 @@
 import { graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { Edge, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
+import { Edge, GraphEdge, GraphNode, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
 import { inject, ref, watch } from 'vue';
 import { Dialog } from '../modals';
 import { multiSelectKeys, nodeTypes } from './config';
@@ -15,13 +15,18 @@ const selectedNode = ref<number>(0);
 const nodeDataIndex = ref<string>('name');
 
 // injected from app level (main.ts)
-const { graph, updateGraph } = inject(graphInjectionKey) as GraphInject;
+const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) as GraphInject;
 
 const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges } = useVueFlow({
     edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
     nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
     nodeTypes: nodeTypes,
     multiSelectionKeyCode: multiSelectKeys,
+});
+
+registerResetCallback(() => {
+    edges.value = graph.value.elements.filter(e => isEdge(e)) as Array<GraphEdge>;
+    nodes.value = graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>;
 });
 
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
@@ -47,6 +52,7 @@ const onDrop = DropEvent(vueFlowRef, project, addNodes);
                 <input
                     class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
                     type="text"
+                    v-if="nodes[selectedNode]"
                     v-model.value="nodes[selectedNode].data[nodeDataIndex]"
                 />
             </template>
