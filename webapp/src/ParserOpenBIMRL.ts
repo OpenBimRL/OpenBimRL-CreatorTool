@@ -1,7 +1,14 @@
 import { Edge, isEdge, isNode, Position } from '@vue-flow/core';
 import dagre, { graphlib } from 'dagre';
 import { v4 as uuidv4 } from 'uuid';
-import type { CustomNode, ResultSets, RulesOrRuleSets, SubChecks } from './components/graph/Types';
+import type {
+    CustomNode,
+    GraphJSON,
+    ParseOptions,
+    ResultSets,
+    RulesOrRuleSets,
+    SubChecks,
+} from './components/graph/Types';
 
 type Elements = Array<CustomNode | Edge>;
 
@@ -273,7 +280,8 @@ export default class Parser {
      * @param opts
      * @returns
      */
-    parse(data: any, opts: any) {
+    parse(data: any, opts: ParseOptions): GraphJSON {
+
         let bimRule = data['BIMRule'];
         let precalculations = bimRule['Precalculations'];
         let ns = precalculations['Node'];
@@ -282,13 +290,13 @@ export default class Parser {
         var graphElements: Elements = [];
         var nodeMap: { [key: string]: any } = {};
 
-        //If Precalculations is checked in
+        //If Precalculations is checked in opts
         if (opts.enablePrecalculations) {
             //Parse Nodes
             for (let index in ns) {
                 let n = ns[index];
 
-                let inputHandles: any[] = [];
+                let inputHandles: Array<unknown> = [];
                 if (typeof n['Inputs'] !== 'undefined') {
                     let ihs = n['Inputs']['Input'];
 
@@ -541,7 +549,7 @@ export default class Parser {
         }
 
         return {
-            elements: this.getLayoutedElements(graphElements, 'LR'),
+            elements: this.getLayoutedElements(graphElements, 'LR')!,
             subChecks: subChecks,
             resultSets: resultSetsArr,
         }; //Apply layout and register elements
