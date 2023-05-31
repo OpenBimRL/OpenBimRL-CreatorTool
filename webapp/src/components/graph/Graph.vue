@@ -17,16 +17,20 @@ const nodeDataIndex = ref<string>('name');
 // injected from app level (main.ts)
 const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) as GraphInject;
 
-const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges } = useVueFlow({
-    edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
-    nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
-    nodeTypes: nodeTypes,
-    multiSelectionKeyCode: multiSelectKeys,
-});
+const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes } =
+    useVueFlow({
+        edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
+        nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
+        nodeTypes: nodeTypes,
+        multiSelectionKeyCode: multiSelectKeys,
+    });
 
 registerResetCallback(() => {
-    edges.value = graph.value.elements.filter(e => isEdge(e)) as Array<GraphEdge>;
-    nodes.value = graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>;
+    removeEdges(edges.value);
+    removeNodes(nodes.value);
+
+    addNodes(graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>);
+    addEdges(graph.value.elements.filter(e => isEdge(e)) as Array<GraphEdge>);
 });
 
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
