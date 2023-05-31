@@ -1,4 +1,4 @@
-import type { Edge,Node } from '@vue-flow/core';
+import type { Edge, Node } from '@vue-flow/core';
 import type { Ref } from 'vue';
 
 export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
@@ -79,3 +79,11 @@ export interface GraphInject {
 }
 
 export type GraphResetCallback = () => void;
+
+export interface ParseOptions {
+    multiSelectionMode: boolean;
+    enablePrecalculations: boolean;
+    enableRuleIdentifier: boolean;
+    enableRules: boolean;
+    renderBackground: boolean;
+}
