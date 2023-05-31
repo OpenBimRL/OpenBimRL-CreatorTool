@@ -4,6 +4,7 @@ import { graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { Edge, GraphEdge, GraphNode, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
+import { nextTick } from 'vue';
 import { inject, ref, watch } from 'vue';
 import { Dialog } from '../modals';
 import { multiSelectKeys, nodeTypes } from './config';
@@ -26,11 +27,16 @@ const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, remo
     });
 
 registerResetCallback(() => {
-    removeEdges(edges.value);
+    const newNodes = graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>,
+        newEdges = graph.value.elements.filter(e => isEdge(e)) as Array<GraphEdge>;
+
     removeNodes(nodes.value);
 
-    addNodes(graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>);
-    addEdges(graph.value.elements.filter(e => isEdge(e)) as Array<GraphEdge>);
+    // this is necessary due to an issue where the elements are not removed properly when they have the same node ID
+    nextTick(() => {
+        addNodes(newNodes);
+        addEdges(newEdges);
+    });
 });
 
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
