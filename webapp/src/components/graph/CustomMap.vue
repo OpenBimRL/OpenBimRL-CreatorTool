@@ -5,7 +5,6 @@ import { ref } from 'vue';
 import { getMinimapNodeColor } from './config';
 
 const scaled = ref(false);
-
 </script>
 
 <template>

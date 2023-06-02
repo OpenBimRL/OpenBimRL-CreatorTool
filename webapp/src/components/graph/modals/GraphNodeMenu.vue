@@ -3,10 +3,7 @@
         class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-slate-50 z-50 transition-transform"
         :style="`width: ${width}px`"
     >
-        <button
-            class="absolute border-2 h-full cursor-col-resize"
-            @mousedown="mouseResizeStart"
-        />
+        <button class="absolute border-2 h-full cursor-col-resize" @mousedown="mouseResizeStart" />
         <form>
             <div class="border rounded overflow-hidden flex">
                 <label for="search-lib" class="p-2 text-sm cursor-text bg-slate-100 border-r">

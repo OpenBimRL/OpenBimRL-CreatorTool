@@ -6,7 +6,7 @@
             </p>
         </div>
         <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
-            <p class="text-center" :class="{'text-blue-600': hovering}">
+            <p class="text-center" :class="{ 'text-blue-600': hovering }">
                 <span class="pr-2" style="display: ruby">{{ data.label }}</span>
             </p>
             <CustomHandle

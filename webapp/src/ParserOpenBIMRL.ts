@@ -281,7 +281,6 @@ export default class Parser {
      * @returns
      */
     parse(data: any, opts: ParseOptions): GraphJSON {
-
         let bimRule = data['BIMRule'];
         let precalculations = bimRule['Precalculations'];
         let ns = precalculations['Node'];

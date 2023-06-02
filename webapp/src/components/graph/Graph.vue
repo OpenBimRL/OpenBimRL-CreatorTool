@@ -6,9 +6,9 @@ import { Edge, GraphEdge, GraphNode, isEdge, isNode, useVueFlow, VueFlow } from 
 import { inject, nextTick, ref, watch } from 'vue';
 import { Dialog } from '../modals';
 import { multiSelectKeys, nodeTypes } from './config';
+import CustomMap from './CustomMap.vue';
 import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
 import type { CustomNode, GraphInject } from './Types';
-import CustomMap from './CustomMap.vue';
 
 const dialog = ref<typeof Dialog | null>(null);
 const selectedNode = ref<number>(0);
