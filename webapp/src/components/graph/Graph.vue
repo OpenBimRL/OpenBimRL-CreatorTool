@@ -1,15 +1,14 @@
-<!-- Flowchart.vue -->
 <script lang="ts" setup>
 import { graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { Edge, GraphEdge, GraphNode, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
-import { nextTick } from 'vue';
-import { inject, ref, watch } from 'vue';
+import { inject, nextTick, ref, watch } from 'vue';
 import { Dialog } from '../modals';
 import { multiSelectKeys, nodeTypes } from './config';
 import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
 import type { CustomNode, GraphInject } from './Types';
+import CustomMap from './CustomMap.vue';
 
 const dialog = ref<typeof Dialog | null>(null);
 const selectedNode = ref<number>(0);
@@ -20,6 +19,9 @@ const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) 
 
 const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes } =
     useVueFlow({
+        maxZoom: 2,
+        minZoom: 0.1,
+        fitViewOnInit: true,
         edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
         nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
         nodeTypes: nodeTypes,
@@ -56,6 +58,7 @@ const onDrop = DropEvent(vueFlowRef, project, addNodes);
     >
         <Background :variant="BackgroundVariant.Lines" :pattern-color="'#efefef'" :size="0.8" />
         <Controls />
+        <CustomMap />
         <Dialog ref="dialog" @close="">
             <template v-slot:title>Change Input</template>
             <template v-slot:content>
@@ -71,3 +74,14 @@ const onDrop = DropEvent(vueFlowRef, project, addNodes);
         </Dialog>
     </VueFlow>
 </template>
+
+<style>
+/* import the required styles */
+@import '@vue-flow/core/dist/style.css';
+
+/* import the default theme (optional) */
+@import '@vue-flow/core/dist/theme-default.css';
+
+/* import control styles */
+@import '@vue-flow/controls/dist/style.css';
+</style>

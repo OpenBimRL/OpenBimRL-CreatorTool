@@ -1,5 +1,5 @@
 import json from '@/assets/graph/defaultGraphExample.json';
-import { Edge, NodeTypesObject } from '@vue-flow/core';
+import { Edge, GraphNode, NodeTypesObject } from '@vue-flow/core';
 import { markRaw, Ref, ref } from 'vue';
 import { FunctionNode, InputType, RuleIdentifier } from './nodes';
 import type { CustomNode, GraphInject, GraphJSON, GraphResetCallback } from './Types';
@@ -30,4 +30,17 @@ export function initialGraph(): GraphInject {
     };
 
     return { graph, updateGraph, registerResetCallback, resetGraph };
+}
+
+export function getMinimapNodeColor(node: GraphNode): string {
+    switch (node.type) {
+        case 'functionType':
+            return 'cyan';
+        case 'inputType':
+            return 'khaki';
+        case 'ruleIdentifier':
+            return 'lightCoral';
+        default:
+            return '#aaa';
+    }
 }
