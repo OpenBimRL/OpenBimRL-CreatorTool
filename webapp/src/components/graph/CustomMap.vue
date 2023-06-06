@@ -16,8 +16,8 @@ const scaled = ref(false);
         :zoom-step="0.5"
         :node-color="getMinimapNodeColor"
         :node-stroke-color="'black'"
-        :class="{ 'scale-100': scaled }"
-        class="mt-20 scale-50 transition-transform"
+        :class="{ 'scale-100': scaled, 'scale-50': !scaled }"
+        class="mt-20 transition-transform"
         @mouseenter="scaled = true"
         @mouseleave="scaled = false"
     />
