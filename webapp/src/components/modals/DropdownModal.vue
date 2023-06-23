@@ -10,7 +10,7 @@
                     @submit.prevent="modalItems[item]"
                     class="border hover:bg-slate-200 hover:border-slate-400"
                 >
-                    <button class="cursor-pointer px-4">{{ item }}</button>
+                    <button class="cursor-pointer px-4 bg-transparent">{{ item }}</button>
                 </form>
             </div>
         </dialog>
