@@ -1,3 +1,3 @@
-export { Graph as Graph } from './graph';
+export { Graph } from './graph';
 export { default as Help } from './Help.vue';
-export { default as SideOverlay } from './SideOverlay.vue';
+export { SideOverlay } from './model_check_view';
