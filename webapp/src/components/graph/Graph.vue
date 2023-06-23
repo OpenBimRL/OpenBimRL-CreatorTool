@@ -1,3 +1,29 @@
+<template>
+    <VueFlow
+        @connect="onConnect"
+        @node-double-click="onNodeDoubleClick"
+        @dragover.prevent="onDragOver"
+        @drop="onDrop"
+    >
+        <Background :variant="BackgroundVariant.Lines" :pattern-color="'#efefef'" :size="0.8" />
+        <Controls />
+        <CustomMap />
+        <Dialog ref="dialog" @close="">
+            <template v-slot:title>Change Input</template>
+            <template v-slot:content>
+                <input
+                    class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
+                    type="text"
+                    v-if="nodes[selectedNode]"
+                    v-model.value="nodes[selectedNode].data[nodeDataIndex]"
+                />
+            </template>
+            <template v-slot:accept_button_text>Change Input</template>
+            <template v-slot:reject_button_text>Revert</template>
+        </Dialog>
+    </VueFlow>
+</template>
+
 <script lang="ts" setup>
 import { graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
@@ -48,32 +74,6 @@ const onNodeDoubleClick = DoubleClickEvent(nodes, selectedNode, nodeDataIndex, d
 const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);
 </script>
-
-<template>
-    <VueFlow
-        @connect="onConnect"
-        @node-double-click="onNodeDoubleClick"
-        @dragover.prevent="onDragOver"
-        @drop="onDrop"
-    >
-        <Background :variant="BackgroundVariant.Lines" :pattern-color="'#efefef'" :size="0.8" />
-        <Controls />
-        <CustomMap />
-        <Dialog ref="dialog" @close="">
-            <template v-slot:title>Change Input</template>
-            <template v-slot:content>
-                <input
-                    class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
-                    type="text"
-                    v-if="nodes[selectedNode]"
-                    v-model.value="nodes[selectedNode].data[nodeDataIndex]"
-                />
-            </template>
-            <template v-slot:accept_button_text>Change Input</template>
-            <template v-slot:reject_button_text>Revert</template>
-        </Dialog>
-    </VueFlow>
-</template>
 
 <style>
 /* import the required styles */

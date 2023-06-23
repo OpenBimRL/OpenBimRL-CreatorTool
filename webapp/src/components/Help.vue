@@ -1,13 +1,3 @@
-<script setup lang="ts">
-import { XMarkIcon } from '@heroicons/vue/24/solid';
-
-import GithubMark from '@/assets/logos/github-mark.svg';
-import LinkedInLogo from '@/assets/logos/linkedin_logo.png';
-import TwitterLogo from '@/assets/logos/twitter_logo.svg';
-
-const date = new Date();
-</script>
-
 <template>
     <aside class="fixed right-0 top-0 z-50 h-full w-1/5 bg-gray-100 px-3 py-2">
         <div class="flex justify-between">
@@ -78,6 +68,16 @@ const date = new Date();
         </div>
     </aside>
 </template>
+
+<script setup lang="ts">
+import { XMarkIcon } from '@heroicons/vue/24/solid';
+
+import GithubMark from '@/assets/logos/github-mark.svg';
+import LinkedInLogo from '@/assets/logos/linkedin_logo.png';
+import TwitterLogo from '@/assets/logos/twitter_logo.svg';
+
+const date = new Date();
+</script>
 
 <style scoped>
 td:first-child {

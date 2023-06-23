@@ -1,3 +1,64 @@
+<template>
+    <nav class="fixed z-10 w-full bg-gray-300 py-2 pl-8 text-white">
+        <ul class="mt-1 flex gap-3">
+            <li>
+                <button class="nav-button" @click.prevent="dialog?.open()">
+                    <span>New</span>
+                </button>
+                <Dialog
+                    ref="dialog"
+                    accept_button_class="bg-red-600"
+                    reject_button_class="bg-gray-500"
+                    @close="newGraph"
+                >
+                    <template v-slot:title>Creating new Project</template>
+                    <template v-slot:content>
+                        <p>Are you sure to create a new project?</p>
+                        <p>Unsaved changes will be lost.</p>
+                    </template>
+                    <template v-slot:accept_button_text>Continue</template>
+                    <template v-slot:reject_button_text>Go Back</template>
+                </Dialog>
+            </li>
+            <li>
+                <div class="flex gap-1">
+                    <input
+                        class="hidden"
+                        type="file"
+                        ref="uploadXMLInput"
+                        accept="application/xml"
+                        @change="onXMLUpload"
+                    />
+                    <input
+                        class="hidden"
+                        type="file"
+                        ref="uploadJSONInput"
+                        accept="application/json"
+                        @change="onJSONUpload"
+                    />
+                    <DropdownButton :modal-items="uploadModalItems">
+                        <span>Upload</span>
+                    </DropdownButton>
+                    <DropdownButton :modal-items="downloadModalItems">
+                        <span>Download</span>
+                    </DropdownButton>
+                </div>
+            </li>
+            <li>
+                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">
+                    Create Nodes
+                </button>
+            </li>
+            <li>
+                <button class="colored nav-button bg-red-600">Create Group</button>
+            </li>
+            <li>
+                <button class="nav-button" @click="$emit('showHelp')">Help?</button>
+            </li>
+        </ul>
+    </nav>
+</template>
+
 <script setup lang="ts">
 import { graphInjectionKey } from '@/keys';
 import Parser from '@/ParserOpenBIMRL';
@@ -75,67 +136,6 @@ const newGraph = () => {
     resetGraph();
 };
 </script>
-
-<template>
-    <nav class="fixed z-10 w-full bg-gray-300 py-2 pl-8 text-white">
-        <ul class="mt-1 flex gap-3">
-            <li>
-                <button class="nav-button" @click.prevent="dialog?.open()">
-                    <span>New</span>
-                </button>
-                <Dialog
-                    ref="dialog"
-                    accept_button_class="bg-red-600"
-                    reject_button_class="bg-gray-500"
-                    @close="newGraph"
-                >
-                    <template v-slot:title>Creating new Project</template>
-                    <template v-slot:content>
-                        <p>Are you sure to create a new project?</p>
-                        <p>Unsaved changes will be lost.</p>
-                    </template>
-                    <template v-slot:accept_button_text>Continue</template>
-                    <template v-slot:reject_button_text>Go Back</template>
-                </Dialog>
-            </li>
-            <li>
-                <div class="flex gap-1">
-                    <input
-                        class="hidden"
-                        type="file"
-                        ref="uploadXMLInput"
-                        accept="application/xml"
-                        @change="onXMLUpload"
-                    />
-                    <input
-                        class="hidden"
-                        type="file"
-                        ref="uploadJSONInput"
-                        accept="application/json"
-                        @change="onJSONUpload"
-                    />
-                    <DropdownButton :modal-items="uploadModalItems">
-                        <span>Upload</span>
-                    </DropdownButton>
-                    <DropdownButton :modal-items="downloadModalItems">
-                        <span>Download</span>
-                    </DropdownButton>
-                </div>
-            </li>
-            <li>
-                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">
-                    Create Nodes
-                </button>
-            </li>
-            <li>
-                <button class="colored nav-button bg-red-600">Create Group</button>
-            </li>
-            <li>
-                <button class="nav-button" @click="$emit('showHelp')">Help?</button>
-            </li>
-        </ul>
-    </nav>
-</template>
 
 <style>
 button.nav-button {

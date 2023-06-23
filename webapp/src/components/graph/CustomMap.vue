@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { PanelPosition } from '@vue-flow/core';
-import { MiniMap } from '@vue-flow/minimap';
-import { ref } from 'vue';
-import { getMinimapNodeColor } from './config';
-
-const scaled = ref(false);
-</script>
-
 <template>
     <MiniMap
         ref="map"
@@ -22,6 +13,15 @@ const scaled = ref(false);
         @mouseleave="scaled = false"
     />
 </template>
+
+<script setup lang="ts">
+import { PanelPosition } from '@vue-flow/core';
+import { MiniMap } from '@vue-flow/minimap';
+import { ref } from 'vue';
+import { getMinimapNodeColor } from './config';
+
+const scaled = ref(false);
+</script>
 
 <style>
 @import '@vue-flow/minimap/dist/style.css';

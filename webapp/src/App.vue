@@ -1,3 +1,24 @@
+<template>
+    <Navigation @showHelp="toggleModal(Modal.Help)" @showNodeLib="toggleModal(Modal.NodeLib)" />
+    <SideOverlay
+        :class="{ open: modals[Modal.SideOverlay] }"
+        @open="toggleModal(Modal.SideOverlay)"
+        @close="toggleModal(Modal.SideOverlay)"
+    />
+    <Help
+        :class="{ 'translate-x-full': !modals[Modal.Help] }"
+        class="transition-transform"
+        @close="toggleModal(Modal.Help)"
+    />
+    <GraphNodeMenu
+        :class="{ 'translate-x-full': !modals[Modal.NodeLib] }"
+        class="transition-transform"
+    />
+    <main @click="closeAllModals()">
+        <Graph class="h-screen" />
+    </main>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Graph, Help, SideOverlay } from './components';
@@ -24,26 +45,5 @@ const closeAllModals = () => {
     for (const [, index] of Object.entries(Modal)) modals.value[index as Modal] = false;
 };
 </script>
-
-<template>
-    <Navigation @showHelp="toggleModal(Modal.Help)" @showNodeLib="toggleModal(Modal.NodeLib)" />
-    <SideOverlay
-        :class="{ open: modals[Modal.SideOverlay] }"
-        @open="toggleModal(Modal.SideOverlay)"
-        @close="toggleModal(Modal.SideOverlay)"
-    />
-    <Help
-        :class="{ 'translate-x-full': !modals[Modal.Help] }"
-        class="transition-transform"
-        @close="toggleModal(Modal.Help)"
-    />
-    <GraphNodeMenu
-        :class="{ 'translate-x-full': !modals[Modal.NodeLib] }"
-        class="transition-transform"
-    />
-    <main @click="closeAllModals()">
-        <Graph class="h-screen" />
-    </main>
-</template>
 
 <style scoped></style>
