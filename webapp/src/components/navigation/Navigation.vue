@@ -1,5 +1,5 @@
 <template>
-    <nav class="fixed z-10 w-full bg-gray-300 py-2 pl-8 text-white">
+    <nav class="fixed z-10 w-full bg-default-light py-2 pl-8 text-primary">
         <ul class="mt-1 flex gap-3">
             <li>
                 <button class="nav-button" @click.prevent="dialog?.open()">
@@ -45,12 +45,12 @@
                 </div>
             </li>
             <li>
-                <button class="colored nav-button bg-blue-600" @click="$emit('showNodeLib')">
+                <button class="colored nav-button bg-ease-blue" @click="$emit('showNodeLib')">
                     Create Nodes
                 </button>
             </li>
             <li>
-                <button class="colored nav-button bg-red-600">Create Group</button>
+                <button class="colored nav-button bg-danger">Create Group</button>
             </li>
             <li>
                 <button class="nav-button" @click="$emit('showHelp')">Help?</button>
@@ -143,6 +143,6 @@ button.nav-button {
 }
 
 button.nav-button:not(.colored) {
-    @apply bg-gray-500;
+    @apply bg-default-dark;
 }
 </style>

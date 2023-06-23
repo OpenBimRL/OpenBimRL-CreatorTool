@@ -19,7 +19,7 @@
                         @dragstart="onDragStart($event, item)"
                         draggable="true"
                     >
-                        <ExclamationCircleIcon class="w-7" />
+                        <ExclamationCircleIcon class="w-7 text-secondary" />
                     </button>
                     <template #content>
                         <div class="bg-white rounded border m-2" data-popover="up">

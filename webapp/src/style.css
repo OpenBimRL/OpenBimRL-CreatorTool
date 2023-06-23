@@ -11,4 +11,12 @@
     .anchor > * {
         visibility: visible;
     }
+
+    button {
+        @apply text-primary;
+    }
+
+    button.bg-transparent {
+        @apply text-secondary;
+    }
 }

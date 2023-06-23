@@ -1,6 +1,6 @@
 <template>
     <aside
-        class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-slate-50 z-50 transition-transform"
+        class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-default-overlay z-50 transition-transform"
         :style="`width: ${width}px`"
     >
         <button class="absolute border-2 h-full cursor-col-resize" @mousedown="mouseResizeStart" />
@@ -22,7 +22,7 @@
                     <span>Icons</span>
                 </label>
                 <input
-                    class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-blue-600 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-200 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-green-600 checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s]"
+                    class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-ease-blue before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-200 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-success checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s]"
                     type="checkbox"
                     role="switch"
                     id="icon-list__switch"
@@ -40,7 +40,7 @@
                         class="aria-selected:bg-white p-2 border-r last:border-r-0"
                         :aria-selected="libname === currentSelection"
                     >
-                        <button class="text-sm" @click="currentSelection = libname">
+                        <button class="text-sm bg-transparent" @click="currentSelection = libname">
                             <span>{{ libname }}</span>
                         </button>
                     </li>
@@ -82,7 +82,7 @@
                 </div>
                 <button
                     type="button"
-                    class="bg-green-500 h-full aspect-square flex rounded justify-center items-center text-white"
+                    class="bg-success h-full aspect-square flex rounded justify-center items-center"
                     @click="createLibrary"
                 >
                     <PlusIcon class="w-9" />
@@ -90,7 +90,7 @@
             </form>
 
             <div class="border rounded bg-gray-600">
-                <button class="w-full text-white p-1" @click="handleUpload">
+                <button class="w-full p-1" @click="handleUpload">
                     <span>Upload Library</span>
                 </button>
                 <input
