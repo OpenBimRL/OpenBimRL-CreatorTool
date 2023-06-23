@@ -63,7 +63,14 @@ export interface Rule {
 
 export type RuleSet = Array<Rule>;
 
-export type ResultSets = Array<any>;
+export type ResultSets = Array<ResultSet>;
+export interface ResultSet {
+    elements: string;
+    filter: string;
+    label: string;
+    name: string;
+    type: string;
+}
 
 export interface GraphJSON {
     elements: Array<CustomNode | Edge>;
