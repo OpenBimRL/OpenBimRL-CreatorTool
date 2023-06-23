@@ -36,6 +36,7 @@ New client side implementations can be added by writing code in: /webapp/src/
 In order to bundle Vue components into a single app.js file, the code has to be compiled using vite. The files will be stored in */webapp/dist/*. These files are used by the index.html file. To generate the compiled files, simply run following command:
 
 ```shell
+cd webapp
 npm run build
 ```
 
