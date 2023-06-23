@@ -1,7 +1,7 @@
 <template>
-    <div class="border-2 rounded overflow-hidden">
+    <div class="border-2 rounded overflow-hidden" :class="{'bg-default-overlay': open}">
         <button
-            class="grid w-full h-12 bg-default-overlay hover:bg-default-contrast"
+            class="grid w-full h-12 bg-transparent hover:bg-default-contrast"
             :class="{'border-b-2': open}"
             @click="open = !open"
         >
