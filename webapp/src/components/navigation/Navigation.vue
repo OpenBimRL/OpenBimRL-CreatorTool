@@ -69,6 +69,8 @@ import type { GraphInject, ParseOptions } from '../graph/Types';
 import { Dialog, DialogReturnValue } from '../modals';
 import type { DropdownProps } from './Types';
 
+defineEmits(['showNodeLib', 'showHelp']);
+
 const { graph, resetGraph } = inject(graphInjectionKey) as GraphInject;
 
 const downloadFile = (filedata: string, filename: string) => {

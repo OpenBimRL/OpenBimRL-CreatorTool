@@ -76,6 +76,8 @@ import GithubMark from '@/assets/logos/github-mark.svg';
 import LinkedInLogo from '@/assets/logos/linkedin_logo.png';
 import TwitterLogo from '@/assets/logos/twitter_logo.svg';
 
+defineEmits(['close']);
+
 const date = new Date();
 </script>
 
