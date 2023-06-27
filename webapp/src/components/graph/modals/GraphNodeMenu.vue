@@ -5,15 +5,14 @@
     >
         <button class="absolute border-2 h-full cursor-col-resize" @mousedown="mouseResizeStart" />
         <form>
-            <div class="border rounded overflow-hidden flex">
-                <label for="search-lib" class="p-2 text-sm cursor-text bg-slate-100 border-r">
-                    <span>Search</span>
-                </label>
-                <input id="search-lib" class="w-full pl-1" v-model="search" />
-                <span class="relative">
-                    <MagnifyingGlassIcon class="text-gray-400 w-6 absolute top-2 right-2" />
-                </span>
-            </div>
+            <InputField v-model="search" placeholder="ifc.get...">
+                <span>Search</span>
+                <template v-slot:icon>
+                    <span class="relative">
+                        <MagnifyingGlassIcon class="text-gray-400 w-6 absolute top-2 right-2" />
+                    </span>
+                </template>
+            </InputField>
         </form>
 
         <div class="flex flex-col h-full max-w-full">
@@ -105,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import { InputField } from '@/components';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { ref } from 'vue';
 import type { RuleSet } from '../Types';
