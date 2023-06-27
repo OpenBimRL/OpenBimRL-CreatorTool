@@ -31,26 +31,32 @@ export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorTy
 
 export type CustomNode = Node<NodeData<unknown, unknown>>;
 
-export type Operator = 'equals' | 'or' | 'and';
+export type RuleSetOperator = 'and' | 'or' | 'xor';
 
-export interface RulesOrRuleSet {
-    label: string;
-    type: string;
-    quantifier: string;
-    operator: Operator;
-    operand1: string;
-    operand2: string;
-    rulesOrRuleSets: RulesOrRuleSets;
+export interface Rule {}
+
+export interface RuleSetElement {
+    color: string;
+    id: string;
+    name: string;
+    items: Array<CustomNode>;
 }
 
-export type RulesOrRuleSets = Array<RulesOrRuleSet>;
+export interface RuleSet {
+    id: string;
+    label: string;
+    operator: RuleSetOperator;
+    rulesOrRuleSets: Array<Rule | RuleSet>;
+}
+
+export type RulesOrRuleSets = Array<Rule | RuleSet>;
 
 export type SubChecks = Array<SubCheck>;
 
 export interface SubCheck {
     label: string;
     name: string;
-    applicability: Array<never>;
+    applicability: RulesOrRuleSets;
     rulesOrRuleSets: RulesOrRuleSets;
     resultSets: [];
     [key: string]: any;
