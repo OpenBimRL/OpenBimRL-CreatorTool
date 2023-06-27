@@ -45,14 +45,16 @@ export interface RulesOrRuleSet {
 
 export type RulesOrRuleSets = Array<RulesOrRuleSet>;
 
-export type SubChecks = Array<{
+export type SubChecks = Array<SubCheck>;
+
+export interface SubCheck {
     label: string;
     name: string;
     applicability: Array<never>;
     rulesOrRuleSets: RulesOrRuleSets;
     resultSets: [];
     [key: string]: any;
-}>;
+}
 
 export interface Rule {
     id: string;
