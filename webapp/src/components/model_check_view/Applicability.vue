@@ -3,18 +3,12 @@
         <p class="text-center py-4 text-xl">
             <span>Applicability</span>
         </p>
-        <div
-            v-show="!check.applicability.length"
-            class="dropzone border-2 border-dashed border-default-contrast m-2"
-        >
-            <p class="text-center py-4 text-lg text-default-dark">
-                <strong>Drop Here</strong>
-            </p>
-        </div>
+        <AddElement :kinds="[{ label: 'rule Set', event: 'ruleSet' }, 'rule']" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { AddElement } from './internal_components';
 import type { SubCheck } from './Types';
 const props = defineProps<{ check: SubCheck }>();
 </script>

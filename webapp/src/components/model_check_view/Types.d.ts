@@ -1,1 +1,1 @@
-export type { GraphInject, SubCheck, RulesOrRuleSets } from '../graph/Types';
+export type { GraphInject, SubCheck, RulesOrRuleSets, ResultSet, CustomNode } from '../graph/Types';
