@@ -21,9 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Graph, Help, SideOverlay } from './components';
-import GraphNodeMenu from './components/graph/modals/GraphNodeMenu.vue';
-import Navigation from './components/navigation';
+import { Graph, GraphNodeMenu, Help, Navigation, SideOverlay } from './components';
 
 enum Modal {
     Help,
