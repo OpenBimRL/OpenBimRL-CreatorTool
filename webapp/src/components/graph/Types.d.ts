@@ -1,6 +1,13 @@
-import type { Edge, Node } from '@vue-flow/core';
+import type { Edge,Node } from '@vue-flow/core';
 import type { Ref } from 'vue';
 
+export interface GraphJSON {
+    elements: Array<CustomNode | Edge>;
+    subChecks: SubChecks;
+    resultSets: ResultSets;
+}
+
+// Nodes
 export interface NodeData<InputConnectorType = unknown, OutputConnectorType = unknown> {
     name: string;
     icon: string;
@@ -31,20 +38,23 @@ export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorTy
 
 export type CustomNode = Node<NodeData<unknown, unknown>>;
 
+// Rules and RuleSets
+
 export type RuleSetOperator = 'and' | 'or' | 'xor';
+export type RuleOrRuleSetType = 'rule' | 'ruleSet';
 
-export interface Rule {}
-
-export interface RuleSetElement {
-    color: string;
-    id: string;
-    name: string;
-    items: Array<CustomNode>;
+export interface Rule {
+    label: string;
+    operand1: string;
+    operand2: string;
+    operator: string;
+    quantifier: string;
+    type: RuleOrRuleSetType;
 }
 
 export interface RuleSet {
-    id: string;
     label: string;
+    type: RuleOrRuleSetType;
     operator: RuleSetOperator;
     rulesOrRuleSets: Array<Rule | RuleSet>;
 }
@@ -62,15 +72,6 @@ export interface SubCheck {
     [key: string]: any;
 }
 
-export interface Rule {
-    id: string;
-    name: string;
-    color: string;
-    items: Array<CustomNode>;
-}
-
-export type RuleSet = Array<Rule>;
-
 export type ResultSets = Array<ResultSet>;
 export interface ResultSet {
     elements: string;
@@ -78,12 +79,6 @@ export interface ResultSet {
     label: string;
     name: string;
     type: string;
-}
-
-export interface GraphJSON {
-    elements: Array<CustomNode | Edge>;
-    subChecks: SubChecks;
-    resultSets: ResultSets;
 }
 
 export interface GraphInject {
