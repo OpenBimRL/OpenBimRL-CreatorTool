@@ -68,7 +68,7 @@ export interface SubCheck {
     name: string;
     applicability: RulesOrRuleSets;
     rulesOrRuleSets: RulesOrRuleSets;
-    resultSets: [];
+    resultSets: Array<unknown>;
     [key: string]: any;
 }
 
