@@ -3,16 +3,15 @@
         <p class="text-center text-xl py-4">
             <span>Rules and RuleSets</span>
         </p>
-        <div class="m-2 border-2">
-            
-        </div>
+        <RuleOrRuleSet :rules-and-rule-sets="rulesAndRuleSets" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { RulesOrRuleSets } from './Types';
+import RuleOrRuleSet from './RuleOrRuleSet.vue';
+import { RulesOrRuleSets } from '../Types';
 
-const props = defineProps<{rulesAndRuleSets: RulesOrRuleSets}>()
+const props = defineProps<{ rulesAndRuleSets: RulesOrRuleSets }>();
 </script>
 
 <style scoped></style>
