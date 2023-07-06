@@ -107,7 +107,7 @@
 import { InputField } from '@/components';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { ref } from 'vue';
-import type { RuleSetElement } from '../Types';
+import type { ImportedRuleSet, RuleSetElement } from './Types';
 import GraphItemGroup from './GraphItemGroup.vue';
 
 const width = ref(window.innerWidth / 4);
@@ -127,10 +127,6 @@ const mouseResizeStop = () => {
 };
 
 const showLibsAsList = ref(false);
-
-interface ImportedRuleSet {
-    default: Array<RuleSetElement>;
-}
 
 const importedLibraries: Record<string, ImportedRuleSet> = import.meta.glob(
     '@/assets/graph/libs/*.json',

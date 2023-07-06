@@ -47,10 +47,10 @@
 import { Cog8ToothIcon, ExclamationCircleIcon } from '@heroicons/vue/24/solid';
 import { computed } from 'vue';
 import Popper from 'vue3-popper';
-import { Rule } from '../Types';
+import { RuleSetElement } from './Types';
 
 interface Props {
-    group: Rule;
+    group: RuleSetElement;
     search: string;
     showAsList?: boolean;
 }
