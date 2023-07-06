@@ -1,6 +1,6 @@
 <template>
     <aside
-        class="flex flex-grow-0 fixed inset-y-16 right-4 z-10 w-10 rounded border bg-default-overlay bg-opacity-90 shadow-md transition-all duration-200 selection:shadow-xl overflow-scroll"
+        class="flex flex-grow-0 fixed inset-y-16 right-4 z-40 w-10 rounded border bg-default-overlay bg-opacity-90 shadow-md transition-all duration-200"
     >
         <button
             class="relative h-full w-10 transition-colors duration-300 bg-default-light hover:bg-default-dark hover:bg-opacity-40 flex-shrink-0 text-secondary rounded"
@@ -9,7 +9,7 @@
             <div class="absolute -left-2 block -rotate-90 text-xl" />
         </button>
 
-        <div class="content flex flex-col w-full h-full transition-opacity pr-4 pl-2">
+        <div class="content flex flex-col w-full h-full transition-opacity pr-4 pl-2 overflow-hidden">
             <span class="sr-only">Model Check View</span>
             <div class="w-full h-full p-2">
                 <ResultSets />
@@ -47,5 +47,9 @@ aside.open > button {
 
 aside:not(.open) > button ~ div.content {
     opacity: 0;
+}
+
+aside > div.content {
+    @apply overflow-auto;
 }
 </style>
