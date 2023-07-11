@@ -316,7 +316,7 @@ export default class Parser {
                     }
                 }
 
-                let outputHandles: any[] = [];
+                let outputHandles: Array<any> = [];
                 if (typeof n['Outputs'] !== 'undefined') {
                     let ohs = n['Outputs']['Output'];
 
@@ -495,9 +495,9 @@ export default class Parser {
                     let subCheck = subChecksArr[index];
                     let subCheckAttributes = subCheck._attributes ? subCheck._attributes : subCheck; //check if information are packaged as _attributes
 
-                    let newApplicabilityList: any[] = [];
-                    let newRulesOrRuleSetsList: any[] = [];
-                    let newResultSetsList: any[] = [];
+                    let newApplicabilityList: Array<any> = [];
+                    let newRulesOrRuleSetsList: Array<any> = [];
+                    let newResultSetsList: Array<any> = [];
 
                     let subCheckItem = {
                         label: uuidv4(),
