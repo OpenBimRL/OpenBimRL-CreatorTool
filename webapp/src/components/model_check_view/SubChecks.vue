@@ -38,7 +38,7 @@ import { InputField } from '@/components';
 import { graphInjectionKey } from '@/keys';
 import { ArrowDownIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { inject, ref } from 'vue';
-import { AddElement, Applicability, Expandable, RulesAndRuleSets } from './internal_components';
+import { AddElement, Applicability, Expandable, RulesAndRuleSets } from '.';
 import type { GraphInject } from './Types';
 
 const json = inject(graphInjectionKey) as GraphInject;

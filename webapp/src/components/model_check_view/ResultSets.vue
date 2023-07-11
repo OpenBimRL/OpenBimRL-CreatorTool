@@ -69,7 +69,7 @@ import { InputField } from '@/components';
 import { graphInjectionKey } from '@/keys';
 import { ArrowDownIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { computed, inject, ref } from 'vue';
-import { AddElement, Expandable } from './internal_components';
+import { AddElement, Expandable } from '.';
 import type { CustomNode, GraphInject, ResultSet } from './Types';
 
 const json = inject(graphInjectionKey) as GraphInject;

@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ResultSets, SubChecks } from './internal_components';
+import { ResultSets, SubChecks } from '.';
 
 defineEmits(['open']);
 </script>

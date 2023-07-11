@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { AddElement } from './internal_components';
+import { AddElement } from '.';
 import type { SubCheck } from './Types';
 const props = defineProps<{ check: SubCheck }>();
 </script>
