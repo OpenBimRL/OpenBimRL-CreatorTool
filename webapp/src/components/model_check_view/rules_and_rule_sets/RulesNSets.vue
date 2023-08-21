@@ -1,9 +1,11 @@
 <template>
-    <div class="border-2 mt-2">
+    <div class="border-2 mt-2 bg-default-contrast">
         <p class="text-center text-xl py-4">
             <span>Rules and RuleSets</span>
         </p>
-        <RuleOrRuleSet :rules-and-rule-sets="rulesAndRuleSets" />
+        <div v-for="ruleOrRuleSet in rulesAndRuleSets">
+            <RuleOrRuleSet :={ruleOrRuleSet} />
+        </div>
     </div>
 </template>
 

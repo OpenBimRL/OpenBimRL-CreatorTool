@@ -1,16 +1,16 @@
 import { createUniqueID } from '@/ParserOpenBIMRL';
 import {
-    AddEdges,
-    AddNodes,
-    Connection,
-    Edge,
-    GraphEdge,
-    GraphNode,
-    isNode,
-    Node,
-    NodeMouseEvent,
-    Project,
-    RemoveEdges,
+AddEdges,
+AddNodes,
+Connection,
+Edge,
+GraphEdge,
+GraphNode,
+isNode,
+Node,
+NodeMouseEvent,
+Project,
+RemoveEdges,
 } from '@vue-flow/core';
 import type { Ref } from 'vue';
 import { Dialog } from '../modals';
@@ -35,9 +35,11 @@ export function ConnectEvent(
         )
             return;
 
-        const existingConnection = edges.value.find(element => element.target == edge.target);
+        // const existingConnection = edges.value.find(
+        //     element => element.targetHandle == edge.targetHandle,
+        // );
 
-        if (existingConnection) removeEdges([existingConnection]);
+        // if (existingConnection) removeEdges([existingConnection]);
 
         addEdges([edge]);
     };
