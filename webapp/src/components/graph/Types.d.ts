@@ -1,5 +1,6 @@
-import type { Edge,Node } from '@vue-flow/core';
+import type { Edge, Node } from '@vue-flow/core';
 import type { Ref } from 'vue';
+import { RuleOperator, RuleOrRuleSetType, RuleQuantifier, RuleSetOperator } from './enums';
 
 export interface GraphJSON {
     elements: Array<CustomNode | Edge>;
@@ -40,15 +41,12 @@ export type CustomNode = Node<NodeData<unknown, unknown>>;
 
 // Rules and RuleSets
 
-export type RuleSetOperator = 'and' | 'or' | 'xor';
-export type RuleOrRuleSetType = 'rule' | 'ruleSet';
-
 export interface Rule {
     label: string;
     operand1: string;
     operand2: string;
-    operator: string;
-    quantifier: string;
+    operator: RuleOperator;
+    quantifier: RuleQuantifier;
     type: RuleOrRuleSetType;
 }
 
