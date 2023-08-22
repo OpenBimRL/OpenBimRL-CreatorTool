@@ -1,5 +1,5 @@
 import { createUniqueID } from '@/ParserOpenBIMRL';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { RuleSet, RulesOrRuleSets, SubChecks } from '../graph/Types';
 import { TreeData, TreeNode, TreeNodeState } from './Tree';
 
@@ -51,7 +51,7 @@ export const convert = (data: SubChecks): TreeData => {
 
 const convertRecursive = (data: RulesOrRuleSets): Array<TreeNode> => {
     return data.map(element => ({
-        text: element.label,
+        text: computed(() => element.label),
         id: createUniqueID(),
         state: structuredClone(defaultState),
         data: reactive(element),

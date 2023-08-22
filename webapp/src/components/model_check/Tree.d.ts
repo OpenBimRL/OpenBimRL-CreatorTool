@@ -1,3 +1,4 @@
+import { Ref } from 'vue';
 import { Rule, RuleSet } from '../graph/Types';
 
 export interface TreeData {
@@ -5,7 +6,7 @@ export interface TreeData {
 }
 
 export interface TreeNode {
-    text: string;
+    text: string | Ref<string>;
     state: TreeNodeState;
     nodes?: Array<TreeNode>;
     id: number | string;

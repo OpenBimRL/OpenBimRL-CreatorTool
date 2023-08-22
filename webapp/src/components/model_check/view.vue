@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { graphInjectionKey } from '@/keys';
-import { inject, ref } from 'vue';
+import { inject, reactive, ref } from 'vue';
 import { GraphInject, ResultSets, RuleSet, SubChecks } from '../graph/Types';
 import { convert } from './TreeConverter';
 import { ModelCheckProps } from './Types';
@@ -87,7 +87,7 @@ const selectNode = (node: TreeNode) => {
     if (node.selectable === false) return;
     tree.value.selectNode(node.id);
 
-    currentRule.value = node;
+    currentRule.value = reactive(node);
 };
 
 const treeOptions = treeOptionsFunc(currentRule, tree);
