@@ -2,6 +2,7 @@ export enum RuleSetOperator {
     AND = 'and',
     OR = 'or',
     XOR = 'xor',
+    NAND = 'nand',
 }
 export enum RuleOrRuleSetType {
     RULE = 'rule',
@@ -12,11 +13,15 @@ export enum RuleQuantifier {
     EXISTS = 'exists',
     ALL = 'all',
     NOTEXISTS = 'notexists',
+    NOTALL = 'notall',
 }
 
 export enum RuleOperator {
     EQUALS = 'equals',
-    INCLUDES = 'includes',
-    GREATERTHAN = 'greaterthan',
-    LESSOREQUALS = 'lessorequals',
+    // INCLUDES = 'includes',
+    GREATER_THAN = 'greaterthan',
+    GREATER_OR_EQUALS = 'greaterorequals',
+    LESSOR_EQUALS = 'lessorequals',
+    LESS_THAN = 'lessthan',
+    NOT_EQUALS = 'notequals',
 }
