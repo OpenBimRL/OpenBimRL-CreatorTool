@@ -1,6 +1,13 @@
 <template>
-    <div class="border rounded overflow-hidden flex w-full">
-        <label :for="key" class="p-2 text-sm cursor-text bg-slate-100 border-r">
+    <div
+        class="flex w-full rounded overflow-hidden border dark:border-default-medium"
+        :class="focused ? ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'] : []/* { 'border-opacity-20': focused, 'border-default-dark': focused } */"
+    >
+        <label
+            :for="key"
+            class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
+            
+        >
             <slot />
         </label>
         <input
@@ -8,15 +15,21 @@
             :placeholder="placeholder || '...'"
             :value="modelValue"
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-            class="w-full pl-1"
+            @focusin="focused = true"
+            @focusout="focused = false"
+            class="w-full pl-1 dark:bg-default-dark focus-visible:outline-none"
         />
         <slot name="icon" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
+
 defineProps(['modelValue', 'placeholder']);
 defineEmits(['update:modelValue']);
+
+const focused = ref(false);
 
 const key = self.crypto.randomUUID();
 </script>
