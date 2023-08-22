@@ -35,17 +35,6 @@
             </li>
             <li>
                 <RouterLink
-                    to="/sets"
-                    id="router-link-sets"
-                    title="Result Sets"
-                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
-                >
-                    <CodeBracketIcon />
-                    <label v-show="open" for="router-link-sets"><span>Result Sets</span></label>
-                </RouterLink>
-            </li>
-            <li>
-                <RouterLink
                     to="/viewer"
                     id="router-link-viewer"
                     title="View Model"

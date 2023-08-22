@@ -9,19 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/checks',
-        component: ModelCheckView,
-        props: {
-            title: 'Sub Checks',
-            bindData: 'subChecks',
-        } as ModelCheckProps,
-    },
-    {
-        path: '/sets',
-        component: ModelCheckView,
-        props: {
-            title: 'Result Sets',
-            bindData: 'resultSets',
-        } as ModelCheckProps,
+        component: ModelCheckView
     },
 ];
 
