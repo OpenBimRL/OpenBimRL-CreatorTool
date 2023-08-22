@@ -1,7 +1,7 @@
 <template>
     <div
         class="flex w-full rounded overflow-hidden border dark:border-default-medium"
-        :class="focused ? ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'] : []/* { 'border-opacity-20': focused, 'border-default-dark': focused } */"
+        :class="focused ? ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'] : []"
     >
         <label
             :for="key"
