@@ -1,5 +1,5 @@
 <template>
-    <aside class="fixed right-0 top-0 z-50 h-full w-1/5 bg-default-overlay px-3 py-2">
+    <aside class="fixed right-0 top-0 z-50 h-full w-1/5 bg-default-medium bg-opacity-90 dark:text-default-medium  dark:bg-opacity-95 dark:bg-default-dark px-3 py-2">
         <div class="flex justify-between">
             <button class="bg-transparent" @click="$emit('close')">
                 <XMarkIcon class="inline h-8 w-8" />
@@ -62,7 +62,7 @@
                     <img loading="lazy" :src="TwitterLogo" class="w-12" />
                 </a>
                 <a href="https://github.com/RUB-Informatik-im-Bauwesen">
-                    <img loading="lazy" :src="GithubMark" class="w-12" />
+                    <img loading="lazy" :src="GithubMark" class="w-12 dark:mix-blend-hard-light" />
                 </a>
             </div>
         </div>

@@ -8,7 +8,7 @@
         :node-color="getMinimapNodeColor"
         :node-stroke-color="'black'"
         :class="{ 'scale-100': scaled, 'scale-50': !scaled }"
-        class="mt-20 transition-transform"
+        class="transition-transform dark:bg-default-dark"
         @mouseenter="scaled = true"
         @mouseleave="scaled = false"
     />

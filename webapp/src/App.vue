@@ -1,10 +1,4 @@
 <template>
-    <Navigation @showHelp="toggleModal(Modal.Help)" @showNodeLib="toggleModal(Modal.NodeLib)" />
-    <SideOverlay
-        :class="{ open: modals[Modal.SideOverlay] }"
-        @open="toggleModal(Modal.SideOverlay)"
-        @close="toggleModal(Modal.SideOverlay)"
-    />
     <Help
         :class="{ 'translate-x-full': !modals[Modal.Help] }"
         class="transition-transform"
@@ -14,14 +8,27 @@
         :class="{ 'translate-x-full': !modals[Modal.NodeLib] }"
         class="transition-transform"
     />
-    <main @click="closeAllModals()">
-        <Graph class="h-screen" />
+    <main class="grid h-screen">
+        <TopNavigation
+            style="grid-area: nav"
+            @showHelp="toggleModal(Modal.Help)"
+            @showNodeLib="toggleModal(Modal.NodeLib)"
+        />
+        <SideNavigation style="grid-area: side" />
+        <RouterView style="grid-area: main" @click="closeAllModals()" />
     </main>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Graph, GraphNodeMenu, Help, Navigation, SideOverlay } from './components';
+import {
+    Graph,
+    GraphNodeMenu,
+    Help,
+    SideNavigation,
+    SideOverlay,
+    TopNavigation,
+} from './components';
 
 enum Modal {
     Help,
@@ -36,12 +43,22 @@ modals.value[Modal.NodeLib] = false;
 const toggleModal = (modalName: Modal) => {
     const oldState = modals.value[modalName];
     closeAllModals();
+
     modals.value[modalName] = !oldState;
+    console.log(modals.value[modalName]);
 };
 
-const closeAllModals = () => {
+const closeAllModals = () => { // this is cursed js/ts
     for (const [, index] of Object.entries(Modal)) modals.value[index as Modal] = false;
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+main {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        'side nav'
+        'side main';
+}
+</style>

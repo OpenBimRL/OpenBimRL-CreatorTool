@@ -4,8 +4,18 @@
         @node-double-click="onNodeDoubleClick"
         @dragover.prevent="onDragOver"
         @drop="onDrop"
+        class="bg-default-light dark:bg-default-dark"
     >
-        <Background :variant="BackgroundVariant.Lines" :pattern-color="'#efefef'" :size="0.8" />
+        <Background
+            :variant="BackgroundVariant.Lines"
+            :pattern-color="
+                darkMode
+                    ? TWConf.theme.extend.colors.default.light
+                    : TWConf.theme.extend.colors.default.dark
+            "
+            :line-width="0.25"
+            :size="0.8"
+        />
         <Controls />
         <CustomMap />
         <Dialog ref="dialog" @close="">
@@ -25,16 +35,18 @@
 </template>
 
 <script lang="ts" setup>
-import { graphInjectionKey } from '@/keys';
+import { darkModeKey, graphInjectionKey } from '@/keys';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { Edge, GraphEdge, GraphNode, isEdge, isNode, useVueFlow, VueFlow } from '@vue-flow/core';
-import { inject, nextTick, ref, watch } from 'vue';
+import { Edge, GraphEdge, GraphNode, VueFlow, isEdge, isNode, useVueFlow } from '@vue-flow/core';
+import { Ref, inject, nextTick, ref, watch } from 'vue';
 import { Dialog } from '../modals';
-import { multiSelectKeys, nodeTypes } from './config';
 import CustomMap from './CustomMap.vue';
-import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
 import type { CustomNode, GraphInject } from './Types';
+import { multiSelectKeys, nodeTypes } from './config';
+import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
+
+import TWConf from '@/../tailwind.config';
 
 const dialog = ref<typeof Dialog | null>(null);
 const selectedNode = ref<number>(0);
@@ -42,6 +54,7 @@ const nodeDataIndex = ref<string>('name');
 
 // injected from app level (main.ts)
 const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) as GraphInject;
+const darkMode = inject(darkModeKey) as Ref<boolean>;
 
 const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes } =
     useVueFlow({
