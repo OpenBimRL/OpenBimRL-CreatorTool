@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-default-medium dark:text-default-light dark:bg-default-darkest dark:bg-opacity-90 transition-all" :class="{'max-w-[4rem]': !open, 'max-w-full': open}">
+    <nav class="bg-default-medium dark:bg-default-darkest dark:bg-opacity-90 transition-all" :class="{'max-w-[4rem]': !open, 'max-w-full': open}">
         <ul
             class="flex flex-col h-full"
         >

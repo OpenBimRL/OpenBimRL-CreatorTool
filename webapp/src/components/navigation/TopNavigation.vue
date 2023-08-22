@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="main-nav bg-default-light text-default-dark border-b dark:border-b-0 dark:bg-default-dark dark:bg-opacity-90 pl-8 dark:text-default-light text-lg"
+        class="main-nav bg-default-light border-b dark:border-b-0 dark:bg-default-dark dark:bg-opacity-90 pl-8 text-lg"
     >
         <ul class="flex">
             <li>

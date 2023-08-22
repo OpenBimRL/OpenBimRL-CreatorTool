@@ -8,7 +8,7 @@
         :class="{ 'translate-x-full': !modals[Modal.NodeLib] }"
         class="transition-transform"
     />
-    <main class="grid h-screen">
+    <main class="grid h-screen text-default-dark dark:text-default-light">
         <TopNavigation
             style="grid-area: nav"
             @showHelp="toggleModal(Modal.Help)"
