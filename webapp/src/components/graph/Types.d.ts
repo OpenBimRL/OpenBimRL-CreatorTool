@@ -76,7 +76,7 @@ export interface ResultSet {
     filter: string;
     label: string;
     name: string;
-    type: string;
+    type: 'resultSet';
 }
 
 export interface GraphInject {
