@@ -26,7 +26,6 @@ import {
     GraphNodeMenu,
     Help,
     SideNavigation,
-    SideOverlay,
     TopNavigation,
 } from './components';
 
