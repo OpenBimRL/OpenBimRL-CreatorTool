@@ -1,7 +1,7 @@
 import { createUniqueID } from '@/ParserOpenBIMRL';
-import { computed, reactive } from 'vue';
-import { RuleSet, RulesOrRuleSets, SubChecks } from '../graph/Types';
-import { TreeData, TreeNode, TreeNodeState } from './Tree';
+import { computed, reactive, ref } from 'vue';
+import { ResultSets, RuleSet, RulesOrRuleSets, SubChecks } from '../graph/Types';
+import { TreeNode, TreeNodeState } from './Tree';
 
 const defaultState: TreeNodeState = {
     checked: false,
@@ -9,30 +9,47 @@ const defaultState: TreeNodeState = {
     selected: false,
 };
 
-export const convert = (data: SubChecks): TreeData => {
-    const tree = {} as TreeData;
+export const convertResultSets = (data: ResultSets): Array<TreeNode> => [
+    {
+        id: createUniqueID(),
+        text: 'resultSets',
+        state: {
+            checked: false,
+            expanded: true,
+            selected: false,
+        },
+        selectable: false,
+        nodes: data.map(element => ({
+            id: createUniqueID(),
+            state: structuredClone(defaultState),
+            text: computed(() => element.name),
+            data: element,
+        }))
+    },
+];
 
-    const rootElement: TreeNode = {
+export const convertSubChecks = (data: SubChecks): Array<TreeNode> => [
+    {
         id: createUniqueID(),
         text: 'subChecks',
         nodes: data.map(element => ({
             id: createUniqueID(),
-            text: element.name,
-            selectable: false,
+            text: computed(() => element.name),
             state: structuredClone(defaultState),
+            data: element,
             nodes: [
                 {
                     text: 'applicability',
                     id: createUniqueID(),
                     state: structuredClone(defaultState),
-                    nodes: convertRecursive(element.applicability),
+                    nodes: convertRecursiveRules(element.applicability),
                     selectable: false,
                 },
                 {
                     text: 'rulesOrRuleSets',
                     id: createUniqueID(),
                     state: structuredClone(defaultState),
-                    nodes: convertRecursive(element.rulesOrRuleSets),
+                    nodes: convertRecursiveRules(element.rulesOrRuleSets),
                     selectable: false,
                 },
             ],
@@ -43,13 +60,10 @@ export const convert = (data: SubChecks): TreeData => {
             selected: false,
         },
         selectable: false,
-    };
-    tree.treeDisplayData = [rootElement];
+    },
+];
 
-    return tree;
-};
-
-const convertRecursive = (data: RulesOrRuleSets): Array<TreeNode> => {
+const convertRecursiveRules = (data: RulesOrRuleSets): Array<TreeNode> => {
     return data.map(element => ({
         text: computed(() => element.label),
         id: createUniqueID(),
@@ -59,7 +73,7 @@ const convertRecursive = (data: RulesOrRuleSets): Array<TreeNode> => {
         nodes:
             (element as RuleSet).rulesOrRuleSets &&
             Array.isArray((element as RuleSet).rulesOrRuleSets)
-                ? convertRecursive((element as RuleSet).rulesOrRuleSets)
+                ? convertRecursiveRules((element as RuleSet).rulesOrRuleSets)
                 : undefined,
     }));
 };

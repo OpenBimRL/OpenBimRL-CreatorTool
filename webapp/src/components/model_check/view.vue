@@ -1,11 +1,11 @@
 <template>
     <div class="grid w-full h-full dark:bg-default-dark p-5">
         <div style="grid-area: header" class="flex">
-            <h1 class="text-2xl my-auto">{{ title }}</h1>
+            <h1 class="text-2xl my-auto">Checks</h1>
         </div>
         <div style="grid-area: sidebar" class="p-2 mr-2 rounded-lg border select-none">
             <Tree
-                :nodes="convertedData.treeDisplayData"
+                :nodes="data"
                 :custom-styles="treeStyle"
                 :custom-options="treeOptions"
                 ref="tree"
@@ -30,17 +30,30 @@
                         </button>
                     </span>
                 </p>
-                <hr class="border-default-dark">
+                <hr class="border-default-dark" />
                 <!-- check wheather it's a rule or ruleset -->
-                <div v-if="currentRule.data?.hasOwnProperty('rulesOrRuleSets')">
-                    <p><span class="text-xl"> Edit RuleSet </span></p>
-                    <InputField v-model="(currentRule.data as RuleSet).label">
-                        <span>Label</span>
+                <div v-if="currentRule.data?.type === RuleOrRuleSetType.RULESET">
+                    <RuleSetForm :rule-set="(currentRule.data as RuleSet)" />
+                </div>
+                <div v-else-if="currentRule.data?.type === RuleOrRuleSetType.RULE">
+                    <RuleForm :rule="(currentRule.data as Rule)" />
+                </div>
+                <div v-else-if="currentRule.data?.type === 'resultSet'">
+                    <ResultSetForm
+                        :result-set="(currentRule.data as ResultSet)"
+                        :graph-nodes="graph.elements"
+                        :sub-checks="graph.subChecks"
+                    />
+                </div>
+                <div v-else-if="currentRule.data?.hasOwnProperty('name')">
+                    <p class="my-1">
+                        <span class="text-xl">Edit Name</span>
+                    </p>
+                    <InputField class="my-1" v-model="(currentRule.data as SubCheck).name">
+                        <span>Name</span>
                     </InputField>
                 </div>
-                <div v-else>
-                    <p><span class="text-xl">Edit Rule</span></p>
-                </div>
+                <div v-else><span class="text-2xl">Error! Could not get type!</span></div>
             </div>
             <div v-else><span class="text-xl">Select a node</span></div>
         </div>
@@ -49,26 +62,27 @@
 
 <script setup lang="ts">
 import { graphInjectionKey } from '@/keys';
-import { inject, reactive, ref } from 'vue';
-import { GraphInject, ResultSets, RuleSet, SubChecks } from '../graph/Types';
-import { convert } from './TreeConverter';
-import { ModelCheckProps } from './Types';
+import { Ref, inject, reactive, ref } from 'vue';
+import type { GraphInject, ResultSet, Rule, RuleSet, SubCheck } from '../graph/Types';
+import type { TreeNode } from './Tree';
+import { treeOptions as treeOptionsFunc, treeStyle } from './TreeConfig';
+import { convertResultSets, convertSubChecks } from './TreeConverter';
+import { ResultSetForm, RuleForm, RuleSetForm } from './forms';
 
 // @ts-ignore
 import Tree from 'vuejs-tree';
-import { TreeNode } from './Tree';
-import { treeOptions as treeOptionsFunc, treeStyle } from './TreeConfig';
 import InputField from '../InputField.vue';
-
-const props = defineProps<ModelCheckProps>();
+import { RuleOrRuleSetType } from '../graph/enums';
 
 const currentRule = ref<TreeNode | null>(null);
 
-const data = (inject(graphInjectionKey) as GraphInject).graph.value[props.bindData] as
-    | SubChecks
-    | ResultSets;
+const { graph } = inject(graphInjectionKey) as GraphInject;
 
-const convertedData = ref(convert(data as SubChecks));
+const data: Ref<Array<TreeNode>> = ref<Array<TreeNode>>([] as Array<TreeNode>);
+data.value.push(
+    ...convertSubChecks(graph.value.subChecks),
+    ...convertResultSets(graph.value.resultSets),
+);
 const tree = ref<any>(null);
 
 const doubleClickEvent = (event: MouseEvent) => {
@@ -96,7 +110,7 @@ const treeOptions = treeOptionsFunc(currentRule, tree);
 <style scoped>
 div.grid {
     grid-template-areas:
-        '. header'
+        'header header'
         'sidebar main';
 
     grid-template-columns: 30rem 1fr;

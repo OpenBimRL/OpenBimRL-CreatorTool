@@ -1,4 +1,3 @@
-import { ModelCheckProps } from '@/components/model_check/Types';
 import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
 import { Graph, ModelCheckView } from '../components';
 

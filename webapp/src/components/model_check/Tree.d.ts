@@ -1,9 +1,5 @@
 import { Ref } from 'vue';
-import { Rule, RuleSet } from '../graph/Types';
-
-export interface TreeData {
-    treeDisplayData: Array<TreeNode>;
-}
+import { ResultSet, Rule, RuleSet, SubCheck } from '../graph/Types';
 
 export interface TreeNode {
     text: string | Ref<string>;
@@ -16,7 +12,7 @@ export interface TreeNode {
     selectable?: boolean;
     expandable?: boolean;
     tags?: Array<number>;
-    data?: Rule | RuleSet;
+    data?: Rule | RuleSet | SubCheck | ResultSet;
 }
 
 export interface TreeNodeState {
