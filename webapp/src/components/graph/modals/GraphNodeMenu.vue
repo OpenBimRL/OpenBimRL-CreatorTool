@@ -45,7 +45,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="bg-default-light dark:bg-default-dark border overflow-y-auto overflow-x-hidden h-full">
+            <div
+                class="bg-default-light dark:bg-default-dark border overflow-y-auto overflow-x-hidden h-full"
+            >
                 <div
                     v-for="(libname, index) in loadedLibraries"
                     :key="index"
@@ -67,8 +69,13 @@
 
         <div class="flex flex-col gap-4">
             <form class="flex gap-4 items-center">
-                <div class="bg-default-light dark:bg-default-dark w-full flex border rounded overflow-hidden">
-                    <label for="lib-select" class="inline-block bg-default-medium dark:bg-default-dark p-2 border-r">
+                <div
+                    class="bg-default-light dark:bg-default-dark w-full flex border rounded overflow-hidden"
+                >
+                    <label
+                        for="lib-select"
+                        class="inline-block bg-default-medium dark:bg-default-dark p-2 border-r"
+                    >
                         <span>Library</span>
                     </label>
                     <select
@@ -88,7 +95,9 @@
                 </button>
             </form>
 
-            <div class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest">
+            <div
+                class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest"
+            >
                 <button class="w-full p-1" @click="handleUpload">
                     <span>Upload Library</span>
                 </button>
@@ -107,8 +116,8 @@
 import { InputField } from '@/components';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { ref } from 'vue';
-import type { ImportedRuleSet, RuleSetElement } from './Types';
 import GraphItemGroup from './GraphItemGroup.vue';
+import type { ImportedRuleSet, RuleSetElement } from './Types';
 
 const width = ref(window.innerWidth / 4);
 

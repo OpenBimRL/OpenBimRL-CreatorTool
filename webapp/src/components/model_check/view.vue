@@ -57,13 +57,13 @@
 <script setup lang="ts">
 import { graphInjectionKey } from '@/keys';
 import { inject, ref } from 'vue';
+import { InputField } from '..';
 import type { GraphInject, ResultSet, Rule, RuleSet, SubCheck } from '../graph/Types';
 import { RuleOrRuleSetType } from '../graph/enums';
 import { ResultSetForm, RuleForm, RuleSetForm } from './forms';
 import Tree from './tree';
 import { ITree } from './tree/Tree';
 import { TreeNode } from './tree/Types';
-import { InputField } from '..';
 const { graph } = inject(graphInjectionKey) as GraphInject;
 
 const tree = ref<ITree | null>(null);

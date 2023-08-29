@@ -1,6 +1,9 @@
 <template>
     <div class="border m-1 rounded relative">
-        <div class="text-center m-1 dark:text-default-darkest dark:mix-blend-hard-light" :style="{ 'background-color': group.color }">
+        <div
+            class="text-center m-1 dark:text-default-darkest dark:mix-blend-hard-light"
+            :style="{ 'background-color': group.color }"
+        >
             <span>{{ group.name }}</span>
         </div>
 
@@ -22,8 +25,13 @@
                         <ExclamationCircleIcon class="w-7 text-secondary" />
                     </button>
                     <template #content>
-                        <div class="bg-default-light dark:bg-default-dark rounded border m-2" data-popover="up">
-                            <p class="bg-default-light dark:bg-default-dark p-2">{{ item.data!.name }}</p>
+                        <div
+                            class="bg-default-light dark:bg-default-dark rounded border m-2"
+                            data-popover="up"
+                        >
+                            <p class="bg-default-light dark:bg-default-dark p-2">
+                                {{ item.data!.name }}
+                            </p>
                             <p class="p-2">{{ item.data!.description }}</p>
                         </div>
                     </template>

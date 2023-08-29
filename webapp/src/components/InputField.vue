@@ -1,12 +1,13 @@
 <template>
     <div
         class="flex w-full rounded overflow-hidden border dark:border-default-medium"
-        :class="focused ? ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'] : []"
+        :class="
+            focused ? ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'] : []
+        "
     >
         <label
             :for="key"
             class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-            
         >
             <slot />
         </label>
@@ -24,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 defineProps(['modelValue', 'placeholder']);
 defineEmits(['update:modelValue']);

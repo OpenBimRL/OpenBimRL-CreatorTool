@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/checks',
-        component: ModelCheckView
+        component: ModelCheckView,
     },
 ];
 

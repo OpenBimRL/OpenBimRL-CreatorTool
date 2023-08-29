@@ -1,16 +1,16 @@
 import { createUniqueID } from '@/ParserOpenBIMRL';
 import {
-AddEdges,
-AddNodes,
-Connection,
-Edge,
-GraphEdge,
-GraphNode,
-isNode,
-Node,
-NodeMouseEvent,
-Project,
-RemoveEdges,
+    AddEdges,
+    AddNodes,
+    Connection,
+    Edge,
+    GraphEdge,
+    GraphNode,
+    isNode,
+    Node,
+    NodeMouseEvent,
+    Project,
+    RemoveEdges,
 } from '@vue-flow/core';
 import type { Ref } from 'vue';
 import { Dialog } from '../modals';

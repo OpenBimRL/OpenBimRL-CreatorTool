@@ -21,13 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-    Graph,
-    GraphNodeMenu,
-    Help,
-    SideNavigation,
-    TopNavigation,
-} from './components';
+import { GraphNodeMenu, Help, SideNavigation, TopNavigation } from './components';
 
 enum Modal {
     Help,
@@ -47,7 +41,8 @@ const toggleModal = (modalName: Modal) => {
     console.log(modals.value[modalName]);
 };
 
-const closeAllModals = () => { // this is cursed js/ts
+const closeAllModals = () => {
+    // this is cursed js/ts
     for (const [, index] of Object.entries(Modal)) modals.value[index as Modal] = false;
 };
 </script>

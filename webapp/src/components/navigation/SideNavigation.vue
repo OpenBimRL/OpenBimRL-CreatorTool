@@ -1,11 +1,12 @@
 <template>
-    <nav class="bg-default-medium dark:bg-default-darkest dark:bg-opacity-90 transition-all" :class="{'max-w-[4rem]': !open, 'max-w-full': open}">
-        <ul
-            class="flex flex-col h-full"
-        >
+    <nav
+        class="bg-default-medium dark:bg-default-darkest dark:bg-opacity-90 transition-all"
+        :class="{ 'max-w-[4rem]': !open, 'max-w-full': open }"
+    >
+        <ul class="flex flex-col h-full">
             <li class="mt-16">
                 <button
-                @click="open = !open"
+                    @click="open = !open"
                     class="p-2 flex w-full h-full hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
                 >
                     <Bars3Icon />
@@ -40,7 +41,7 @@
                     title="View Model"
                     class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
                 >
-                    <HomeModernIcon/>
+                    <HomeModernIcon />
                     <label v-show="open" for="router-link-viewer"><span>Model Viewer</span></label>
                 </RouterLink>
             </li>
@@ -49,8 +50,8 @@
 </template>
 
 <script setup lang="ts">
-import { ShieldCheckIcon, HomeModernIcon } from '@heroicons/vue/24/outline';
-import { Bars3Icon, CodeBracketIcon, CubeTransparentIcon } from '@heroicons/vue/24/solid';
+import { HomeModernIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import { Bars3Icon, CubeTransparentIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 
 const open = ref(false);
