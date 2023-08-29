@@ -21,7 +21,7 @@ export enum RuleOperator {
     // INCLUDES = 'includes',
     GREATER_THAN = 'greaterthan',
     GREATER_OR_EQUALS = 'greaterorequals',
-    LESSOR_EQUALS = 'lessorequals',
+    LESS_OR_EQUALS = 'lessorequals',
     LESS_THAN = 'lessthan',
     NOT_EQUALS = 'notequals',
 }
