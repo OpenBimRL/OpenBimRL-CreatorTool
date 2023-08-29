@@ -1,6 +1,6 @@
 <template>
     <aside
-        class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-default-overlay z-50 transition-transform"
+        class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-default-medium dark:bg-default-dark z-50 transition-transform"
         :style="`width: ${width}px`"
     >
         <button class="absolute border-2 h-full cursor-col-resize" @mousedown="mouseResizeStart" />
@@ -32,11 +32,11 @@
                 </label>
             </div>
             <div class="flex">
-                <ul class="border border-b-white rounded-t overflow-hidden">
+                <ul class="border border-b-default-light rounded-t overflow-hidden">
                     <li
                         v-for="(libname, index) in loadedLibraries"
                         :key="index"
-                        class="aria-selected:bg-white p-2 border-r last:border-r-0"
+                        class="aria-selected:bg-default-light dark:aria-selected:bg-default-darkest p-2 border-r last:border-r-0"
                         :aria-selected="libname === currentSelection"
                     >
                         <button class="text-sm bg-transparent" @click="currentSelection = libname">
@@ -45,7 +45,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="bg-white border overflow-y-auto overflow-x-hidden h-full">
+            <div class="bg-default-light dark:bg-default-dark border overflow-y-auto overflow-x-hidden h-full">
                 <div
                     v-for="(libname, index) in loadedLibraries"
                     :key="index"
@@ -67,13 +67,13 @@
 
         <div class="flex flex-col gap-4">
             <form class="flex gap-4 items-center">
-                <div class="bg-white w-full flex border rounded overflow-hidden">
-                    <label for="lib-select" class="inline-block bg-slate-100 p-2 border-r">
+                <div class="bg-default-light dark:bg-default-dark w-full flex border rounded overflow-hidden">
+                    <label for="lib-select" class="inline-block bg-default-medium dark:bg-default-dark p-2 border-r">
                         <span>Library</span>
                     </label>
                     <select
                         id="lib-select"
-                        class="bg-white pl-3 w-full"
+                        class="bg-default-light dark:bg-default-dark pl-3 w-full"
                         v-model.value="currentSelection"
                     >
                         <option v-for="lib in Object.keys(availableLibraries)" v-text="lib" />
@@ -88,7 +88,7 @@
                 </button>
             </form>
 
-            <div class="border rounded bg-gray-600">
+            <div class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest">
                 <button class="w-full p-1" @click="handleUpload">
                     <span>Upload Library</span>
                 </button>

@@ -6,7 +6,7 @@
     />
     <GraphNodeMenu
         :class="{ 'translate-x-full': !modals[Modal.NodeLib] }"
-        class="transition-transform"
+        class="transition-transform text-default-dark dark:text-default-light"
     />
     <main class="grid h-screen text-default-dark dark:text-default-light">
         <TopNavigation
