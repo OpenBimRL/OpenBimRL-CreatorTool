@@ -10,6 +10,10 @@
         "format": "npx prettier --config ./prod.prettierrc.json --write .",
         "check-types": "vue-tsc --noEmit"
     },
+    "peerDependencies": {
+        "three": "0.152.2",
+        "@types/three": "0.152.1"
+    },
     "dependencies": {
         "@heroicons/vue": "^2.0.17",
         "@vue-flow/background": "^1.2.0",
@@ -19,7 +23,6 @@
         "dagre": "^0.8.5",
         "openbim-components": "^1.1.5",
         "stream": "^0.0.2",
-        "three": "^0.157.0",
         "uuid": "^9.0.0",
         "vue": "^3.3.4",
         "vue-router": "^4.2.4",
@@ -28,7 +31,6 @@
     },
     "devDependencies": {
         "@types/dagre": "^0.7.48",
-        "@types/three": "^0.157.0",
         "@types/uuid": "^9.0.1",
         "@vitejs/plugin-vue": "^4.1.0",
         "autoprefixer": "^10.4.14",
