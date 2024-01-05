@@ -22,11 +22,24 @@ export async function isConnected(): Promise<boolean> {
 }
 
 export async function addModel(file: File): Promise<ApiAnswer<string>> {
-    return await postApi<string>("/model", {data: await file.text()})
+    const fd = new FormData();
+
+    fd.append("file", file);
+    return await postApi<string>("/model", fd)
 }
 
 export async function getModel(id: string): Promise<Uint8Array> {
     return await getApiBinary("/model/" + id);
+}
+
+export async function getModels(): Promise<Array<string>> {
+    try {
+        const response = await getApi<Array<string>>('/models');
+        return response.content;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
 }
 
 async function getApi<T>(path: string): Promise<ApiAnswer<T>> {
@@ -45,13 +58,10 @@ async function getApiBinary(path: string): Promise<Uint8Array> {
     return new Uint8Array(buffer);
 }
 
-async function postApi<T>(path: string, params: ApiPostData<any>): Promise<ApiAnswer<T>> {
+async function postApi<T>(path: string, params: FormData): Promise<ApiAnswer<T>> {
     const response = await fetch(new URL(path, apiEndpoint.value), {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params)
+        body: params
     });
     if (!response.ok) throw new Error(response.statusText);
 
