@@ -1,0 +1,62 @@
+<template>
+    <aside
+        class="fixed right-0 top-0 z-50 h-full w-1/4 bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
+    >
+        <div class="flex justify-between">
+            <button class="bg-transparent" @click="$emit('close')">
+                <XMarkIcon class="inline h-8 w-8" />
+            </button>
+            <h3 class="text-3xl"><strong>API Connection</strong></h3>
+        </div>
+        <div class="pl-4">
+            <h4 class="text-2xl">API Settings</h4>
+            <InputField
+                type="url"
+                v-model="tempApiUrl"
+                :valid="urlValid"
+                invalid-message="Not a valid URL"
+            >
+                <span>Endpoint</span>
+            </InputField>
+            <br />
+            <div
+                class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest"
+            >
+                <button class="w-full p-1" @click="">
+                    <span>Test Connection</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+</template>
+
+<script setup lang="ts">
+import { InputField } from '@/components';
+import { apiEndpoint } from '@/modules/apiConnection';
+import { XMarkIcon } from '@heroicons/vue/24/solid';
+import { ref, watch } from 'vue';
+
+defineEmits(['close']);
+
+const urlValid = ref(true);
+
+const tempApiUrl = ref(apiEndpoint.value);
+
+const updateUrl = () => {
+    try {
+        apiEndpoint.value = new URL(tempApiUrl.value);
+        urlValid.value = true;
+    } catch (e) {
+        console.error(e);
+        urlValid.value = false;
+    }
+};
+
+watch([tempApiUrl], updateUrl);
+</script>
+
+<style scoped>
+td:first-child {
+    vertical-align: baseline;
+}
+</style>
