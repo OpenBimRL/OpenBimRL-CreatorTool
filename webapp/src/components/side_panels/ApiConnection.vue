@@ -19,14 +19,20 @@
                 <span>Endpoint</span>
             </InputField>
             <br />
-            <div
-                class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest"
+
+            <button
+                class="w-full p-1 border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest disabled:bg-opacity-30"
+                @click="testConnection"
+                v-bind="{ disabled: loading || !urlValid }"
             >
-                <button class="w-full p-1" @click="testConnection" v-bind="{disabled: loading}">
-                    <span v-if="!loading">Test Connection&nbsp;</span><VueSpinnerRadio v-else class="inline-block" />
-                </button>
-            </div>
-            <p>connection status: {{ connectionStatusText }}</p>
+                <span v-if="!loading">Test Connection&nbsp;</span>
+                <VueSpinnerRadio v-else class="inline-block" />
+            </button>
+
+            <p>
+                <span>connection status:&nbsp;</span
+                ><strong :class="statusTextColor">{{ connectionStatusText }}</strong>
+            </p>
         </div>
     </aside>
 </template>
@@ -37,7 +43,7 @@ import { apiEndpoint, isConnected } from '@/modules/apiConnection';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
 import { Ref, computed, ref, watch } from 'vue';
 
-import {VueSpinnerRadio} from "vue3-spinners"
+import { VueSpinnerRadio } from 'vue3-spinners';
 
 defineEmits(['close']);
 
@@ -70,8 +76,14 @@ const updateUrl = () => {
     } catch (e) {
         console.error(e);
         urlValid.value = false;
+        connectionStatus.value = undefined;
     }
 };
+
+const statusTextColor: Ref<string | undefined> = computed(() => {
+    if (connectionStatus.value === false) return 'text-red-700';
+    if (connectionStatus.value) return 'text-green-700';
+});
 
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
