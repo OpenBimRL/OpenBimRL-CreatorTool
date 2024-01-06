@@ -7,10 +7,6 @@ interface ApiAnswer<T> {
     content: T;
 }
 
-interface ApiPostData<T> {
-    data: T;
-}
-
 export async function isConnected(): Promise<boolean> {
     try {
         const response = await getApi<boolean>('/connection');
