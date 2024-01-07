@@ -1,16 +1,27 @@
 import { FragmentsGroup } from 'bim-fragment';
 import * as OBC from 'openbim-components';
-import { Color } from "three";
-import { Ref, ref } from 'vue';
+import { Color } from 'three';
+import { reactive, ref, watch } from 'vue';
+import { getModel, getModels } from './apiConnection';
 
+// init components
 const components = new OBC.Components();
 components.onInitialized.add(() => {});
 
+// init scene
 const sceneComponent = new OBC.SimpleScene(components);
 sceneComponent.setup();
 components.scene = sceneComponent;
 
-const createLoader = (container: HTMLElement) => {
+// reference declaration
+export const selected = ref<string | null>(null);
+export const loading = ref(false);
+let loader: OBC.FragmentIfcLoader;
+
+export const models = reactive(new Array<string>());
+const loadedModels = new Map<string, FragmentsGroup | null>();
+
+export function init(container: HTMLElement) {
     const rendererComponent = new OBC.PostproductionRenderer(components, container);
     components.renderer = rendererComponent;
     const postproduction = rendererComponent.postproduction;
@@ -18,8 +29,8 @@ const createLoader = (container: HTMLElement) => {
     const cameraComponent = new OBC.OrthoPerspectiveCamera(components);
     components.camera = cameraComponent;
 
-    const raycasterComponent = new OBC.SimpleRaycaster(components);
-    components.raycaster = raycasterComponent;
+    // const raycasterComponent = new OBC.SimpleRaycaster(components);
+    // components.raycaster = raycasterComponent;
 
     components.init();
     postproduction.enabled = true;
@@ -27,48 +38,92 @@ const createLoader = (container: HTMLElement) => {
     const grid = new OBC.SimpleGrid(components, new Color(0x666666));
     postproduction.customEffects.excludedMeshes.push(grid.get());
 
-    const ifcLoader = new OBC.FragmentIfcLoader(components);
+    loader = new OBC.FragmentIfcLoader(components);
 
-    ifcLoader.settings.wasm = {
+    loader.settings.wasm = {
         path: '/resources/',
         absolute: true,
     };
 
-    const highlighter = new OBC.FragmentHighlighter(components);
-    highlighter.setup();
+    // // highlight on hover
+    // const highlighter = new OBC.FragmentHighlighter(components);
+    // highlighter.setup();
 
-    const propertiesProcessor = new OBC.IfcPropertiesProcessor(components);
-    highlighter.events.select.onClear.add(() => {
-        propertiesProcessor.cleanPropertiesList();
-    });
+    // const propertiesProcessor = new OBC.IfcPropertiesProcessor(components);
+    // highlighter.events.select.onClear.add(() => {
+    //     propertiesProcessor.cleanPropertiesList();
+    // });
 
-    ifcLoader.onIfcLoaded.add(async model => {    
-        components.scene.get().add(model);
-        await highlighter.update();
-        (await components.tools.get(OBC.FragmentManager)).updateWindow()
-        
-        propertiesProcessor.process(model);
-        highlighter.events.select.onHighlight.add(selection => {
-            const fragmentID = Object.keys(selection)[0];
-            const expressID = Number([...selection[fragmentID]][0]);
-            propertiesProcessor.renderProperties(model, expressID);
-        });
-    });
+    // // automatically process the model
+    // loader.onIfcLoaded.add(async model => {
+    //     propertiesProcessor.process(model);
+    //     highlighter.events.select.onHighlight.add(selection => {
+    //         const fragmentID = Object.keys(selection)[0];
+    //         const expressID = Number([...selection[fragmentID]][0]);
+    //         propertiesProcessor.renderProperties(model, expressID);
+    //     });
+    // });
+}
 
-    // const mainToolbar = new OBC.Toolbar(components, { name: 'Main Toolbar', position: 'bottom' });
-    // mainToolbar.addChild(
-    //     ifcLoader.uiElement.get('main'),
-    //     propertiesProcessor.uiElement.get('main'),
-    // );
-    // components.ui.addToolbar(mainToolbar);
+async function updateWindow() {
+    // await (await components.tools.get(OBC.FragmentHighlighter)).update();
+    await (await components.tools.get(OBC.FragmentManager)).updateWindow();
+}
 
-    return ifcLoader;
-};
+// loads a model
+export async function loadModel(model: FragmentsGroup) {
+    loading.value = true;
+    components.scene.get().add(model);
+    await updateWindow();
+    loading.value = false;
+}
 
-let selected: Ref<string | null> = ref(null);
-const models = ref(new Map<string, FragmentsGroup>());
+// uloads a model
+export async function unloadModel(model: FragmentsGroup) {
+    loading.value = true;
+    components.scene.get().remove(model);
+    await updateWindow();
+    loading.value = false;
+}
 
 // this is cursed. Please make it better JS/TS god
-const getSelected = () => (selected.value ? models.value.get(selected.value) || null : null);
+export async function getSelected(): Promise<FragmentsGroup | null> {
+    if (!loader) throw new Error('loader not yet initialized');
+    if (!selected.value) return null;
+    if (!loadedModels.has(selected.value)) throw new Error('Key not found');
 
-export { createLoader, getSelected, models };
+    const model = loadedModels.get(selected.value);
+
+    if (model) return model;
+
+    // if model was not loaded yet:
+    loading.value = true;
+    const loadedModel = await loader.load(await getModel(selected.value), selected.value);
+    loadedModels.set(selected.value, loadedModel);
+    loading.value = false;
+    return loadedModel;
+}
+
+export function updateModels() {
+    getModels().then(data => {
+        if (models.length) models.splice(0, models.length);
+        models.push(...data);
+    });
+}
+
+watch(selected, async (newVal, oldVal) => {
+    if (!loader) return;
+    if (oldVal) {
+        const oldModel = loadedModels.get(oldVal);
+        if (oldModel) await unloadModel(oldModel);
+    }
+
+    if (!newVal) return;
+    const selectedModel = await getSelected();
+    if (!selectedModel) return;
+    loadModel(selectedModel);
+});
+
+watch(models, () =>
+    models.forEach(model => loadedModels.set(model, loadedModels.get(model) || null)),
+);
