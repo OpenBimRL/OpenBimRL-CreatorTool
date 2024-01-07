@@ -18,7 +18,7 @@ export const selected = ref<string | null>(null);
 export const loading = ref(false);
 let loader: OBC.FragmentIfcLoader;
 
-export const models = reactive(new Array<string>());
+export const models = reactive(new Map<string, string>());
 const loadedModels = new Map<string, FragmentsGroup | null>();
 
 export function init(container: HTMLElement) {
@@ -106,8 +106,8 @@ export async function getSelected(): Promise<FragmentsGroup | null> {
 
 export function updateModels() {
     getModels().then(data => {
-        if (models.length) models.splice(0, models.length);
-        models.push(...data);
+        models.clear();
+        data.forEach((v, k) => models.set(k, v));
     });
 }
 
@@ -125,5 +125,5 @@ watch(selected, async (newVal, oldVal) => {
 });
 
 watch(models, () =>
-    models.forEach(model => loadedModels.set(model, loadedModels.get(model) || null)),
+    [...models.keys()].forEach(model => loadedModels.set(model, loadedModels.get(model) || null)),
 );

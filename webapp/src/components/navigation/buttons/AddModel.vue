@@ -13,13 +13,15 @@
 
 <script setup lang="ts">
 import { addModel } from '@/modules/apiConnection';
+import { models } from '@/modules/ifcViewer';
 import { Ref, ref } from 'vue';
 
 const ifcModelInput: Ref<HTMLInputElement | null> = ref(null);
-const addModelFunc = (event: Event) => {
+const addModelFunc = () => {
     const files = ifcModelInput.value?.files;
     if (!files || !files[0]) return;
-    addModel(files[0]);
+    const file = files[0]!;
+    addModel(file).then(result => models.set(result.content, file.name));
 };
 </script>
 

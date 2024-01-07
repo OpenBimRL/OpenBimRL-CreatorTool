@@ -7,10 +7,10 @@
         </div>
         <div class="w-1/6 p-4">
             <h4 class="text-xl">Models:</h4>
-            <p v-for="model in models">
-                <button @click="selected = model">
-                    <strong v-if="selected === model">{{ model }}</strong>
-                    <span v-else>{{ model }}</span>
+            <p v-for="[id, name] in models">
+                <button @click="selected = id">
+                    <strong v-if="selected === id">{{ name }}</strong>
+                    <span v-else>{{ name }}</span>
                 </button>
             </p>
         </div>

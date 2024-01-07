@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import { models } from './ifcViewer';
 
 export const apiEndpoint = ref(new URL('http://localhost:8080'));
 
@@ -24,9 +23,6 @@ export async function addModel(file: File): Promise<ApiAnswer<string>> {
     fd.append('file', file);
     const response = await postApi<string>('/model', fd);
 
-    // update model ID in Map
-    models.push(response.content);
-
     return response;
 }
 
@@ -34,13 +30,13 @@ export async function getModel(id: string): Promise<Uint8Array> {
     return await getApiBinary('/model/' + id);
 }
 
-export async function getModels(): Promise<Array<string>> {
+export async function getModels(): Promise<Map<string, string>> {
     try {
-        const response = await getApi<Array<string>>('/models');
-        return response.content;
+        const response = await getApi<{[key: string]: string}>('/models');
+        return new Map(Object.entries(response.content));
     } catch (e) {
         console.error(e);
-        return [];
+        return new Map();
     }
 }
 
