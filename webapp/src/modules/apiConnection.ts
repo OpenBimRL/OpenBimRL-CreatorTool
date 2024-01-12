@@ -7,6 +7,20 @@ interface ApiAnswer<T> {
     content: T;
 }
 
+export async function checkGraph(modelUUID: string, graph: string): Promise<ApiAnswer<any>> {
+    const fd = new FormData();
+
+    fd.append('file', graph);
+
+    const graphUUID = (await postApi<string>('/graph', fd)).content;
+
+    const getParams = `graphIDs=${graphUUID}`;
+
+    const requestEndpoint = `/check/${modelUUID}?${getParams}`;
+
+    return await getApi<any>(requestEndpoint)
+}
+
 export async function isConnected(): Promise<boolean> {
     try {
         const response = await getApi<boolean>('/connection');
@@ -32,7 +46,7 @@ export async function getModel(id: string): Promise<Uint8Array> {
 
 export async function getModels(): Promise<Map<string, string>> {
     try {
-        const response = await getApi<{[key: string]: string}>('/models');
+        const response = await getApi<{ [key: string]: string }>('/models');
         return new Map(Object.entries(response.content));
     } catch (e) {
         console.error(e);
