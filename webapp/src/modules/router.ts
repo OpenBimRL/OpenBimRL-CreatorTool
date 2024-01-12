@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/viewer',
         name: Routes.VIEWER,
-        component: () => import("@/components/viewer/IfcViewer.vue"),
+        component: () => import('@/components/viewer/IfcViewer.vue'),
     },
 ];
 
