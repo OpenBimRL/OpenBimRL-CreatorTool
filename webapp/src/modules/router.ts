@@ -2,7 +2,9 @@ import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
 import { Graph, IFCViewer, ModelCheckView } from '../components';
 
 export enum Routes {
-    GRAPH = "graph", CHECKS = "checks", VIEWER = "viewer"
+    GRAPH = 'graph',
+    CHECKS = 'checks',
+    VIEWER = 'viewer',
 }
 
 const routes: Array<RouteRecordRaw> = [

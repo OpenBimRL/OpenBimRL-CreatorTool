@@ -22,7 +22,9 @@
                 <AddModel />
             </li>
             <li>
-                <button class="nav-button" @click="$emit('showApiConnection')">Api-Connection</button>
+                <button class="nav-button" @click="$emit('showApiConnection')">
+                    Api-Connection
+                </button>
             </li>
             <li>
                 <button class="nav-button" @click="$emit('showHelp')">Help?</button>
@@ -50,14 +52,14 @@
 
 <script setup lang="ts">
 import { darkModeKey } from '@/keys';
+import { Routes, default as router } from '@/modules/router';
 import { Ref, inject } from 'vue';
-import { Download, NewGraph, Upload, AddModel } from './buttons';
-import { Routes, default as router } from '@/modules/router'
+import { AddModel, Download, NewGraph, Upload } from './buttons';
 
 defineEmits(['showNodeLib', 'showHelp', 'showApiConnection']);
 
 const darkMode = inject(darkModeKey) as Ref<boolean>;
-const route = router.currentRoute
+const route = router.currentRoute;
 </script>
 
 <style>

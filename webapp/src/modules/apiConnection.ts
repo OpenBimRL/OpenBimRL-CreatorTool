@@ -18,7 +18,7 @@ export async function checkGraph(modelUUID: string, graph: string): Promise<ApiA
 
     const requestEndpoint = `/check/${modelUUID}?${getParams}`;
 
-    return await getApi<any>(requestEndpoint)
+    return await getApi<any>(requestEndpoint);
 }
 
 export async function isConnected(): Promise<boolean> {
