@@ -47,8 +47,8 @@
                 </button>
             </div>
         </div>
-        <div v-show="connected" class="h-full ml-4 p-4">
-            <div class="border h-full dark:bg-white overflow-auto">
+        <div v-show="connected" class="ml-4 p-4 relative h-full">
+            <div class="border dark:bg-white absolute inset-4 overflow-auto">
                 <json-viewer
                     v-if="!checkLoading"
                     class="dark:text-default-darkest"
