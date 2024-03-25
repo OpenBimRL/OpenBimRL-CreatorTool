@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <dialog ref="dialog" class="-translate-y-full rounded border border-black p-12">
         <div>
@@ -33,7 +34,7 @@ interface Props {
     reject_button_class?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
     accept_button_class: 'bg-blue-600',
     reject_button_class: 'bg-red-600',
 });

@@ -7,7 +7,7 @@ interface ApiAnswer<T> {
     content: T;
 }
 
-export async function checkGraph(modelUUID: string, graph: string): Promise<ApiAnswer<any>> {
+export async function checkGraph(modelUUID: string, graph: string): Promise<ApiAnswer<unknown>> {
     const fd = new FormData();
 
     fd.append('file', graph);
@@ -18,7 +18,7 @@ export async function checkGraph(modelUUID: string, graph: string): Promise<ApiA
 
     const requestEndpoint = `/check/${modelUUID}?${getParams}`;
 
-    return await getApi<any>(requestEndpoint);
+    return await getApi<unknown>(requestEndpoint);
 }
 
 export async function isConnected(): Promise<boolean> {

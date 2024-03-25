@@ -8,6 +8,7 @@
         <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
             <CustomHandle
                 v-for="(input, index) in data.inputs"
+                :key="input.index"
                 :id="input.index"
                 type="target"
                 :position="Position.Left"
@@ -17,6 +18,7 @@
             </CustomHandle>
             <CustomHandle
                 v-for="(output, index) in data.outputs"
+                :key="output.index"
                 :id="output.index"
                 type="source"
                 :position="Position.Right"
