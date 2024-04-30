@@ -688,11 +688,11 @@
                 "data": {
                     "name": "geometry.checkIntersection",
                     "icon": "exclamation-circle-fill",
-                    "description": "Checks if geometies of two RegionalBSPTree3D are intersecting.",
+                    "description": "Checks if geometies of BoundingBoxes are intersecting.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "RegionBSPTree3D_List" },
-                        { "index": "1", "name": "RegionBSPTree3D_List" }
+                        { "index": "0", "name": "BoundingBox(es)" },
+                        { "index": "1", "name": "BoundingBox(es)" }
                     ],
                     "outputs": [{ "index": "0", "name": "FilterMap" }],
                     "selected": false
