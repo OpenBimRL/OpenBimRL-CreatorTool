@@ -83,7 +83,11 @@
                         class="bg-default-light dark:bg-default-dark pl-3 w-full"
                         v-model="currentSelection"
                     >
-                        <option v-for="lib in Object.keys(availableLibraries)" :key="lib" v-text="lib" />
+                        <option
+                            v-for="lib in Object.keys(availableLibraries)"
+                            :key="lib"
+                            v-text="lib"
+                        />
                     </select>
                 </div>
                 <button
