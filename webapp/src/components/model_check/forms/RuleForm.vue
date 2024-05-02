@@ -11,12 +11,15 @@
             <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
                 <label
                     class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select">
+                    for="rule-form-operator-select"
+                >
                     <span>Quantifier</span>
                 </label>
-                <select v-model="rule.quantifier"
+                <select
+                    v-model="rule.quantifier"
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select">
+                    id="rule-form-operator-select"
+                >
                     <option v-for="(value, name) in RuleQuantifier" :value="value" :key="value">
                         {{ name }}
                     </option>
@@ -25,12 +28,15 @@
             <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
                 <label
                     class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select">
+                    for="rule-form-operator-select"
+                >
                     <span>Operator</span>
                 </label>
-                <select v-model="rule.operator"
+                <select
+                    v-model="rule.operator"
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select">
+                    id="rule-form-operator-select"
+                >
                     <option v-for="(value, name) in RuleOperator" :value="value" :key="value">
                         {{ name }}
                     </option>
@@ -58,7 +64,7 @@ defineProps<{ rule: Rule }>();
 </script>
 
 <style scoped>
-div.rule-form>* {
+div.rule-form > * {
     @apply my-1;
 }
 </style>

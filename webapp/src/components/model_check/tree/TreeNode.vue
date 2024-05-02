@@ -5,13 +5,20 @@
             <!-- Expand Arrow -->
             <p>
                 <button @click="toggleExpanded(node)" class="w-4">
-                    <component v-show="node.nodes.length"
-                        :is="node.state.expanded ? BarsArrowUpIcon : BarsArrowDownIcon" class="inline-block" />
+                    <component
+                        v-show="node.nodes.length"
+                        :is="node.state.expanded ? BarsArrowUpIcon : BarsArrowDownIcon"
+                        class="inline-block"
+                    />
                 </button>
-                <span :class="{
-            hover: node.state.hover,
-            'text-default-contrast': node.state.selected,
-        }" @dblclick="toggleExpanded(node)" @click="if (node.selectable) $emit('select', node.id);">
+                <span
+                    :class="{
+                        hover: node.state.hover,
+                        'text-default-contrast': node.state.selected,
+                    }"
+                    @dblclick="toggleExpanded(node)"
+                    @click="if (node.selectable) $emit('select', node.id);"
+                >
                     {{ node.text }}
                 </span>
                 <button v-show="node.addable" @click="addToNode(index)">
@@ -22,18 +29,28 @@
                 </button>
             </p>
             <div v-if="isSubCheck(data[index])">
-                <CategoryNode v-show="node.state.expanded"
+                <CategoryNode
+                    v-show="node.state.expanded"
                     v-bind="{ nodes: nodes, data: (data[index] as SubCheck).applicability, parent: node, header: 'Applicability' }"
                     @select="$emit('select', $event)"
-                    @add="(data[index] as SubCheck).applicability.push(getDefaultRule())" class="ml-4" />
-                <CategoryNode v-show="node.state.expanded"
+                    @add="(data[index] as SubCheck).applicability.push(getDefaultRule())"
+                    class="ml-4"
+                />
+                <CategoryNode
+                    v-show="node.state.expanded"
                     v-bind="{ nodes: nodes, data: (data[index] as SubCheck).rulesOrRuleSets, parent: node, header: 'Rules and Rule Sets' }"
                     @select="$emit('select', $event)"
-                    @add="(data[index] as SubCheck).rulesOrRuleSets.push(getDefaultRule())" class="ml-4" />
+                    @add="(data[index] as SubCheck).rulesOrRuleSets.push(getDefaultRule())"
+                    class="ml-4"
+                />
             </div>
-            <TreeNode v-else-if="node.type === RuleOrRuleSetType.RULESET" v-show="node.state.expanded"
+            <TreeNode
+                v-else-if="node.type === RuleOrRuleSetType.RULESET"
+                v-show="node.state.expanded"
                 v-bind="{ nodes: nodes, data: (data[index] as RuleSet).rulesOrRuleSets, parent: node }"
-                @select="$emit('select', $event)" class="ml-4" />
+                @select="$emit('select', $event)"
+                class="ml-4"
+            />
         </li>
     </ul>
 </template>
@@ -150,11 +167,11 @@ const emits = defineEmits<{
     @apply text-default-contrast text-opacity-60;
 }
 
-p>* {
+p > * {
     @apply hover:text-default-contrast hover:text-opacity-60;
 }
 
-p>button {
+p > button {
     @apply mx-1;
 }
 </style>
