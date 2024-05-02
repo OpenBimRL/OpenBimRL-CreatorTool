@@ -11,6 +11,7 @@
             </p>
             <CustomHandle
                 v-for="(input, index) in data.inputs"
+                :key="input.index"
                 @mouseenter="hovering = true"
                 @mouseleave="hovering = false"
                 :id="input.index"
