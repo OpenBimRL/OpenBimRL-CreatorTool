@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="result_set-form">
         <p><span class="text-xl"> Edit RuleSet </span></p>
@@ -9,21 +10,15 @@
             <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
                 <label
                     class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
+                    for="rule-form-operator-select">
                     <span>Elements</span>
                 </label>
-                <select
-                    v-model="resultSet.elements"
+                <select v-model="resultSet.elements"
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option
-                        v-for="value in graphNodes.filter(
-                            element => element.type === 'ruleIdentifier',
-                        )"
-                        :value="value.data?.label"
-                    >
+                    id="rule-form-operator-select">
+                    <option v-for="value in graphNodes.filter(
+            element => element.type === 'ruleIdentifier',
+        )" :value="value.data?.label" :key="value.id">
                         {{ value.data?.label }}
                     </option>
                 </select>
@@ -31,16 +26,15 @@
             <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
                 <label
                     class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
+                    for="rule-form-operator-select">
                     <span>Filter</span>
                 </label>
-                <select
-                    v-model="resultSet.filter"
+                <select v-model="resultSet.filter"
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option v-for="value in filter" :value="value.label">{{ value.label }}</option>
+                    id="rule-form-operator-select">
+                    <option v-for="(value, index) in filter" :value="value.label" :key="index">
+                        {{ value.label }}
+                    </option>
                 </select>
             </div>
         </div>
@@ -94,7 +88,7 @@ const filterRecursive = (rulesOrRuleSets: RulesOrRuleSets): Array<Rule> => {
 </script>
 
 <style scoped>
-div.result_set-form > * {
+div.result_set-form>* {
     @apply my-1;
 }
 </style>
