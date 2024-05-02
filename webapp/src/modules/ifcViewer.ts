@@ -4,6 +4,8 @@ import { Color } from 'three';
 import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
 
+import * as WEBIFC from 'web-ifc';
+
 // init components
 const components = new OBC.Components();
 components.onInitialized.add(() => {});
@@ -17,6 +19,9 @@ components.scene = sceneComponent;
 const selected = ref<string | null>(null);
 const loading = ref(false);
 let loader: OBC.FragmentIfcLoader;
+let highlighter: OBC.FragmentHighlighter;
+let propsProcessor: OBC.IfcPropertiesProcessor;
+let culler: OBC.ScreenCuller;
 
 const models = reactive(new Map<string, string>());
 const loadedModels = new Map<string, FragmentsGroup | null>();
@@ -25,9 +30,8 @@ function init(container: HTMLElement) {
     const rendererComponent = new OBC.PostproductionRenderer(components, container);
     components.renderer = rendererComponent;
     const postproduction = rendererComponent.postproduction;
-
-    const cameraComponent = new OBC.OrthoPerspectiveCamera(components);
-    components.camera = cameraComponent;
+    components.camera = new OBC.OrthoPerspectiveCamera(components);
+    components.raycaster = new OBC.SimpleRaycaster(components);
 
     // const raycasterComponent = new OBC.SimpleRaycaster(components);
     // components.raycaster = raycasterComponent;
@@ -38,42 +42,58 @@ function init(container: HTMLElement) {
     const grid = new OBC.SimpleGrid(components, new Color(0x666666));
     postproduction.customEffects.excludedMeshes.push(grid.get());
 
-    loader = new OBC.FragmentIfcLoader(components);
+    const fragments = new OBC.FragmentManager(components);
 
+    loader = new OBC.FragmentIfcLoader(components);
     loader.settings.wasm = {
         path: '/resources/',
         absolute: true,
     };
 
-    // // highlight on hover
-    // const highlighter = new OBC.FragmentHighlighter(components);
-    // highlighter.setup();
+    const excludedCats = [
+        WEBIFC.IFCTENDONANCHOR,
+        WEBIFC.IFCREINFORCINGBAR,
+        WEBIFC.IFCREINFORCINGELEMENT,
+        WEBIFC.IFCSPACE,
+    ];
+    for (const cat of excludedCats) {
+        loader.settings.excludedCategories.add(cat);
+    }
 
-    // const propertiesProcessor = new OBC.IfcPropertiesProcessor(components);
-    // highlighter.events.select.onClear.add(() => {
-    //     propertiesProcessor.cleanPropertiesList();
-    // });
+    highlighter = new OBC.FragmentHighlighter(components);
+    highlighter.setup();
+    rendererComponent.postproduction.customEffects.outlineEnabled = true;
+    highlighter.outlineEnabled = true;
 
-    // // automatically process the model
-    // loader.onIfcLoaded.add(async model => {
-    //     propertiesProcessor.process(model);
-    //     highlighter.events.select.onHighlight.add(selection => {
-    //         const fragmentID = Object.keys(selection)[0];
-    //         const expressID = Number([...selection[fragmentID]][0]);
-    //         propertiesProcessor.renderProperties(model, expressID);
-    //     });
-    // });
+    propsProcessor = new OBC.IfcPropertiesProcessor(components);
+
+    const highlighterEvents = highlighter.events;
+    highlighterEvents.select.onClear.add(() => {
+        propsProcessor.cleanPropertiesList();
+    });
+
+    highlighterEvents.select.onHighlight.add(selection => {
+        const fragmentID = Object.keys(selection)[0];
+        console.log(fragmentID);
+
+        const expressID = [...selection[fragmentID]][0];
+        const fragment = fragments.list[fragmentID];
+        if (fragment.group) {
+            propsProcessor.renderProperties(fragment.group, expressID);
+        }
+    });
 }
 
 async function updateWindow() {
-    // await (await components.tools.get(OBC.FragmentHighlighter)).update();
-    await (await components.tools.get(OBC.FragmentManager)).updateWindow();
+    await components.tools.get(OBC.FragmentManager).updateWindow();
 }
 
 // loads a model
 async function loadModel(model: FragmentsGroup) {
     loading.value = true;
+    model.frustumCulled = true;
     components.scene.get().add(model);
+    await propsProcessor.process(model);
     await updateWindow();
     loading.value = false;
 }
@@ -83,6 +103,7 @@ async function unloadModel(model: FragmentsGroup) {
     loading.value = true;
     components.scene.get().remove(model);
     await updateWindow();
+    propsProcessor.dispose();
     loading.value = false;
 }
 
@@ -98,7 +119,7 @@ async function getSelected(): Promise<FragmentsGroup | null> {
 
     // if model was not loaded yet:
     loading.value = true;
-    const loadedModel = await loader.load(await getModel(selected.value), selected.value);
+    const loadedModel = await loader.load(await getModel(selected.value));
     loadedModels.set(selected.value, loadedModel);
     loading.value = false;
     return loadedModel;
@@ -131,8 +152,10 @@ watch(models, () =>
 const getScene = () => components.scene.get();
 
 export {
+    components,
     getScene,
     getSelected,
+    highlighter,
     init,
     loadModel,
     loading,

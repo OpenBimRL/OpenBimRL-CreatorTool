@@ -7,7 +7,23 @@ interface ApiAnswer<T> {
     content: T;
 }
 
-export async function checkGraph(modelUUID: string, graph: string): Promise<ApiAnswer<unknown>> {
+interface Node {
+    inputs: Array<unknown>;
+    outputs: Array<unknown>;
+}
+
+interface CheckResult {
+    nodes: { [key: string]: Node };
+    results: { [key: string]: unknown };
+    checks: string;
+}
+
+type Error = unknown;
+
+export async function checkGraph(
+    modelUUID: string,
+    graph: string,
+): Promise<ApiAnswer<CheckResult | Error | null>> {
     const fd = new FormData();
 
     fd.append('file', graph);
@@ -18,7 +34,7 @@ export async function checkGraph(modelUUID: string, graph: string): Promise<ApiA
 
     const requestEndpoint = `/check/${modelUUID}?${getParams}`;
 
-    return await getApi<unknown>(requestEndpoint);
+    return await getApi<CheckResult | Error | null>(requestEndpoint);
 }
 
 export async function isConnected(): Promise<boolean> {
