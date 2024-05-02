@@ -149,7 +149,7 @@ watch(apiEndpoint, testConnection);
 </script>
 
 <style scoped>
-@import "vue-json-viewer/style.css";
+@import 'vue-json-viewer/style.css';
 
 td:first-child {
     vertical-align: baseline;

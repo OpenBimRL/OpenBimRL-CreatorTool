@@ -1,5 +1,8 @@
 <template>
-    <div ref="el" class="bg-default-light dark:bg-default-dark h-full w-full grid grid-flow-col grid-cols-7">
+    <div
+        ref="el"
+        class="bg-default-light dark:bg-default-dark h-full w-full grid grid-flow-col grid-cols-7"
+    >
         <div ref="viewerContainer" class="relative dark:text-default-darkest col-span-6">
             <div
                 v-show="loading"
