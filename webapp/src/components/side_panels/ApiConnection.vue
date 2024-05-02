@@ -73,7 +73,7 @@ import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
 
 import Parser from '@/ParserOpenBIMRL';
 import { graphInjectionKey, parserInjectionKey } from '@/keys';
-//@ts-ignore // there are no types ;(
+//@ts-expect-error there are no types for that lib
 import JsonViewer from 'vue-json-viewer';
 import type { GraphInject } from '../graph/Types';
 
@@ -91,7 +91,7 @@ const connectionLoading = ref(false);
 
 const checkLoading = ref(false);
 
-const checkResult: Ref<any> = ref<any>({});
+const checkResult: Ref<unknown> = ref<unknown>({});
 
 const connectionStatusText: Ref<string> = computed(() => {
     if (connectionStatus.value === false) return 'not connected';
@@ -137,9 +137,10 @@ const checkGraph = () => {
         });
 };
 
-const statusTextColor: Ref<string | undefined> = computed(() => {
+const statusTextColor: Ref<string> = computed(() => {
     if (connectionStatus.value === false) return 'text-red-700';
     if (connectionStatus.value) return 'text-green-700';
+    return '';
 });
 
 const connected = computed(() => connectionStatus.value ?? false);
