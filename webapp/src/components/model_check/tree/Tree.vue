@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div>
         <ul>
@@ -45,7 +47,7 @@ import CategoryNode from './CategoryNode.vue';
 import { ITree } from './Tree';
 import { TreeNode } from './Types';
 
-const props = defineProps<{
+defineProps<{
     data: GraphJSON;
 }>();
 

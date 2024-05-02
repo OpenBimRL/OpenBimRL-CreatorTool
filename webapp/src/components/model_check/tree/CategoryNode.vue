@@ -69,11 +69,12 @@ props.nodes.set(id, {
     },
 } as TreeNodeType);
 
+// eslint-disable-next-line vue/no-mutating-props
 watchEffect(() => props.parent?.nodes.push(id));
 
 const node = computed(() => props.nodes.get(id));
 
-const emits = defineEmits<{
+defineEmits<{
     (e: 'select', node: string): void;
     (e: 'add'): void;
 }>();
