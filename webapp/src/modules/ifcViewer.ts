@@ -14,14 +14,14 @@ sceneComponent.setup();
 components.scene = sceneComponent;
 
 // reference declaration
-export const selected = ref<string | null>(null);
-export const loading = ref(false);
+const selected = ref<string | null>(null);
+const loading = ref(false);
 let loader: OBC.FragmentIfcLoader;
 
-export const models = reactive(new Map<string, string>());
+const models = reactive(new Map<string, string>());
 const loadedModels = new Map<string, FragmentsGroup | null>();
 
-export function init(container: HTMLElement) {
+function init(container: HTMLElement) {
     const rendererComponent = new OBC.PostproductionRenderer(components, container);
     components.renderer = rendererComponent;
     const postproduction = rendererComponent.postproduction;
@@ -71,7 +71,7 @@ async function updateWindow() {
 }
 
 // loads a model
-export async function loadModel(model: FragmentsGroup) {
+async function loadModel(model: FragmentsGroup) {
     loading.value = true;
     components.scene.get().add(model);
     await updateWindow();
@@ -79,7 +79,7 @@ export async function loadModel(model: FragmentsGroup) {
 }
 
 // uloads a model
-export async function unloadModel(model: FragmentsGroup) {
+async function unloadModel(model: FragmentsGroup) {
     loading.value = true;
     components.scene.get().remove(model);
     await updateWindow();
@@ -87,7 +87,7 @@ export async function unloadModel(model: FragmentsGroup) {
 }
 
 // this is cursed. Please make it better JS/TS god
-export async function getSelected(): Promise<FragmentsGroup | null> {
+async function getSelected(): Promise<FragmentsGroup | null> {
     if (!loader) throw new Error('loader not yet initialized');
     if (!selected.value) return null;
     if (!loadedModels.has(selected.value)) throw new Error('Key not found');
@@ -104,7 +104,7 @@ export async function getSelected(): Promise<FragmentsGroup | null> {
     return loadedModel;
 }
 
-export function updateModels() {
+function updateModels() {
     getModels().then(data => {
         models.clear();
         data.forEach((v, k) => models.set(k, v));
@@ -127,3 +127,17 @@ watch(selected, async (newVal, oldVal) => {
 watch(models, () =>
     [...models.keys()].forEach(model => loadedModels.set(model, loadedModels.get(model) || null)),
 );
+
+const getScene = () => components.scene.get();
+
+export {
+    getScene,
+    getSelected,
+    init,
+    loadModel,
+    loading,
+    models,
+    selected,
+    unloadModel,
+    updateModels,
+};

@@ -13,7 +13,11 @@
         </div>
         <div class="p-4 relative">
             <h4 class="text-xl">Models:</h4>
-            <p v-for="[id, name] in models" class="text-ellipsis break-words overflow-hidden">
+            <p
+                v-for="[id, name] in models"
+                class="text-ellipsis break-words overflow-hidden"
+                :key="id"
+            >
                 <button @click="selected = id">
                     <strong v-if="selected === id">{{ name }}</strong>
                     <span v-else>{{ name }}</span>
@@ -25,11 +29,20 @@
 
 <script setup lang="ts">
 import darkMode from '@/modules/darkmode';
-import { init, loading, models, selected, updateModels } from '@/modules/ifcViewer';
-import { onMounted, ref } from 'vue';
+import { getScene, init, loading, models, selected, updateModels } from '@/modules/ifcViewer';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { VueSpinnerCore } from 'vue3-spinners';
 
 const viewerContainer = ref<HTMLElement | null>(null);
+const loaded = ref(getScene().visible);
+
+watch(loaded, (_, newVal) => {
+    getScene().visible = newVal;
+});
+
+onMounted(() => (getScene().visible = true));
+
+onUnmounted(() => (getScene().visible = false));
 
 onMounted(() => {
     if (!viewerContainer.value) return;
