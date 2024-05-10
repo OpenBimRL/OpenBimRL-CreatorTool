@@ -74,7 +74,7 @@ import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
 
 import Parser from '@/ParserOpenBIMRL';
 import { graphInjectionKey, parserInjectionKey } from '@/keys';
-import { highlight } from '@/modules/ifcViewerInteraction';
+import { highlight, unHighlight } from '@/modules/ifcViewerInteraction';
 //@ts-expect-error there are no types for that lib
 import JsonViewer from 'vue-json-viewer';
 import type { GraphInject } from '../graph/Types';
@@ -152,19 +152,18 @@ const connected = computed(() => connectionStatus.value ?? false);
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
 const handleJSONNodeClicked = (event: MouseEvent) => {
-    console.log((event.target as HTMLElement).parentElement);
-
     Array.from(
         (event.target as HTMLElement).parentElement?.querySelectorAll('[keyname="guid"]') ?? [],
     ).forEach(element => {
         const toggleDiv = element.closest('div.toggle') as HTMLDivElement | null;
         if (!toggleDiv) return;
+        const guid = (element as HTMLSpanElement).innerText.replaceAll('"', '')
         toggleDiv.addEventListener('mouseenter', () => {
-            highlight((element as HTMLSpanElement).innerText);
+            highlight(guid);
         });
-        // toggleDiv.addEventListener('mouseleave', () => {
-        //     unHighlight((element as HTMLSpanElement).innerText);
-        // });
+        toggleDiv.addEventListener('mouseleave', () => {
+            unHighlight(guid);
+        });
     });
 };
 </script>

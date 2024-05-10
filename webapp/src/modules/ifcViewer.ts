@@ -1,4 +1,4 @@
-import { FragmentsGroup } from 'bim-fragment';
+import type { FragmentsGroup } from 'bim-fragment';
 import * as OBC from 'openbim-components';
 import { Color } from 'three';
 import { reactive, ref, watch } from 'vue';
@@ -74,7 +74,6 @@ function init(container: HTMLElement) {
 
     highlighterEvents.select.onHighlight.add(selection => {
         const fragmentID = Object.keys(selection)[0];
-        console.log(fragmentID);
 
         const expressID = [...selection[fragmentID]][0];
         const fragment = fragments.list[fragmentID];
