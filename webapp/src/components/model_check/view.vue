@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="grid w-full h-full dark:bg-default-dark p-5">
         <div style="grid-area: header" class="flex">
@@ -12,7 +13,7 @@
         >
             <div v-if="currentNode && tree">
                 <p>
-                    <span v-for="(id, index) in currentNode.path">
+                    <span v-for="(id, index) in currentNode.path" :key="index">
                         <span v-if="index != 0">&nbsp;/&nbsp;</span>
                         <!-- I've never seen more inefficient code... Well 'git blame Florian' -->
                         <button

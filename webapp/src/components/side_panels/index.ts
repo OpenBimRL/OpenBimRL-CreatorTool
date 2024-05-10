@@ -1,2 +1,6 @@
-export { default as ApiConnection } from './ApiConnection.vue';
-export { default as Help } from './Help.vue';
+import { defineAsyncComponent } from 'vue';
+
+const Help = defineAsyncComponent(() => import('./Help.vue'));
+const ApiConnection = defineAsyncComponent(() => import('./ApiConnection.vue'));
+
+export { ApiConnection, Help };

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="result_set-form">
         <p><span class="text-xl"> Edit RuleSet </span></p>
@@ -23,6 +24,7 @@
                             element => element.type === 'ruleIdentifier',
                         )"
                         :value="value.data?.label"
+                        :key="value.id"
                     >
                         {{ value.data?.label }}
                     </option>
@@ -40,7 +42,9 @@
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
                     id="rule-form-operator-select"
                 >
-                    <option v-for="value in filter" :value="value.label">{{ value.label }}</option>
+                    <option v-for="(value, index) in filter" :value="value.label" :key="index">
+                        {{ value.label }}
+                    </option>
                 </select>
             </div>
         </div>

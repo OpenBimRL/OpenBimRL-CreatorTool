@@ -1,5 +1,5 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
-import { Graph, ModelCheckView } from '../components';
+import { Graph } from '../components';
 
 export enum Routes {
     GRAPH = 'graph',
@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/checks',
         name: Routes.CHECKS,
-        component: ModelCheckView,
+        component: () => import('@/components/model_check/view.vue'),
     },
     {
         path: '/viewer',

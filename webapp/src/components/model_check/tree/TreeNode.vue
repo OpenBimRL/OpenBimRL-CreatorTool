@@ -1,6 +1,7 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <ul>
-        <li v-for="(node, index) in elements">
+        <li v-for="(node, index) in elements" :key="index">
             <!-- Expand Arrow -->
             <p>
                 <button @click="toggleExpanded(node)" class="w-4">
@@ -104,6 +105,7 @@ const addToNode = (at: number) => {
     if (isRuleSet(item)) {
         item.rulesOrRuleSets.push(getDefaultRule());
     } else if (isRule(item)) {
+        // eslint-disable-next-line vue/no-mutating-props
         props.data[at] = {
             label: 'new Rule Set',
             operator: RuleSetOperator.OR,
@@ -118,6 +120,7 @@ const elements = computed(() =>
         const type = classifyNode(element);
         const id = `${type}_${createUniqueID()}`;
 
+        // eslint-disable-next-line vue/no-mutating-props
         props.parent?.nodes.push(id);
 
         const state =
@@ -141,7 +144,7 @@ const elements = computed(() =>
             path: [...(props.parent?.path || []), id],
             selectable: true,
             state,
-            text: (element as any).name || element.label || type,
+            text: (element as { name: string }).name || element.label || type,
             data: element,
             type,
         } as TreeNodeType;

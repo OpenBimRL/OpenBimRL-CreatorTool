@@ -48,11 +48,12 @@
             </div>
         </div>
         <div v-show="connected" class="ml-4 p-4 relative h-full">
-            <div class="border dark:bg-white absolute inset-4 overflow-auto">
+            <div ref="viewer" class="border dark:bg-white absolute inset-4 overflow-auto">
                 <json-viewer
                     v-if="!checkLoading"
                     class="dark:text-default-darkest"
                     :value="checkResult"
+                    @click="handleJSONNodeClicked"
                 />
                 <div v-else class="h-full flex justify-center items-center">
                     <VueSpinner size="75" class="dark:text-default-dark" />
@@ -73,7 +74,8 @@ import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
 
 import Parser from '@/ParserOpenBIMRL';
 import { graphInjectionKey, parserInjectionKey } from '@/keys';
-//@ts-ignore // there are no types ;(
+import { highlight, unHighlight } from '@/modules/ifcViewerInteraction';
+//@ts-expect-error there are no types for that lib
 import JsonViewer from 'vue-json-viewer';
 import type { GraphInject } from '../graph/Types';
 
@@ -83,6 +85,7 @@ const parser = inject(parserInjectionKey) as Parser;
 const { graph } = inject(graphInjectionKey) as GraphInject;
 
 const urlValid = ref(true);
+const viewer = ref<HTMLDivElement | null>(null);
 
 const tempApiUrl = ref(apiEndpoint.value);
 
@@ -91,7 +94,7 @@ const connectionLoading = ref(false);
 
 const checkLoading = ref(false);
 
-const checkResult: Ref<any> = ref<any>({});
+const checkResult: Ref<unknown> = ref<unknown>({});
 
 const connectionStatusText: Ref<string> = computed(() => {
     if (connectionStatus.value === false) return 'not connected';
@@ -132,20 +135,37 @@ const checkGraph = () => {
     checkLoading.value = true;
     apiCheckGraph(selected.value, graphString)
         .then(data => (checkResult.value = data.content))
+        .catch(err => (checkResult.value = err))
         .finally(() => {
             checkLoading.value = false;
         });
 };
 
-const statusTextColor: Ref<string | undefined> = computed(() => {
+const statusTextColor: Ref<string> = computed(() => {
     if (connectionStatus.value === false) return 'text-red-700';
     if (connectionStatus.value) return 'text-green-700';
+    return '';
 });
 
 const connected = computed(() => connectionStatus.value ?? false);
 
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
+const handleJSONNodeClicked = (event: MouseEvent) => {
+    Array.from(
+        (event.target as HTMLElement).parentElement?.querySelectorAll('[keyname="guid"]') ?? [],
+    ).forEach(element => {
+        const toggleDiv = element.closest('div.toggle') as HTMLDivElement | null;
+        if (!toggleDiv) return;
+        const guid = (element as HTMLSpanElement).innerText.replaceAll('"', '');
+        toggleDiv.addEventListener('mouseenter', () => {
+            highlight(guid);
+        });
+        toggleDiv.addEventListener('mouseleave', () => {
+            unHighlight(guid);
+        });
+    });
+};
 </script>
 
 <style scoped>

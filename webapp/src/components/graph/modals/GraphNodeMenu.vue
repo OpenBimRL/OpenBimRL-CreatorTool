@@ -25,7 +25,7 @@
                     type="checkbox"
                     role="switch"
                     id="icon-list__switch"
-                    v-model.value="showLibsAsList"
+                    v-model="showLibsAsList"
                 />
                 <label class="hover:cursor-pointer" for="icon-list__switch">
                     <span>List</span>
@@ -81,9 +81,13 @@
                     <select
                         id="lib-select"
                         class="bg-default-light dark:bg-default-dark pl-3 w-full"
-                        v-model.value="currentSelection"
+                        v-model="currentSelection"
                     >
-                        <option v-for="lib in Object.keys(availableLibraries)" v-text="lib" />
+                        <option
+                            v-for="lib in Object.keys(availableLibraries)"
+                            :key="lib"
+                            v-text="lib"
+                        />
                     </select>
                 </div>
                 <button

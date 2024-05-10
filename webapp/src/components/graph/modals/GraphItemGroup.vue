@@ -65,7 +65,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const onDragStart = (event: DragEvent, node: any) => {
+const onDragStart = (event: DragEvent, node: unknown) => {
     if (!event.dataTransfer) return;
     event.dataTransfer.setData('application/vueflow', JSON.stringify(node));
     event.dataTransfer.effectAllowed = 'move';

@@ -37,6 +37,7 @@ const getLabelClasses = computed(() => {
     if (props.valid === false) return ['!border-red-700'];
     if (focused.value)
         return ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'];
+    return [];
 });
 
 const invalidMessageProp = computed(() => {

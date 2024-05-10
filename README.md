@@ -3,9 +3,14 @@
 > **Current Version:** 0.1.10 <br>
 > **Publication Date:** 01.06.2022 <br>
 > **Updated Date:** 02.06.2023 <br>
-> **Autors:** Marcel Stepien and Florian Becker <br>
-> **E-Mail:** marcel.stepien@ruhr-uni-bochum.de
+> **Autors:** Marcel Stepien (original) and Florian Becker (Vue.js version)<br>
+> **E-Mail:** marcel.stepien@ruhr-uni-bochum.de; florian.becker-f86@ruhr-uni-bochum.de
 <br>
+
+<p align="center">
+    <a target="_blank" href="https://ide.florianbecker.eu">Demo</a>
+    <!-- &middot; -->
+</p>
 
 
 A web-based application to create and edit OpenBimRL files. 

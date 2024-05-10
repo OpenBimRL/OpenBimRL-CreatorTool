@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="rule_set-form">
         <p><span class="text-xl"> Edit RuleSet </span></p>
@@ -17,7 +18,9 @@
                 class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
                 id="rule-form-operator-select"
             >
-                <option v-for="(value, name) in RuleSetOperator" :value="value">{{ name }}</option>
+                <option v-for="(value, name) in RuleSetOperator" :value="value" :key="value">
+                    {{ name }}
+                </option>
             </select>
         </div>
     </div>
@@ -28,7 +31,7 @@ import InputField from '@/components/InputField.vue';
 import { RuleSet } from '@/components/graph/Types';
 import { RuleSetOperator } from '@/components/graph/enums';
 
-const props = defineProps<{ ruleSet: RuleSet }>();
+defineProps<{ ruleSet: RuleSet }>();
 </script>
 
 <style scoped>

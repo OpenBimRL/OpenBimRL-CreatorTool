@@ -7,6 +7,7 @@
             <div class="flex flex-col gap-px">
                 <form
                     v-for="item in Object.keys(modalItems)"
+                    :key="item"
                     @submit.prevent="modalItems[item]"
                     class="border hover:bg-slate-200 hover:border-slate-400"
                 >

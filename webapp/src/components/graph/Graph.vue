@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <VueFlow
         @connect="onConnect"
@@ -22,14 +23,14 @@
             </ControlButton>
         </Controls>
         <CustomMap />
-        <Dialog ref="dialog" @close="">
+        <Dialog ref="dialog">
             <template v-slot:title>Change Input</template>
             <template v-slot:content>
                 <input
                     class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
                     type="text"
                     v-if="nodes[selectedNode]"
-                    v-model.value="nodes[selectedNode].data[nodeDataIndex]"
+                    v-model="nodes[selectedNode].data[nodeDataIndex]"
                 />
             </template>
             <template v-slot:accept_button_text>Change Input</template>

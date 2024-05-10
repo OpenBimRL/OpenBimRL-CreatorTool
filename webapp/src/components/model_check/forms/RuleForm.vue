@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="rule-form">
         <p>
@@ -19,7 +20,7 @@
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
                     id="rule-form-operator-select"
                 >
-                    <option v-for="(value, name) in RuleQuantifier" :value="value">
+                    <option v-for="(value, name) in RuleQuantifier" :value="value" :key="value">
                         {{ name }}
                     </option>
                 </select>
@@ -36,7 +37,9 @@
                     class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
                     id="rule-form-operator-select"
                 >
-                    <option v-for="(value, name) in RuleOperator" :value="value">{{ name }}</option>
+                    <option v-for="(value, name) in RuleOperator" :value="value" :key="value">
+                        {{ name }}
+                    </option>
                 </select>
             </div>
         </div>
@@ -57,7 +60,7 @@ import InputField from '@/components/InputField.vue';
 import { Rule } from '@/components/graph/Types';
 import { RuleOperator, RuleQuantifier } from '@/components/graph/enums';
 
-const props = defineProps<{ rule: Rule }>();
+defineProps<{ rule: Rule }>();
 </script>
 
 <style scoped>
