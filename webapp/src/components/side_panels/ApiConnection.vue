@@ -157,7 +157,7 @@ const handleJSONNodeClicked = (event: MouseEvent) => {
     ).forEach(element => {
         const toggleDiv = element.closest('div.toggle') as HTMLDivElement | null;
         if (!toggleDiv) return;
-        const guid = (element as HTMLSpanElement).innerText.replaceAll('"', '')
+        const guid = (element as HTMLSpanElement).innerText.replaceAll('"', '');
         toggleDiv.addEventListener('mouseenter', () => {
             highlight(guid);
         });

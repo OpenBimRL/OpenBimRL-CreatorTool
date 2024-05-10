@@ -6,7 +6,7 @@ const fragmentMap = new Map<string, FragmentIdMap>();
 export function highlight(guid: string) {
     getSelected().then(model => {
         if (!model) return;
-        const expressID = convertToExpressID(model, guid);     
+        const expressID = convertToExpressID(model, guid);
 
         if (!expressID) return;
         fragmentMap.set(guid, model.getFragmentMap([expressID]));
@@ -21,11 +21,10 @@ export function unHighlight(guid: string) {
 }
 
 function convertToExpressID(model: FragmentsGroup, globalId: string): number | null {
-    if (!model) return null;    
+    if (!model) return null;
 
     const properties = model.getLocalProperties();
     for (const expressID in properties) {
-        
         const entity = properties[Number(expressID)];
         if (!entity) continue;
 
@@ -33,12 +32,10 @@ function convertToExpressID(model: FragmentsGroup, globalId: string): number | n
         let attributeValue = attribute?.value;
         if (!attributeValue) continue;
 
-        if (attributeValue === "3zUryKktuHxfL8BF1T2vCN")
-            console.log("found " + globalId);
-            
+        if (attributeValue === '3zUryKktuHxfL8BF1T2vCN') console.log('found ' + globalId);
 
         if (attributeValue == globalId) return entity.expressID as number;
-    }    
+    }
 
     return null;
 }
