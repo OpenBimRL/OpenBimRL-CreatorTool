@@ -1,54 +1,50 @@
-import type { FragmentsGroup } from 'bim-fragment';
-import * as OBC from 'openbim-components';
-import { Color } from 'three';
+import * as OBC from '@thatopen/components';
+import * as OBCF from '@thatopen/components-front';
+import type { FragmentsGroup } from '@thatopen/fragments';
 import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
 
 import * as WEBIFC from 'web-ifc';
 
 // init components
-const components = new OBC.Components();
-components.onInitialized.add(() => {});
+let components: OBC.Components;
 
-// init scene
-const sceneComponent = new OBC.SimpleScene(components);
-sceneComponent.setup();
-components.scene = sceneComponent;
+let worlds: OBC.Worlds;
+
+let world: OBC.SimpleWorld<OBC.SimpleScene, OBC.SimpleCamera, OBC.SimpleRenderer>;
 
 // reference declaration
 const selected = ref<string | null>(null);
 const loading = ref(false);
-let loader: OBC.FragmentIfcLoader;
-let highlighter: OBC.FragmentHighlighter;
-let propsProcessor: OBC.IfcPropertiesProcessor;
-let culler: OBC.ScreenCuller;
+let ready = false;
 
 const models = reactive(new Map<string, string>());
-const loadedModels = new Map<string, FragmentsGroup | null>();
+const loadedModels: Map<string, FragmentsGroup | null> = new Map<string, FragmentsGroup | null>();
 
-function init(container: HTMLElement) {
-    const rendererComponent = new OBC.PostproductionRenderer(components, container);
-    components.renderer = rendererComponent;
-    const postproduction = rendererComponent.postproduction;
-    components.camera = new OBC.OrthoPerspectiveCamera(components);
-    components.raycaster = new OBC.SimpleRaycaster(components);
+const init = async (container: HTMLElement) => {
+    try {
+        if (components) components.dispose();
+    } catch (_) {}
 
-    // const raycasterComponent = new OBC.SimpleRaycaster(components);
-    // components.raycaster = raycasterComponent;
+    components = new OBC.Components();
+
+    worlds = components.get(OBC.Worlds);
+    world = worlds.create<OBC.SimpleScene, OBC.SimpleCamera, OBC.SimpleRenderer>();
+
+    world.scene = new OBC.SimpleScene(components);
+    world.renderer = new OBC.SimpleRenderer(components, container);
+    world.camera = new OBC.SimpleCamera(components);
 
     components.init();
-    postproduction.enabled = true;
+    world.scene.setup();
 
-    const grid = new OBC.SimpleGrid(components, new Color(0x666666));
-    postproduction.customEffects.excludedMeshes.push(grid.get());
+    const grids = components.get(OBC.Grids);
+    grids.create(world);
 
-    const fragments = new OBC.FragmentManager(components);
+    const _ = components.get(OBC.FragmentsManager);
+    const fragmentIfcLoader = components.get(OBC.IfcLoader);
 
-    loader = new OBC.FragmentIfcLoader(components);
-    loader.settings.wasm = {
-        path: '/resources/',
-        absolute: true,
-    };
+    await fragmentIfcLoader.setup();
 
     const excludedCats = [
         WEBIFC.IFCTENDONANCHOR,
@@ -56,59 +52,59 @@ function init(container: HTMLElement) {
         WEBIFC.IFCREINFORCINGELEMENT,
         WEBIFC.IFCSPACE,
     ];
+
     for (const cat of excludedCats) {
-        loader.settings.excludedCategories.add(cat);
+        fragmentIfcLoader.settings.excludedCategories.add(cat);
     }
 
-    highlighter = new OBC.FragmentHighlighter(components);
-    highlighter.setup();
-    rendererComponent.postproduction.customEffects.outlineEnabled = true;
-    highlighter.outlineEnabled = true;
+    fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
+    fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
 
-    propsProcessor = new OBC.IfcPropertiesProcessor(components);
+    const cullers = components.get(OBC.Cullers);
+    const culler = cullers.create(world);
+    culler.enabled = false;
 
-    const highlighterEvents = highlighter.events;
-    highlighterEvents.select.onClear.add(() => {
-        propsProcessor.cleanPropertiesList();
-    });
+    const highlighter = components.get(OBCF.Highlighter);
+    highlighter.setup({ world });
 
-    highlighterEvents.select.onHighlight.add(selection => {
-        const fragmentID = Object.keys(selection)[0];
+    loading.value = true;
 
-        const expressID = [...selection[fragmentID]][0];
-        const fragment = fragments.list[fragmentID];
-        if (fragment.group) {
-            propsProcessor.renderProperties(fragment.group, expressID);
-        }
-    });
-}
+    const selected = await getSelected();
+    if (selected) {
+        loadModel(selected);
+    }
 
-async function updateWindow() {
-    await components.tools.get(OBC.FragmentManager).updateWindow();
-}
+    loading.value = false;
+    ready = true;
+};
 
 // loads a model
-async function loadModel(model: FragmentsGroup) {
+function loadModel(model: FragmentsGroup) {
     loading.value = true;
-    model.frustumCulled = true;
-    components.scene.get().add(model);
-    await propsProcessor.process(model);
-    await updateWindow();
+    world.scene.three.add(model);
+    const culler = components.get(OBC.Cullers).create(world);
+    for (const mesh of model.children) {
+        culler.add(mesh as any);
+    }
+
+    world.camera.controls.addEventListener('sleep', () => {
+        culler.needsUpdate = true;
+    });
+
+    // finished loading model
     loading.value = false;
 }
 
 // uloads a model
 async function unloadModel(model: FragmentsGroup) {
     loading.value = true;
-    components.scene.get().remove(model);
-    await updateWindow();
-    propsProcessor.dispose();
+    world.scene.three.remove(model);
     loading.value = false;
 }
 
 // this is cursed. Please make it better JS/TS god
 async function getSelected(): Promise<FragmentsGroup | null> {
-    if (!loader) throw new Error('loader not yet initialized');
+    const loader = components.get(OBC.IfcLoader);
     if (!selected.value) return null;
     if (!loadedModels.has(selected.value)) throw new Error('Key not found');
 
@@ -132,7 +128,6 @@ function updateModels() {
 }
 
 watch(selected, async (newVal, oldVal) => {
-    if (!loader) return;
     if (oldVal) {
         const oldModel = loadedModels.get(oldVal);
         if (oldModel) await unloadModel(oldModel);
@@ -148,13 +143,14 @@ watch(models, () =>
     [...models.keys()].forEach(model => loadedModels.set(model, loadedModels.get(model) || null)),
 );
 
-const getScene = () => components.scene.get();
+const getScene = () => (ready ? world.scene : null);
+const getHighlighter = () => components.get(OBCF.Highlighter);
 
 export {
     components,
+    getHighlighter,
     getScene,
     getSelected,
-    highlighter,
     init,
     loadModel,
     loading,
