@@ -547,17 +547,18 @@
                 "id": "ad3c2c41-c755-427d-b66e-ecfe1ad33e2d",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.colorizeGeometryAppearance",
+                    "name": "geometry.calculateAStarSearch",
                     "icon": "exclamation-circle-fill",
-                    "description": "Colorizes the Appearance of a MultiAppearanceShape3D to a specific color.",
+                    "description": "Calculates the closest distrance from start to end given Bounds, Obstacles and a geometric Layout.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "MultiAppearanceShape3D" },
-                        { "index": "1", "name": "Red" },
-                        { "index": "2", "name": "Yellow" },
-                        { "index": "3", "name": "Blue" }
+                        { "index": "0", "name": "start IfcElement" },
+                        { "index": "1", "name": "end IfcElement" },
+                        { "index": "2", "name": "Bounds" },
+                        { "index": "3", "name": "Obstacle List" },
+                        { "index": "4", "name": "GeometricLayout" }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [{ "index": "0", "name": "Path" }],
                     "selected": false
                 }
             },
@@ -578,16 +579,18 @@
                 "id": "816039f0-c763-4d69-95f2-0a23e291384c",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.checkNeighborhoodByDistance",
+                    "name": "geometry.calculateDistancesFromObject",
                     "icon": "exclamation-circle-fill",
-                    "description": "Checks if geometic object are close to each other based on their geometric definitions.",
+                    "description": "Calculates the distances from all Graph Nodes to the start IfcElement. This is a visual Node",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Geometry_List_A" },
-                        { "index": "1", "name": "Geometry_List_B" },
-                        { "index": "2", "name": "Distance_Treshold" }
+                        { "index": "0", "name": "Start IfcElement" },
+                        { "index": "1", "name": "Bounds" },
+                        { "index": "2", "name": "Obstacle List" },
+                        { "index": "3", "name": "GeometricLayout" },
+                        { "index": "4", "name": "MaximumDistance" }
                     ],
-                    "outputs": [{ "index": "0", "name": "Boolean_Masks_List" }],
+                    "outputs": [],
                     "selected": false
                 }
             },
