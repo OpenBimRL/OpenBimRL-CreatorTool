@@ -743,18 +743,15 @@
                 "id": "6e72f422-995c-4fc3-8f7e-2df87e376625",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.createPointGraph",
+                    "name": "geometry.createHexagonLayout",
                     "icon": "exclamation-circle-fill",
-                    "description": "Creates a raster of points in an area enclosed in an RegionalBSPTree3D area, producing nodes and edges.",
+                    "description": "Creates a hexagonal raster of points in an area enclosed in an RegionalBSPTree3D area, producing nodes and edges.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "RegionBSPTree" },
-                        { "index": "1", "name": "StepSize" }
+                        { "index": "0", "name": "CenterPoint" },
+                        { "index": "1", "name": "HexagonSize" }
                     ],
-                    "outputs": [
-                        { "index": "0", "name": "nodes" },
-                        { "index": "1", "name": "edges" }
-                    ],
+                    "outputs": [{ "index": "0", "name": "Layout" }],
                     "selected": false
                 }
             },
