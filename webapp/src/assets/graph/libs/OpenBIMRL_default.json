@@ -751,9 +751,7 @@
                         { "index": "0", "name": "CenterPoint" },
                         { "index": "1", "name": "HexagonSize" }
                     ],
-                    "outputs": [
-                        { "index": "0", "name": "Layout" }
-                    ],
+                    "outputs": [{ "index": "0", "name": "Layout" }],
                     "selected": false
                 }
             },
