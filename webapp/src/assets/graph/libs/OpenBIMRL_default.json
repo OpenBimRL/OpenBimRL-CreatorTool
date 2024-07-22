@@ -563,6 +563,22 @@
                 }
             },
             {
+                "id": "a61a5487-215c-4b12-ab61-ae586063e6fa",
+                "type": "functionType",
+                "data": {
+                    "name": "geometry.calculateBuildingBounds",
+                    "icon": "exclamation-circle-fill",
+                    "description": "Calculates the Buildings Bounds by iterating over every geometric object. (potentially very slow)",
+                    "label": "Example Text Here",
+                    "inputs": [],
+                    "outputs": [                        
+                        { "index": "0", "name": "Bounds" },
+                        { "index": "1", "name": "CenterPoints" }
+                    ],
+                    "selected": false
+                }
+            },
+            {
                 "id": "6236dd3a-04f1-4de7-919f-e5bb107d7d5b",
                 "type": "functionType",
                 "data": {
