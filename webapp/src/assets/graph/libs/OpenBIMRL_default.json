@@ -571,7 +571,7 @@
                     "description": "Calculates the Buildings Bounds by iterating over every geometric object. (potentially very slow)",
                     "label": "Example Text Here",
                     "inputs": [],
-                    "outputs": [                        
+                    "outputs": [
                         { "index": "0", "name": "Bounds" },
                         { "index": "1", "name": "CenterPoints" }
                     ],
