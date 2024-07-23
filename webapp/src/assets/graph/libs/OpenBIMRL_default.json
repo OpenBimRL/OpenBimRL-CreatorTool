@@ -547,17 +547,34 @@
                 "id": "ad3c2c41-c755-427d-b66e-ecfe1ad33e2d",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.colorizeGeometryAppearance",
+                    "name": "geometry.calculateAStarSearch",
                     "icon": "exclamation-circle-fill",
-                    "description": "Colorizes the Appearance of a MultiAppearanceShape3D to a specific color.",
+                    "description": "Calculates the closest distrance from start to end given Bounds, Obstacles and a geometric Layout.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "MultiAppearanceShape3D" },
-                        { "index": "1", "name": "Red" },
-                        { "index": "2", "name": "Yellow" },
-                        { "index": "3", "name": "Blue" }
+                        { "index": "0", "name": "start IfcElement" },
+                        { "index": "1", "name": "end IfcElement" },
+                        { "index": "2", "name": "Bounds" },
+                        { "index": "3", "name": "Obstacle List" },
+                        { "index": "4", "name": "GeometricLayout" }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [{ "index": "0", "name": "Path" }],
+                    "selected": false
+                }
+            },
+            {
+                "id": "a61a5487-215c-4b12-ab61-ae586063e6fa",
+                "type": "functionType",
+                "data": {
+                    "name": "geometry.calculateBuildingBounds",
+                    "icon": "exclamation-circle-fill",
+                    "description": "Calculates the Buildings Bounds by iterating over every geometric object. (potentially very slow)",
+                    "label": "Example Text Here",
+                    "inputs": [],
+                    "outputs": [
+                        { "index": "0", "name": "Bounds" },
+                        { "index": "1", "name": "CenterPoints" }
+                    ],
                     "selected": false
                 }
             },
@@ -578,16 +595,18 @@
                 "id": "816039f0-c763-4d69-95f2-0a23e291384c",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.checkNeighborhoodByDistance",
+                    "name": "geometry.calculateDistancesFromObject",
                     "icon": "exclamation-circle-fill",
-                    "description": "Checks if geometic object are close to each other based on their geometric definitions.",
+                    "description": "Calculates the distances from all Graph Nodes to the start IfcElement. This is a visual Node",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Geometry_List_A" },
-                        { "index": "1", "name": "Geometry_List_B" },
-                        { "index": "2", "name": "Distance_Treshold" }
+                        { "index": "0", "name": "Start IfcElement" },
+                        { "index": "1", "name": "Bounds" },
+                        { "index": "2", "name": "Obstacle List" },
+                        { "index": "3", "name": "GeometricLayout" },
+                        { "index": "4", "name": "MaximumDistance" }
                     ],
-                    "outputs": [{ "index": "0", "name": "Boolean_Masks_List" }],
+                    "outputs": [],
                     "selected": false
                 }
             },
@@ -740,18 +759,15 @@
                 "id": "6e72f422-995c-4fc3-8f7e-2df87e376625",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.createPointGraph",
+                    "name": "geometry.createHexagonLayout",
                     "icon": "exclamation-circle-fill",
-                    "description": "Creates a raster of points in an area enclosed in an RegionalBSPTree3D area, producing nodes and edges.",
+                    "description": "Creates a hexagonal raster of points in an area enclosed in an RegionalBSPTree3D area, producing nodes and edges.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "RegionBSPTree" },
-                        { "index": "1", "name": "StepSize" }
+                        { "index": "0", "name": "CenterPoint" },
+                        { "index": "1", "name": "HexagonSize" }
                     ],
-                    "outputs": [
-                        { "index": "0", "name": "nodes" },
-                        { "index": "1", "name": "edges" }
-                    ],
+                    "outputs": [{ "index": "0", "name": "Layout" }],
                     "selected": false
                 }
             },
@@ -865,16 +881,16 @@
                 "id": "4ad6b33d-28b7-4857-aa6d-6d03e37a12ba",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.calculateAStarSearch",
+                    "name": "geometry.findShortestPath",
                     "icon": "exclamation-circle-fill",
-                    "description": "Performs a shortest path search based on distances from an start node to all reachable end nodes in a graph.",
+                    "description": "Performs a shortest path search based on distances from an start node to an endpoint.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Edges" },
-                        { "index": "1", "name": "StartNodes" },
-                        { "index": "2", "name": "EndNodes" }
+                        { "index": "0", "name": "start ifc element" },
+                        { "index": "1", "name": "end ifc element" },
+                        { "index": "2", "name": "resolution" }
                     ],
-                    "outputs": [{ "index": "0", "name": "Paths" }],
+                    "outputs": [{ "index": "0", "name": "path" }],
                     "selected": false
                 }
             },
