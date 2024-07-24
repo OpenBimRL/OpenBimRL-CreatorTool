@@ -4,8 +4,8 @@ import type { FragmentsGroup } from '@thatopen/fragments';
 import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
 
-import * as WEBIFC from 'web-ifc';
 import { Mesh } from 'three';
+import * as WEBIFC from 'web-ifc';
 
 // init components
 let components: OBC.Components;
@@ -25,7 +25,9 @@ const loadedModels: Map<string, FragmentsGroup | null> = new Map<string, Fragmen
 const init = async (container: HTMLElement) => {
     try {
         if (components) components.dispose();
-    } catch (_) { /* empty */ }
+    } catch (_) {
+        /* empty */
+    }
 
     components = new OBC.Components();
 
@@ -147,20 +149,20 @@ watch(models, () =>
 
 const getScene = () => (ready ? world.scene : null);
 const getHighlighter = () => components.get(OBCF.Highlighter);
-const getComponents = () => components
-const getWorld = () => world
-0
+const getComponents = () => components;
+const getWorld = () => world;
+0;
 export {
     getComponents,
     getHighlighter,
     getScene,
     getSelected,
+    getWorld,
     init,
     loadModel,
     loading,
     models,
     selected,
-    getWorld,
     unloadModel,
     updateModels,
 };

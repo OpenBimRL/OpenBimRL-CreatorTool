@@ -10,10 +10,9 @@ export function highlight(guid: string) {
         convertToExpressID(model, guid).then(expressID => {
             fragmentMap.set(guid, model.getFragmentMap([expressID]));
 
-            console.log("highlighting item with e-id: " + expressID);
+            console.log('highlighting item with e-id: ' + expressID);
 
             const highlighter = getHighlighter();
-            
 
             fragmentMap.forEach(map => highlighter.highlightByID('select', map, false, false));
         });
@@ -30,7 +29,7 @@ async function convertToExpressID(model: FragmentsGroup, globalId: string): Prom
 
     const item = await IfcPropertiesUtils.findItemByGuid(model, globalId);
     console.log(item);
-    
+
     if (item) return Number(item['expressID']);
     throw new TypeError('expressID is null');
 }
