@@ -25,25 +25,24 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { VueSpinnerCore } from 'vue3-spinners';
 
 const viewerContainer = ref<HTMLElement | null>(null);
-const loaded = ref(getScene()?.visible || false);
+const loaded = ref(!!getScene() || false);
 
-watch(loaded, (_, newVal) => {
+watch(loaded, () => {
     const scene = getScene();
     if (!scene) return;
-    scene.visible = newVal;
+    // scene.visible = newVal;
 });
 
 onUnmounted(() => {
     const scene = getScene();
     if (!scene) return;
-    scene.visible = false;
+    // scene.visible = false;
 });
 
 onMounted(async () => {
     if (!viewerContainer.value) return;
     await init(viewerContainer.value);
 
-    getScene().visible = true
     updateModels();
 });
 </script>

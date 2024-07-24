@@ -5,6 +5,7 @@ import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
 
 import * as WEBIFC from 'web-ifc';
+import { Mesh } from 'three';
 
 // init components
 let components: OBC.Components;
@@ -24,7 +25,7 @@ const loadedModels: Map<string, FragmentsGroup | null> = new Map<string, Fragmen
 const init = async (container: HTMLElement) => {
     try {
         if (components) components.dispose();
-    } catch (_) {}
+    } catch (_) { /* empty */ }
 
     components = new OBC.Components();
 
@@ -41,6 +42,7 @@ const init = async (container: HTMLElement) => {
     const grids = components.get(OBC.Grids);
     grids.create(world);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _ = components.get(OBC.FragmentsManager);
     const fragmentIfcLoader = components.get(OBC.IfcLoader);
 
@@ -57,7 +59,7 @@ const init = async (container: HTMLElement) => {
         fragmentIfcLoader.settings.excludedCategories.add(cat);
     }
 
-    fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
+    fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = false;
     fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
 
     const cullers = components.get(OBC.Cullers);
@@ -84,7 +86,7 @@ function loadModel(model: FragmentsGroup) {
     world.scene.three.add(model);
     const culler = components.get(OBC.Cullers).create(world);
     for (const mesh of model.children) {
-        culler.add(mesh as any);
+        culler.add(mesh as Mesh);
     }
 
     world.camera.controls.addEventListener('sleep', () => {
@@ -145,9 +147,11 @@ watch(models, () =>
 
 const getScene = () => (ready ? world.scene : null);
 const getHighlighter = () => components.get(OBCF.Highlighter);
-
+const getComponents = () => components
+const getWorld = () => world
+0
 export {
-    components,
+    getComponents,
     getHighlighter,
     getScene,
     getSelected,
@@ -156,6 +160,7 @@ export {
     loading,
     models,
     selected,
+    getWorld,
     unloadModel,
     updateModels,
 };

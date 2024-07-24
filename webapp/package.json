@@ -36,8 +36,10 @@
         "xml-js": "^1.6.11"
     },
     "devDependencies": {
+        "@babel/types": "^7.24.9",
         "@types/dagre": "^0.7.48",
         "@types/uuid": "^9.0.1",
+        "@typescript-eslint/eslint-plugin": "^7.17.0",
         "@vitejs/plugin-vue": "^5.0",
         "autoprefixer": "^10.4.14",
         "eslint": "^8.57.0",
