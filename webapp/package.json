@@ -1,7 +1,7 @@
 {
     "name": "open_bimrl-creator",
     "private": true,
-    "version": "0.1.25",
+    "version": "0.2.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -16,13 +16,16 @@
     },
     "dependencies": {
         "@heroicons/vue": "^2.0.17",
+        "@thatopen/components": "^2.0.1",
+        "@thatopen/components-front": "^2.0.2",
+        "@thatopen/fragments": "^2.0.0",
+        "@thatopen/ui": "^2.0.0",
+        "@thatopen/ui-obc": "^2.0.0",
         "@vue-flow/background": "^1.2.0",
         "@vue-flow/controls": "^1.0.6",
         "@vue-flow/core": "^1.19.0",
         "@vue-flow/minimap": "^1.1.1",
-        "bim-fragment": "^1.5.0",
         "dagre": "^0.8.5",
-        "openbim-components": "^1.5.1",
         "stream": "^0.0.2",
         "uuid": "^9.0.0",
         "vue": "^3.3.4",
@@ -33,8 +36,10 @@
         "xml-js": "^1.6.11"
     },
     "devDependencies": {
+        "@babel/types": "^7.24.9",
         "@types/dagre": "^0.7.48",
         "@types/uuid": "^9.0.1",
+        "@typescript-eslint/eslint-plugin": "^7.17.0",
         "@vitejs/plugin-vue": "^5.0",
         "autoprefixer": "^10.4.14",
         "eslint": "^8.57.0",

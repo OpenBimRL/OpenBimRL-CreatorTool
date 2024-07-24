@@ -1,41 +1,35 @@
-import type { FragmentIdMap, FragmentsGroup } from 'bim-fragment';
-import { getSelected, highlighter } from './ifcViewer';
+import { IfcPropertiesUtils } from '@thatopen/components';
+import type { FragmentIdMap, FragmentsGroup } from '@thatopen/fragments';
+import { getHighlighter, getSelected } from './ifcViewer';
 
 const fragmentMap = new Map<string, FragmentIdMap>();
 
 export function highlight(guid: string) {
     getSelected().then(model => {
         if (!model) return;
-        const expressID = convertToExpressID(model, guid);
+        convertToExpressID(model, guid).then(expressID => {
+            fragmentMap.set(guid, model.getFragmentMap([expressID]));
 
-        if (!expressID) return;
-        fragmentMap.set(guid, model.getFragmentMap([expressID]));
+            console.log('highlighting item with e-id: ' + expressID);
 
-        fragmentMap.forEach(map => highlighter.highlightByID('select', map));
+            const highlighter = getHighlighter();
+
+            fragmentMap.forEach(map => highlighter.highlightByID('select', map, false, false));
+        });
     });
 }
 
 export function unHighlight(guid: string) {
-    fragmentMap.delete(guid);
-    fragmentMap.forEach(map => highlighter.highlightByID('select', map));
+    // fragmentMap.delete(guid);
+    // fragmentMap.forEach(map => getHighlighter().highlightByID('select', map));
 }
 
-function convertToExpressID(model: FragmentsGroup, globalId: string): number | null {
-    if (!model) return null;
+async function convertToExpressID(model: FragmentsGroup, globalId: string): Promise<number> {
+    if (!model) throw new TypeError('is not a non-null object');
 
-    const properties = model.getLocalProperties();
-    for (const expressID in properties) {
-        const entity = properties[Number(expressID)];
-        if (!entity) continue;
+    const item = await IfcPropertiesUtils.findItemByGuid(model, globalId);
+    console.log(item);
 
-        const attribute = entity.GlobalId;
-        let attributeValue = attribute?.value;
-        if (!attributeValue) continue;
-
-        if (attributeValue === '3zUryKktuHxfL8BF1T2vCN') console.log('found ' + globalId);
-
-        if (attributeValue == globalId) return entity.expressID as number;
-    }
-
-    return null;
+    if (item) return Number(item['expressID']);
+    throw new TypeError('expressID is null');
 }

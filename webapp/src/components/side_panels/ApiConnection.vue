@@ -67,6 +67,7 @@
 import { InputField } from '@/components';
 import { checkGraph as apiCheckGraph, apiEndpoint, isConnected } from '@/modules/apiConnection';
 import { selected } from '@/modules/ifcViewer';
+import { updateVisuals } from '@/modules/visualizer';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
 import { Ref, computed, inject, ref, watch } from 'vue';
 
@@ -149,8 +150,6 @@ const statusTextColor: Ref<string> = computed(() => {
 
 const connected = computed(() => connectionStatus.value ?? false);
 
-watch(tempApiUrl, updateUrl);
-watch(apiEndpoint, testConnection);
 const handleJSONNodeClicked = (event: MouseEvent) => {
     Array.from(
         (event.target as HTMLElement).parentElement?.querySelectorAll('[keyname="guid"]') ?? [],
@@ -166,6 +165,13 @@ const handleJSONNodeClicked = (event: MouseEvent) => {
         });
     });
 };
+
+watch(tempApiUrl, updateUrl);
+watch(apiEndpoint, testConnection);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+watch(checkResult, () =>
+    updateVisuals((checkResult.value as any | undefined)?.graphicOutputs || null),
+);
 </script>
 
 <style scoped>
