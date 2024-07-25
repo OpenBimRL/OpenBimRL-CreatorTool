@@ -595,7 +595,7 @@
                 "id": "816039f0-c763-4d69-95f2-0a23e291384c",
                 "type": "functionType",
                 "data": {
-                    "name": "geometry.calculateDistancesFromObject",
+                    "name": "geometry.calculateDistancesFromElement",
                     "icon": "exclamation-circle-fill",
                     "description": "Calculates the distances from all Graph Nodes to the start IfcElement. This is a visual Node",
                     "label": "Example Text Here",
@@ -603,8 +603,9 @@
                         { "index": "0", "name": "Start IfcElement" },
                         { "index": "1", "name": "Bounds" },
                         { "index": "2", "name": "Obstacle List" },
-                        { "index": "3", "name": "GeometricLayout" },
-                        { "index": "4", "name": "MaximumDistance" }
+                        { "index": "3", "name": "Passages" },
+                        { "index": "4", "name": "GeometricLayout" },
+                        { "index": "5", "name": "MaximumDistance" }
                     ],
                     "outputs": [],
                     "selected": false
