@@ -600,12 +600,13 @@
                     "description": "Calculates the distances from all Graph Nodes to the start IfcElement. This is a visual Node",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Start IfcElement" },
+                        { "index": "0", "name": "Start IfcElement or List" },
                         { "index": "1", "name": "Bounds" },
                         { "index": "2", "name": "Obstacle List" },
                         { "index": "3", "name": "Passages" },
                         { "index": "4", "name": "GeometricLayout" },
-                        { "index": "5", "name": "MaximumDistance" }
+                        { "index": "5", "name": "Margin from obstacles (optional)" },
+                        { "index": "6", "name": "MaximumDistance" }
                     ],
                     "outputs": [],
                     "selected": false
