@@ -605,7 +605,7 @@
                         { "index": "2", "name": "Obstacle List" },
                         { "index": "3", "name": "Passages" },
                         { "index": "4", "name": "GeometricLayout" },
-                        { "index": "5", "name": "Margin from obstacles (optional)"},
+                        { "index": "5", "name": "Margin from obstacles (optional)" },
                         { "index": "6", "name": "MaximumDistance" }
                     ],
                     "outputs": [],
