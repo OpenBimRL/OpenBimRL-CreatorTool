@@ -552,11 +552,13 @@
                     "description": "Calculates the closest distrance from start to end given Bounds, Obstacles and a geometric Layout.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "start IfcElement" },
-                        { "index": "1", "name": "end IfcElement" },
+                        { "index": "0", "name": "StartIfcElement" },
+                        { "index": "1", "name": "EndIfcElement" },
                         { "index": "2", "name": "Bounds" },
-                        { "index": "3", "name": "Obstacle List" },
-                        { "index": "4", "name": "GeometricLayout" }
+                        { "index": "3", "name": "ObstacleList" },
+                        { "index": "4", "name": "PassageWays" },
+                        { "index": "5", "name": "ObstaclePadding (optional)" },
+                        { "index": "6", "name": "GeometricLayout" }
                     ],
                     "outputs": [{ "index": "0", "name": "Path" }],
                     "selected": false
