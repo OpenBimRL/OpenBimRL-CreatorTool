@@ -1,10 +1,10 @@
 # OpenBimRL Creator-Tool
 
-> **Current Version:** 0.1.10 <br>
+> **Current Version:** 0.2.4 <br>
 > **Publication Date:** 01.06.2022 <br>
-> **Updated Date:** 02.06.2023 <br>
+> **Updated Date:** 05.11.2024 <br>
 > **Autors:** Marcel Stepien (original) and Florian Becker (Vue.js version)<br>
-> **E-Mail:** marcel.stepien@ruhr-uni-bochum.de; florian.becker-f86@ruhr-uni-bochum.de
+> **E-Mail:** florian.becker-f86@ruhr-uni-bochum.de
 <br>
 
 <p align="center">
@@ -50,6 +50,6 @@ npm run build
 
 # Run Demo without Coding
 
-**This tool also runs without the sever application!** Simply run the index.html from the [build.zip](https://github.com/FlorianB-DE/OpenBimRL-CreatorTool/releases/latest/download/build.zip) in your web-browser to execute and use the latest updated version of this tool.
+**This tool also runs without the sever application!** Simply open the index.html from the [build.zip](https://github.com/FlorianB-DE/OpenBimRL-CreatorTool/releases/latest/download/build.zip) in your web-browser to execute and use the latest updated version of this tool.
 
 ![OpenBimRL-Creator-Tool demo](images/app-demo.png "Demo")
