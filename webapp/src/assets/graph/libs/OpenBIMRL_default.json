@@ -917,6 +917,33 @@
         "color": "LightCyan",
         "items": [
             {
+                "id": "92c9a198-5013-4a0f-a82a-f76c82828361",
+                "type": "functionType",
+                "data": {
+                    "name": "geometry.getIntersection",
+                    "icon": "exclamation-circle-fill",
+                    "description": "Example Text Here",
+                    "label": "Example Text Here",
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "BoundingBox"
+                        },
+                        {
+                            "index": "1",
+                            "name": "BoundingBox"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "BoundingBox"
+                        }
+                    ],
+                    "selected": false
+                }
+            },
+            {
                 "id": "ad3c2c41-c755-427d-b66e-ecfe1ad33e2d",
                 "type": "functionType",
                 "data": {
