@@ -1353,6 +1353,31 @@
                     "outputs": [{ "index": "0", "name": "check" }],
                     "selected": false
                 }
+            },
+            {
+                "id": "7d41f46d-faf9-4580-b96e-4dfe6bce4ad9",
+                "name": "visual",
+                "color": "Cyan",
+                "items": [
+                    {
+                        "id": "0f4493c4-3817-424b-b3f0-80acc0eace35",
+                        "type": "functionType",
+                        "data": {
+                            "name": "visual.visualizeBounds",
+                            "icon": "exclamation-circle-fill",
+                            "description": "Example Text Here",
+                            "label": "Example Text Here",
+                            "inputs": [
+                                {
+                                    "index": "0",
+                                    "name": "Bounds"
+                                }
+                            ],
+                            "outputs": [],
+                            "selected": false
+                        }
+                    }
+                ]
             }
         ]
     }
