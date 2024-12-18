@@ -13,7 +13,12 @@
                     "description": "An simple node holding a text value and displays it as a label.",
                     "label": "TEXT HERE",
                     "selected": false,
-                    "outputs": [{ "index": "0", "name": "text" }]
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "text"
+                        }
+                    ]
                 }
             }
         ]
@@ -32,8 +37,18 @@
                     "description": "The transferred value is stored as a usable identifier during further rule processing. The identifier is labeled and usable according to the text value of the node.",
                     "label": "IDENTIFIER HERE",
                     "selected": false,
-                    "inputs": [{ "index": "0", "name": "ingoing" }],
-                    "outputs": [{ "index": "0", "name": "outgoing" }]
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "ingoing"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "outgoing"
+                        }
+                    ]
                 }
             }
         ]
@@ -52,12 +67,29 @@
                     "description": "Adds a representation item to the model.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement_List" },
-                        { "index": "1", "name": "IfcRepresentationItem_List" },
-                        { "index": "2", "name": "Identifier" },
-                        { "index": "3", "name": "Type" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "IfcRepresentationItem_List"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Identifier"
+                        },
+                        {
+                            "index": "3",
+                            "name": "Type"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "shape_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "shape_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -69,8 +101,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Calculates the length of a Curve (like an IfcPolyline).",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcRepresentationItem_List" }],
-                    "outputs": [{ "index": "0", "name": "double_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcRepresentationItem_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "double_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -82,8 +124,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Creates a polyline based on a list of Vector3D.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Vector3D_List" }],
-                    "outputs": [{ "index": "0", "name": "IfcPolyline" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Vector3D_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcPolyline"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -95,8 +147,18 @@
                     "name": "ifc.getElementById",
                     "description": "Retrieves the IFC entity of a specific id from the model.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "GUID" }],
-                    "outputs": [{ "index": "0", "name": "IfcElement" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "GUID"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -108,8 +170,18 @@
                     "name": "ifc.filterByElement",
                     "description": "Filters a IFC model and retrieves all elements of a certain type.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcType" }],
-                    "outputs": [{ "index": "0", "name": "IfcElement_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcType"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -121,8 +193,18 @@
                     "name": "ifc.filterByGUID",
                     "description": "Filters a IFC model and retrieves the element of a certain GUID.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "GUID" }],
-                    "outputs": [{ "index": "0", "name": "IfcElement" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "GUID"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -135,12 +217,29 @@
                     "description": "Filters a list of IFC entities by their property definition. Returns all entities that contain the property information.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement List" },
-                        { "index": "1", "name": "PropertySetName" },
-                        { "index": "2", "name": "PropertyName" },
-                        { "index": "3", "name": "Value" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "PropertySetName"
+                        },
+                        {
+                            "index": "2",
+                            "name": "PropertyName"
+                        },
+                        {
+                            "index": "3",
+                            "name": "Value"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "IfcElement List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -153,12 +252,29 @@
                     "description": "Filters a list of IFC entities by their quantity value. Returns all entities that contain the quantity information.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement List" },
-                        { "index": "1", "name": "QuantitySetName" },
-                        { "index": "2", "name": "QuantityName" },
-                        { "index": "3", "name": "Value" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "QuantitySetName"
+                        },
+                        {
+                            "index": "2",
+                            "name": "QuantityName"
+                        },
+                        {
+                            "index": "3",
+                            "name": "Value"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "IfcElement List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -170,8 +286,18 @@
                     "name": "ifc.getIfcType",
                     "description": "Retrieves the class type of an element as String value.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement" }],
-                    "outputs": [{ "index": "0", "name": "String" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "String"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -183,8 +309,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Find the IfcStorey that is related to a specific entity.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement" }],
-                    "outputs": [{ "index": "0", "name": "IfcStorey" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcStorey"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -196,8 +332,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Find the elements that are included in a spatial structure element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcSpatialStructureElement" }],
-                    "outputs": [{ "index": "0", "name": "IfcElementList" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcSpatialStructureElement"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElementList"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -210,11 +356,25 @@
                     "description": "Retrieves the quantity value of a specific entity.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement" },
-                        { "index": "1", "name": "QuantitySetName" },
-                        { "index": "2", "name": "QuantityName" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        },
+                        {
+                            "index": "1",
+                            "name": "QuantitySetName"
+                        },
+                        {
+                            "index": "2",
+                            "name": "QuantityName"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "value" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "value"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -226,8 +386,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the property value of a specific entity.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement" }],
-                    "outputs": [{ "index": "0", "name": "Map of PropertyInfo" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Map of PropertyInfo"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -240,11 +410,25 @@
                     "description": "Retrieves the property value of a specific entity.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement" },
-                        { "index": "1", "name": "PropertySetName" },
-                        { "index": "2", "name": "PropertyName" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        },
+                        {
+                            "index": "1",
+                            "name": "PropertySetName"
+                        },
+                        {
+                            "index": "2",
+                            "name": "PropertyName"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "value" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "value"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -257,11 +441,25 @@
                     "description": "Retrieves the property value of a specific entity as String value.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement" },
-                        { "index": "1", "name": "PropertySet_Name" },
-                        { "index": "2", "name": "Property_Name" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        },
+                        {
+                            "index": "1",
+                            "name": "PropertySet_Name"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Property_Name"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "value" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "value"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -273,10 +471,21 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Calculates the height given a list of entities.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
                     "outputs": [
-                        { "index": "0", "name": "minHeight" },
-                        { "index": "1", "name": "maxHeight" }
+                        {
+                            "index": "0",
+                            "name": "minHeight"
+                        },
+                        {
+                            "index": "1",
+                            "name": "maxHeight"
+                        }
                     ],
                     "selected": false
                 }
@@ -289,10 +498,21 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the opening elements as features of an IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
                     "outputs": [
-                        { "index": "0", "name": "voids_List" },
-                        { "index": "1", "name": "fills_List" }
+                        {
+                            "index": "0",
+                            "name": "voids_List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "fills_List"
+                        }
                     ],
                     "selected": false
                 }
@@ -305,8 +525,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the geometry of an IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "Geometry_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Geometry_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -318,8 +548,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the geometry and groups it, based on the IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "Grouped_Geometry_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Grouped_Geometry_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -331,8 +571,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the representation items based on the IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "item_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "item_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -344,8 +594,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the geometry appearance of an IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "MultiAppearanceShape3D_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "MultiAppearanceShape3D_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -357,10 +617,21 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the BoundingBox of an IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement"
+                        }
+                    ],
                     "outputs": [
-                        { "index": "0", "name": "Bounds" },
-                        { "index": "1", "name": "CenterPoints" }
+                        {
+                            "index": "0",
+                            "name": "Bounds"
+                        },
+                        {
+                            "index": "1",
+                            "name": "CenterPoints"
+                        }
                     ],
                     "selected": false
                 }
@@ -374,11 +645,25 @@
                     "description": "Checks the intersection between lists of elements.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement_List" },
-                        { "index": "1", "name": "IfcElement_List" },
-                        { "index": "2", "name": "Scale_Factor" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Scale_Factor"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Results" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Results"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -391,11 +676,25 @@
                     "description": "Checks the intersection between lists of elements restricted by the number of occuring intersections.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement_List" },
-                        { "index": "1", "name": "IfcElement_List" },
-                        { "index": "2", "name": "Counter" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Counter"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "IfcElement_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -407,8 +706,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Checks space bounds of a lists of elements and retrieves connected elements.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "IfcElement_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -420,8 +729,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrives the GUID of an IFC element.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "ID_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "ID_List"
+                        }
+                    ],
                     "selected": false
                 }
             }
@@ -441,10 +760,21 @@
                     "description": "Performes an addition operator given two number values.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "number" },
-                        { "index": "1", "name": "number" }
+                        {
+                            "index": "0",
+                            "name": "number"
+                        },
+                        {
+                            "index": "1",
+                            "name": "number"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -457,10 +787,21 @@
                     "description": "Returns all numbers smaller or equal the 2nd input.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "number" },
-                        { "index": "1", "name": "number" }
+                        {
+                            "index": "0",
+                            "name": "number"
+                        },
+                        {
+                            "index": "1",
+                            "name": "number"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -473,10 +814,21 @@
                     "description": "Returns all numbers greater or equal the 2nd input.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "number" },
-                        { "index": "1", "name": "number" }
+                        {
+                            "index": "0",
+                            "name": "number"
+                        },
+                        {
+                            "index": "1",
+                            "name": "number"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -516,10 +868,21 @@
                     "description": "Performes an subtraction operator given two number values.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "number" },
-                        { "index": "1", "name": "number" }
+                        {
+                            "index": "0",
+                            "name": "number"
+                        },
+                        {
+                            "index": "1",
+                            "name": "number"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -531,8 +894,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Finds the maximum value in a list of values.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "values" }],
-                    "outputs": [{ "index": "0", "name": "maxima" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "values"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "maxima"
+                        }
+                    ],
                     "selected": false
                 }
             }
@@ -552,15 +925,41 @@
                     "description": "Calculates the closest distrance from start to end given Bounds, Obstacles and a geometric Layout.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "StartIfcElement" },
-                        { "index": "1", "name": "EndIfcElement" },
-                        { "index": "2", "name": "Bounds" },
-                        { "index": "3", "name": "ObstacleList" },
-                        { "index": "4", "name": "PassageWays" },
-                        { "index": "5", "name": "ObstaclePadding (optional)" },
-                        { "index": "6", "name": "GeometricLayout" }
+                        {
+                            "index": "0",
+                            "name": "StartIfcElement"
+                        },
+                        {
+                            "index": "1",
+                            "name": "EndIfcElement"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Bounds"
+                        },
+                        {
+                            "index": "3",
+                            "name": "ObstacleList"
+                        },
+                        {
+                            "index": "4",
+                            "name": "PassageWays"
+                        },
+                        {
+                            "index": "5",
+                            "name": "ObstaclePadding (optional)"
+                        },
+                        {
+                            "index": "6",
+                            "name": "GeometricLayout"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Path" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Path"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -574,8 +973,14 @@
                     "label": "Example Text Here",
                     "inputs": [],
                     "outputs": [
-                        { "index": "0", "name": "Bounds" },
-                        { "index": "1", "name": "CenterPoints" }
+                        {
+                            "index": "0",
+                            "name": "Bounds"
+                        },
+                        {
+                            "index": "1",
+                            "name": "CenterPoints"
+                        }
                     ],
                     "selected": false
                 }
@@ -588,8 +993,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Converts a String to a Vector3D list. (Example: x,y,z;x,y,z;... )",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "String" }],
-                    "outputs": [{ "index": "0", "name": "Vector3D_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "String"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Vector3D_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -602,13 +1017,34 @@
                     "description": "Calculates the distances from all Graph Nodes to the start IfcElement. This is a visual Node",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Start IfcElement or List" },
-                        { "index": "1", "name": "Bounds" },
-                        { "index": "2", "name": "Obstacle List" },
-                        { "index": "3", "name": "Passages" },
-                        { "index": "4", "name": "GeometricLayout" },
-                        { "index": "5", "name": "Margin from obstacles (optional)" },
-                        { "index": "6", "name": "MaximumDistance" }
+                        {
+                            "index": "0",
+                            "name": "Start IfcElement or List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Bounds"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Obstacle List"
+                        },
+                        {
+                            "index": "3",
+                            "name": "Passages"
+                        },
+                        {
+                            "index": "4",
+                            "name": "GeometricLayout"
+                        },
+                        {
+                            "index": "5",
+                            "name": "Margin from obstacles (optional)"
+                        },
+                        {
+                            "index": "6",
+                            "name": "MaximumDistance"
+                        }
                     ],
                     "outputs": [],
                     "selected": false
@@ -623,10 +1059,21 @@
                     "description": "Checks if the bounds of geometic objects are intersecting.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Geometry_List_A" },
-                        { "index": "1", "name": "Geometry_List_B" }
+                        {
+                            "index": "0",
+                            "name": "Geometry_List_A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Geometry_List_B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Boolean_Masks_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Boolean_Masks_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -639,10 +1086,21 @@
                     "description": "Checks if points of a geometry are included in the the bounds of a geometic objects.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Geometry_List_A" },
-                        { "index": "1", "name": "Geometry_List_B" }
+                        {
+                            "index": "0",
+                            "name": "Geometry_List_A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Geometry_List_B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Boolean_Masks_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Boolean_Masks_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -655,10 +1113,21 @@
                     "description": "Calculates the distance of bounds by proximity of their coordinates in cardinal directions.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Geometry_List_A" },
-                        { "index": "1", "name": "Geometry_List_B" }
+                        {
+                            "index": "0",
+                            "name": "Geometry_List_A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Geometry_List_B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Distances_Lists" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Distances_Lists"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -671,11 +1140,25 @@
                     "description": "Creates a spherical geometrie as RegionalBSPTree3D in provided precision for collision detection purposes.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "IfcElement_List" },
-                        { "index": "1", "name": "Radius" },
-                        { "index": "2", "name": "Subdivisions" }
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Radius"
+                        },
+                        {
+                            "index": "2",
+                            "name": "Subdivisions"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "RegionBSPTree3D_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree3D_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -687,8 +1170,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Converts IFC elements into RegionalBSPTree3D objects.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "IfcElement_List" }],
-                    "outputs": [{ "index": "0", "name": "RegionBSPTree3D_List" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "IfcElement_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree3D_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -700,8 +1193,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Loads an representation item´newly created into the model context, and therfore into the viewer.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Shape" }],
-                    "outputs": [{ "index": "0", "name": "Geometry" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Shape"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Geometry"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -714,10 +1217,21 @@
                     "description": "Checks if geometies of BoundingBoxes are intersecting.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "BoundingBox(es)" },
-                        { "index": "1", "name": "BoundingBox(es)" }
+                        {
+                            "index": "0",
+                            "name": "BoundingBox(es)"
+                        },
+                        {
+                            "index": "1",
+                            "name": "BoundingBox(es)"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "FilterMap" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "FilterMap"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -729,15 +1243,41 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Decomposes a GeometryArray into its elementary parts.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "GeometryArray" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "GeometryArray"
+                        }
+                    ],
                     "outputs": [
-                        { "index": "0", "name": "coordinates" },
-                        { "index": "1", "name": "indices" },
-                        { "index": "2", "name": "stripCounts" },
-                        { "index": "3", "name": "contourCounts" },
-                        { "index": "4", "name": "normals" },
-                        { "index": "5", "name": "cetroid" },
-                        { "index": "6", "name": "profile" }
+                        {
+                            "index": "0",
+                            "name": "coordinates"
+                        },
+                        {
+                            "index": "1",
+                            "name": "indices"
+                        },
+                        {
+                            "index": "2",
+                            "name": "stripCounts"
+                        },
+                        {
+                            "index": "3",
+                            "name": "contourCounts"
+                        },
+                        {
+                            "index": "4",
+                            "name": "normals"
+                        },
+                        {
+                            "index": "5",
+                            "name": "cetroid"
+                        },
+                        {
+                            "index": "6",
+                            "name": "profile"
+                        }
                     ],
                     "selected": false
                 }
@@ -750,11 +1290,25 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Decomposes a Vector3D into its elementary parts.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Vector3D" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Vector3D"
+                        }
+                    ],
                     "outputs": [
-                        { "index": "0", "name": "x" },
-                        { "index": "1", "name": "y" },
-                        { "index": "2", "name": "z" }
+                        {
+                            "index": "0",
+                            "name": "x"
+                        },
+                        {
+                            "index": "1",
+                            "name": "y"
+                        },
+                        {
+                            "index": "2",
+                            "name": "z"
+                        }
                     ],
                     "selected": false
                 }
@@ -768,10 +1322,21 @@
                     "description": "Creates a hexagonal raster of points in an area enclosed in an RegionalBSPTree3D area, producing nodes and edges.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "CenterPoint" },
-                        { "index": "1", "name": "HexagonSize" }
+                        {
+                            "index": "0",
+                            "name": "CenterPoint"
+                        },
+                        {
+                            "index": "1",
+                            "name": "HexagonSize"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Layout" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Layout"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -784,12 +1349,29 @@
                     "description": "Computes nodes for a graph containing with certain parametric behavior, such as for creating triangles or quad patches.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "RegionBSPTree" },
-                        { "index": "1", "name": "StepSize" },
-                        { "index": "2", "name": "height" },
-                        { "index": "3", "name": "jitter" }
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree"
+                        },
+                        {
+                            "index": "1",
+                            "name": "StepSize"
+                        },
+                        {
+                            "index": "2",
+                            "name": "height"
+                        },
+                        {
+                            "index": "3",
+                            "name": "jitter"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "nodes" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "nodes"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -801,8 +1383,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Loads the graph information and displays it in the 3D viewer.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "NodeDistanceMap" }],
-                    "outputs": [{ "index": "0", "name": "Flag" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "NodeDistanceMap"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Flag"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -815,10 +1407,21 @@
                     "description": "Connects nodes of an graph by inserting edges of a certain stepsize, provided the nodes are already known.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Nodes" },
-                        { "index": "1", "name": "StepSize" }
+                        {
+                            "index": "0",
+                            "name": "Nodes"
+                        },
+                        {
+                            "index": "1",
+                            "name": "StepSize"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "edges" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "edges"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -831,11 +1434,25 @@
                     "description": "Connects nodes of an graph by inserting edges of a certain stepsize, provided the nodes are already known. Priorisation on reference nodes.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Nodes" },
-                        { "index": "1", "name": "ReferenceNodes" },
-                        { "index": "2", "name": "StepSize" }
+                        {
+                            "index": "0",
+                            "name": "Nodes"
+                        },
+                        {
+                            "index": "1",
+                            "name": "ReferenceNodes"
+                        },
+                        {
+                            "index": "2",
+                            "name": "StepSize"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "edges" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "edges"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -847,8 +1464,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Groups edges thogether with its nodes, providing a map of assigned node to edge list pairs.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Edges" }],
-                    "outputs": [{ "index": "0", "name": "node_edge_map" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Edges"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "node_edge_map"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -860,8 +1487,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Joins two RegionalBSPTree3D representations into one.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "RegionBSPTree_List" }],
-                    "outputs": [{ "index": "0", "name": "RegionBSPTree" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree_List"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -874,10 +1511,21 @@
                     "description": "Performs a deepsearch based on distances from an start node to all reachable points in a graph.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Edges" },
-                        { "index": "1", "name": "StartNodes" }
+                        {
+                            "index": "0",
+                            "name": "Edges"
+                        },
+                        {
+                            "index": "1",
+                            "name": "StartNodes"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Nodes_Distances" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Nodes_Distances"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -890,11 +1538,25 @@
                     "description": "Performs a shortest path search based on distances from an start node to an endpoint.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "start ifc element" },
-                        { "index": "1", "name": "end ifc element" },
-                        { "index": "2", "name": "resolution" }
+                        {
+                            "index": "0",
+                            "name": "start ifc element"
+                        },
+                        {
+                            "index": "1",
+                            "name": "end ifc element"
+                        },
+                        {
+                            "index": "2",
+                            "name": "resolution"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "path" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "path"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -907,10 +1569,21 @@
                     "description": "Checks if a ray passing through the scene has an intersection with a geometric object.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "RegionBSPTree" },
-                        { "index": "1", "name": "Segment3D" }
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Segment3D"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Filter" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Filter"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -923,10 +1596,21 @@
                     "description": "Loads the graph information and displays it in the 3D viewer.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Nodes" },
-                        { "index": "1", "name": "Edges" }
+                        {
+                            "index": "0",
+                            "name": "Nodes"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Edges"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Flag" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Flag"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -938,8 +1622,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Loads the paths information and displays it in the 3D viewer.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Paths" }],
-                    "outputs": [{ "index": "0", "name": "Flag" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Paths"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Flag"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -951,8 +1645,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the centroid of an RegionBSPTree3D.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "RegionBSPTree3D" }],
-                    "outputs": [{ "index": "0", "name": "Centroids" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "RegionBSPTree3D"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Centroids"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -965,10 +1669,21 @@
                     "description": "Coverts a Point3d to Vector3D. An z-offset can be specified, if necessary.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Point3D" },
-                        { "index": "1", "name": "z_offset_position" }
+                        {
+                            "index": "0",
+                            "name": "Point3D"
+                        },
+                        {
+                            "index": "1",
+                            "name": "z_offset_position"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Vector3D" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Vector3D"
+                        }
+                    ],
                     "selected": false
                 }
             }
@@ -988,10 +1703,21 @@
                     "description": "Filters a list of elements by a list of of masking boolean values.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Objects" },
-                        { "index": "1", "name": "Filters" }
+                        {
+                            "index": "0",
+                            "name": "Objects"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Filters"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Subset of Objects" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Subset of Objects"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1003,8 +1729,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Inverts the result of a filter. Basically, performing a boolean flip on all values of a list.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "Filters" }],
-                    "outputs": [{ "index": "0", "name": "Inverted Filters" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Filters"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Inverted Filters"
+                        }
+                    ],
                     "selected": false
                 }
             }
@@ -1023,8 +1759,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Calculates the sum of all numbers contained in a given list.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "list" }],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "list"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1036,8 +1782,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Counts the items in a list and returns the number.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "list" }],
-                    "outputs": [{ "index": "0", "name": "result" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "list"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1050,10 +1806,21 @@
                     "description": "Retrieves an item of a specific index contained in a list of elements.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "list" },
-                        { "index": "1", "name": "index" }
+                        {
+                            "index": "0",
+                            "name": "list"
+                        },
+                        {
+                            "index": "1",
+                            "name": "index"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "item" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "item"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1066,10 +1833,21 @@
                     "description": "Retrieves an item index of a specific value contained in a list of elements.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "list" },
-                        { "index": "1", "name": "item" }
+                        {
+                            "index": "0",
+                            "name": "list"
+                        },
+                        {
+                            "index": "1",
+                            "name": "item"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "index" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "index"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1081,8 +1859,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Flattens the hierarchy of an Collection by one level.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "list" }],
-                    "outputs": [{ "index": "0", "name": "flattened_list" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "list"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "flattened_list"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1095,12 +1883,24 @@
                     "description": "Groups a list of items by key and value pairs.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "list" },
-                        { "index": "1", "name": "referenceList" }
+                        {
+                            "index": "0",
+                            "name": "list"
+                        },
+                        {
+                            "index": "1",
+                            "name": "referenceList"
+                        }
                     ],
                     "outputs": [
-                        { "index": "0", "name": "key" },
-                        { "index": "1", "name": "value" }
+                        {
+                            "index": "0",
+                            "name": "key"
+                        },
+                        {
+                            "index": "1",
+                            "name": "value"
+                        }
                     ],
                     "selected": false
                 }
@@ -1114,13 +1914,28 @@
                     "description": "Creates a map of elements, if a key and value list is provided.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "keys" },
-                        { "index": "1", "name": "values" }
+                        {
+                            "index": "0",
+                            "name": "keys"
+                        },
+                        {
+                            "index": "1",
+                            "name": "values"
+                        }
                     ],
                     "outputs": [
-                        { "index": "0", "name": "keys" },
-                        { "index": "1", "name": "values" },
-                        { "index": "2", "name": "map" }
+                        {
+                            "index": "0",
+                            "name": "keys"
+                        },
+                        {
+                            "index": "1",
+                            "name": "values"
+                        },
+                        {
+                            "index": "2",
+                            "name": "map"
+                        }
                     ],
                     "selected": false
                 }
@@ -1134,10 +1949,21 @@
                     "description": "Retrieve the value in a map by key.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "map" },
-                        { "index": "1", "name": "key" }
+                        {
+                            "index": "0",
+                            "name": "map"
+                        },
+                        {
+                            "index": "1",
+                            "name": "key"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "value" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "value"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1150,10 +1976,21 @@
                     "description": "Retrieve the value in a map by a list of keys.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "map" },
-                        { "index": "1", "name": "keys" }
+                        {
+                            "index": "0",
+                            "name": "map"
+                        },
+                        {
+                            "index": "1",
+                            "name": "keys"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "values" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "values"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1165,8 +2002,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Reverses the map, making values to keys and keys to values.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "map" }],
-                    "outputs": [{ "index": "0", "name": "invertedMap" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "map"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "invertedMap"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1179,10 +2026,21 @@
                     "description": "Generates a filter mask by number of objects contained in the Map values.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "map" },
-                        { "index": "1", "name": "counting_limit" }
+                        {
+                            "index": "0",
+                            "name": "map"
+                        },
+                        {
+                            "index": "1",
+                            "name": "counting_limit"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "filter" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "filter"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1194,8 +2052,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Counts the number of objects contained in the Map values and generates a new map based on that.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "map" }],
-                    "outputs": [{ "index": "0", "name": "mapCounted" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "map"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "mapCounted"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1207,8 +2075,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the keyset of a assigned map.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "map" }],
-                    "outputs": [{ "index": "0", "name": "keySet" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "map"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "keySet"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1220,8 +2098,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Retrieves the values of a assigned map.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "map" }],
-                    "outputs": [{ "index": "0", "name": "values" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "map"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "values"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1234,13 +2122,28 @@
                     "description": "Sorts a list of items in ASC or DESC order.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "list" },
-                        { "index": "1", "name": "referenceList" },
-                        { "index": "2", "name": "order" }
+                        {
+                            "index": "0",
+                            "name": "list"
+                        },
+                        {
+                            "index": "1",
+                            "name": "referenceList"
+                        },
+                        {
+                            "index": "2",
+                            "name": "order"
+                        }
                     ],
                     "outputs": [
-                        { "index": "0", "name": "sortedList" },
-                        { "index": "1", "name": "sortedReferenceValues" }
+                        {
+                            "index": "0",
+                            "name": "sortedList"
+                        },
+                        {
+                            "index": "1",
+                            "name": "sortedReferenceValues"
+                        }
                     ],
                     "selected": false
                 }
@@ -1254,10 +2157,21 @@
                     "description": "Removes elements from list B in the list A.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "List A" },
-                        { "index": "1", "name": "List B" }
+                        {
+                            "index": "0",
+                            "name": "List A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "List B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Altered_List_A" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Altered_List_A"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1270,10 +2184,21 @@
                     "description": "Joins two collections to one ArrayList.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "List A" },
-                        { "index": "1", "name": "List B" }
+                        {
+                            "index": "0",
+                            "name": "List A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "List B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Joined_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Joined_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1285,8 +2210,18 @@
                     "icon": "exclamation-circle-fill",
                     "description": "Creates a new Arraylist by converting a formated string text of values.",
                     "label": "Example Text Here",
-                    "inputs": [{ "index": "0", "name": "values" }],
-                    "outputs": [{ "index": "0", "name": "list" }],
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "values"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "list"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1299,10 +2234,21 @@
                     "description": "Joins two collections of same size item by item to one ArrayList.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Collection A" },
-                        { "index": "1", "name": "Collection B" }
+                        {
+                            "index": "0",
+                            "name": "Collection A"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Collection B"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "Joined_List" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "Joined_List"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1315,10 +2261,21 @@
                     "description": "Creates a new ArrayList of repeated items of a certain amount.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Item" },
-                        { "index": "1", "name": "Repeat Counter" }
+                        {
+                            "index": "0",
+                            "name": "Item"
+                        },
+                        {
+                            "index": "1",
+                            "name": "Repeat Counter"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "ArrayList" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "ArrayList"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1331,10 +2288,21 @@
                     "description": "Checks if a list of elements are included in another set individually.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Elements" },
-                        { "index": "1", "name": "InclusionList" }
+                        {
+                            "index": "0",
+                            "name": "Elements"
+                        },
+                        {
+                            "index": "1",
+                            "name": "InclusionList"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "ListOfChecks" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "ListOfChecks"
+                        }
+                    ],
                     "selected": false
                 }
             },
@@ -1347,37 +2315,48 @@
                     "description": "Checks if a list of elements are included in another set holistically.",
                     "label": "Example Text Here",
                     "inputs": [
-                        { "index": "0", "name": "Elements" },
-                        { "index": "1", "name": "InclusionList" }
+                        {
+                            "index": "0",
+                            "name": "Elements"
+                        },
+                        {
+                            "index": "1",
+                            "name": "InclusionList"
+                        }
                     ],
-                    "outputs": [{ "index": "0", "name": "check" }],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "check"
+                        }
+                    ],
                     "selected": false
                 }
-            },
+            }
+        ]
+    },
+    {
+        "id": "7d41f46d-faf9-4580-b96e-4dfe6bce4ad9",
+        "name": "visual",
+        "color": "Cyan",
+        "items": [
             {
-                "id": "7d41f46d-faf9-4580-b96e-4dfe6bce4ad9",
-                "name": "visual",
-                "color": "Cyan",
-                "items": [
-                    {
-                        "id": "0f4493c4-3817-424b-b3f0-80acc0eace35",
-                        "type": "functionType",
-                        "data": {
-                            "name": "visual.visualizeBounds",
-                            "icon": "exclamation-circle-fill",
-                            "description": "Example Text Here",
-                            "label": "Example Text Here",
-                            "inputs": [
-                                {
-                                    "index": "0",
-                                    "name": "Bounds"
-                                }
-                            ],
-                            "outputs": [],
-                            "selected": false
+                "id": "0f4493c4-3817-424b-b3f0-80acc0eace35",
+                "type": "functionType",
+                "data": {
+                    "name": "visual.visualizeBounds",
+                    "icon": "exclamation-circle-fill",
+                    "description": "Example Text Here",
+                    "label": "Example Text Here",
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "Bounds"
                         }
-                    }
-                ]
+                    ],
+                    "outputs": [],
+                    "selected": false
+                }
             }
         ]
     }
