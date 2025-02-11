@@ -9,11 +9,7 @@
     >
         <Background
             :variant="backgroundLines ? BackgroundVariant.Lines : BackgroundVariant.Dots"
-            :pattern-color="
-                darkMode
-                    ? TWConf.theme.extend.colors.default.light
-                    : TWConf.theme.extend.colors.default.dark
-            "
+            :pattern-color="darkMode ? '#FFF' : TWConf.theme.extend.colors.default.dark"
             :line-width="0.25"
             :size="0.8"
         />
