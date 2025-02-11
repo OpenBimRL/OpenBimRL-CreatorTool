@@ -11,7 +11,7 @@
             :variant="backgroundLines ? BackgroundVariant.Lines : BackgroundVariant.Dots"
             :pattern-color="
                 darkMode
-                    ? TWConf.theme.extend.colors.default.light
+                    ? '#FFF'
                     : TWConf.theme.extend.colors.default.dark
             "
             :line-width="0.25"
