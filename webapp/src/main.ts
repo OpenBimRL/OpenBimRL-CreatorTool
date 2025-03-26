@@ -2,7 +2,12 @@ import { createApp, ref } from 'vue';
 import App from './App.vue';
 import Parser from './ParserOpenBIMRL';
 import { initialGraph } from './components/graph/config';
-import { apiConnectionInjectionKey, darkModeKey, graphInjectionKey, parserInjectionKey } from './keys';
+import {
+    apiConnectionInjectionKey,
+    darkModeKey,
+    graphInjectionKey,
+    parserInjectionKey,
+} from './keys';
 import { darkMode, router } from './modules';
 import './style.css';
 

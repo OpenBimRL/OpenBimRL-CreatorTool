@@ -74,7 +74,7 @@ import { Ref, computed, inject, ref, watch } from 'vue';
 import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
 
 import Parser from '@/ParserOpenBIMRL';
-import { graphInjectionKey, parserInjectionKey, apiConnectionInjectionKey } from '@/keys';
+import { apiConnectionInjectionKey, graphInjectionKey, parserInjectionKey } from '@/keys';
 import { highlight, unHighlight } from '@/modules/ifcViewerInteraction';
 //@ts-expect-error there are no types for that lib
 import JsonViewer from 'vue-json-viewer';
