@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <aside
-        class="fixed right-0 top-0 z-50 h-full w-1/5 bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
+        class="fixed right-0 top-0 z-50 h-full w-1/5 overflow-auto bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
     >
         <div class="flex justify-between">
             <button class="bg-transparent" @click="$emit('close')">
@@ -43,6 +43,14 @@
                 </tr>
                 <tr>
                     <td><b>Entwickler:</b></td>
+                    <td>Florian Becker</td>
+                </tr>
+                <tr>
+                    <td><b>E-Mail:</b></td>
+                    <td>florian.becker-f86@ruhr-uni-bochum.de</td>
+                </tr>
+                <tr>
+                    <td><b>Author:</b></td>
                     <td>Marcel Stepien</td>
                 </tr>
                 <tr>

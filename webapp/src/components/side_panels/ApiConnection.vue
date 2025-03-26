@@ -74,7 +74,7 @@ import { Ref, computed, inject, ref, watch } from 'vue';
 import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
 
 import Parser from '@/ParserOpenBIMRL';
-import { graphInjectionKey, parserInjectionKey } from '@/keys';
+import { apiConnectionInjectionKey, graphInjectionKey, parserInjectionKey } from '@/keys';
 import { highlight, unHighlight } from '@/modules/ifcViewerInteraction';
 //@ts-expect-error there are no types for that lib
 import JsonViewer from 'vue-json-viewer';
@@ -90,7 +90,7 @@ const viewer = ref<HTMLDivElement | null>(null);
 
 const tempApiUrl = ref(apiEndpoint.value);
 
-const connectionStatus = ref<boolean | undefined>(undefined);
+const connectionStatus = inject(apiConnectionInjectionKey)!;
 const connectionLoading = ref(false);
 
 const checkLoading = ref(false);
@@ -168,8 +168,8 @@ const handleJSONNodeClicked = (event: MouseEvent) => {
 
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 watch(checkResult, () =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateVisuals((checkResult.value as any | undefined)?.graphicOutputs || null),
 );
 </script>

@@ -7,6 +7,8 @@ import { getModel, getModels } from './apiConnection';
 import { Mesh } from 'three';
 import * as WEBIFC from 'web-ifc';
 
+import LoadWorker from '../webworker/ifcLoader?worker&inline';
+
 // init components
 let components: OBC.Components;
 
@@ -47,22 +49,7 @@ const init = async (container: HTMLElement) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _ = components.get(OBC.FragmentsManager);
     const fragmentIfcLoader = components.get(OBC.IfcLoader);
-
-    await fragmentIfcLoader.setup();
-
-    const excludedCats = [
-        WEBIFC.IFCTENDONANCHOR,
-        WEBIFC.IFCREINFORCINGBAR,
-        WEBIFC.IFCREINFORCINGELEMENT,
-        WEBIFC.IFCSPACE,
-    ];
-
-    for (const cat of excludedCats) {
-        fragmentIfcLoader.settings.excludedCategories.add(cat);
-    }
-
-    fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = false;
-    fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
+    await configureIfcLoader(fragmentIfcLoader);
 
     const cullers = components.get(OBC.Cullers);
     const culler = cullers.create(world);
@@ -81,6 +68,24 @@ const init = async (container: HTMLElement) => {
     loading.value = false;
     ready = true;
 };
+
+export async function configureIfcLoader(fragmentIfcLoader: OBC.IfcLoader) {
+    await fragmentIfcLoader.setup();
+
+    const excludedCats = [
+        WEBIFC.IFCTENDONANCHOR,
+        WEBIFC.IFCREINFORCINGBAR,
+        WEBIFC.IFCREINFORCINGELEMENT,
+        WEBIFC.IFCSPACE,
+    ];
+
+    for (const cat of excludedCats) {
+        fragmentIfcLoader.settings.excludedCategories.add(cat);
+    }
+
+    fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = false;
+    fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
+}
 
 // loads a model
 function loadModel(model: FragmentsGroup) {
@@ -118,7 +123,22 @@ async function getSelected(): Promise<FragmentsGroup | null> {
 
     // if model was not loaded yet:
     loading.value = true;
-    const loadedModel = await loader.load(await getModel(selected.value));
+    const apiModelAnswer = await getModel(selected.value);
+
+    const loadedModel = window.Worker
+        ? await new Promise<FragmentsGroup>((resolve, reject) => {
+              const fragmentsManager = components.get(OBC.FragmentsManager);
+
+              const worker = new LoadWorker();
+              worker.onmessage = (e: MessageEvent<Uint8Array>) => {
+                  const fragments = fragmentsManager.load(e.data);
+                  resolve(fragments);
+              };
+              worker.postMessage({ file: apiModelAnswer });
+              worker.onerror = reject;
+          })
+        : await loader.load(apiModelAnswer);
+
     loadedModels.set(selected.value, loadedModel);
     loading.value = false;
     return loadedModel;
