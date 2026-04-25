@@ -135,7 +135,7 @@ import { graphInjectionKey } from '@/keys';
 import { getFunctions } from '@/modules/apiConnection';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { isNode } from '@vue-flow/core';
-import { inject, ref, watch } from 'vue';
+import { inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import GraphItemGroup from './GraphItemGroup.vue';
 import type { ImportedRuleSet, RuleSetElement } from './Types';
 import type { GraphInject, NodeData } from '../Types';
@@ -211,7 +211,7 @@ const handleSignature = (handles: Array<NodeHandleLike> = []) =>
         .sort()
         .join('|');
 
-const validateGraphAgainstLibrary = (libraryName: string) => {
+const validateGraphAgainstLibrary = (libraryName: string): number => {
     const selectedLibrary = availableLibraries[libraryName] ?? [];
     const allLibraryItems = selectedLibrary.flatMap(group => group.items ?? []);
     const libraryMap = new Map<string, (typeof allLibraryItems)[number]>(
@@ -221,6 +221,7 @@ const validateGraphAgainstLibrary = (libraryName: string) => {
         }),
     );
 
+    let invalidCount = 0;
     const updatedElements = graph.value.elements.map(element => {
         if (!isNode(element)) return element;
         const nodeData = element.data as NodeData<NodeHandleLike, NodeHandleLike>;
@@ -228,6 +229,7 @@ const validateGraphAgainstLibrary = (libraryName: string) => {
         const libraryNode = libraryMap.get(signatureKey);
 
         if (!libraryNode) {
+            invalidCount += 1;
             return {
                 ...element,
                 data: {
@@ -251,6 +253,7 @@ const validateGraphAgainstLibrary = (libraryName: string) => {
                 handleSignature(libraryData.outputs as Array<NodeHandleLike>);
 
         if (!inputsEqual || !outputsEqual) {
+            invalidCount += 1;
             return {
                 ...element,
                 data: {
@@ -275,6 +278,7 @@ const validateGraphAgainstLibrary = (libraryName: string) => {
         ...graph.value,
         elements: updatedElements,
     });
+    return invalidCount;
 };
 
 const fetchApiFunctionLibrary = async () => {
@@ -299,6 +303,24 @@ const fetchApiFunctionLibrary = async () => {
 watch(currentSelection, libraryName => {
     if (!libraryName) return;
     validateGraphAgainstLibrary(libraryName);
+});
+
+const onCompileGraph = () => {
+    const libraryName = currentSelection.value;
+    const invalidCount = validateGraphAgainstLibrary(libraryName);
+    window.dispatchEvent(
+        new CustomEvent('openbimrl:compile-graph:done', {
+            detail: { invalidCount, libraryName },
+        }),
+    );
+};
+
+onMounted(() => {
+    window.addEventListener('openbimrl:compile-graph', onCompileGraph);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('openbimrl:compile-graph', onCompileGraph);
 });
 </script>
 

@@ -1,6 +1,6 @@
 import * as OBC from '@thatopen/components';
 import * as OBCF from '@thatopen/components-front';
-import type { FragmentsGroup } from '@thatopen/fragments';
+import type { FragmentsGroup, IfcProperties } from '@thatopen/fragments';
 import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
 
@@ -76,7 +76,6 @@ export async function configureIfcLoader(fragmentIfcLoader: OBC.IfcLoader) {
         WEBIFC.IFCTENDONANCHOR,
         WEBIFC.IFCREINFORCINGBAR,
         WEBIFC.IFCREINFORCINGELEMENT,
-        WEBIFC.IFCSPACE,
     ];
 
     for (const cat of excludedCats) {
@@ -113,6 +112,7 @@ async function unloadModel(model: FragmentsGroup) {
 
 // this is cursed. Please make it better JS/TS god
 async function getSelected(): Promise<FragmentsGroup | null> {
+    if (!components) return null;
     const loader = components.get(OBC.IfcLoader);
     if (!selected.value) return null;
     if (!loadedModels.has(selected.value)) throw new Error('Key not found');
@@ -130,8 +130,9 @@ async function getSelected(): Promise<FragmentsGroup | null> {
               const fragmentsManager = components.get(OBC.FragmentsManager);
 
               const worker = new LoadWorker();
-              worker.onmessage = (e: MessageEvent<Uint8Array>) => {
-                  const fragments = fragmentsManager.load(e.data);
+              worker.onmessage = (e: MessageEvent<{ bytes: Uint8Array; properties: IfcProperties | null }>) => {
+                  const fragments = fragmentsManager.load(e.data.bytes);
+                  if (e.data.properties) fragments.setLocalProperties(e.data.properties);
                   resolve(fragments);
               };
               worker.postMessage({ file: apiModelAnswer });
@@ -152,6 +153,7 @@ function updateModels() {
 }
 
 watch(selected, async (newVal, oldVal) => {
+    if (!components || !world) return;
     if (oldVal) {
         const oldModel = loadedModels.get(oldVal);
         if (oldModel) await unloadModel(oldModel);
@@ -168,9 +170,9 @@ watch(models, () =>
 );
 
 const getScene = () => (ready ? world.scene : null);
-const getHighlighter = () => components.get(OBCF.Highlighter);
+const getHighlighter = () => (components ? components.get(OBCF.Highlighter) : null);
 const getComponents = () => components;
-const getWorld = () => world;
+const getWorld = () => (world ? world : null);
 0;
 export {
     getComponents,

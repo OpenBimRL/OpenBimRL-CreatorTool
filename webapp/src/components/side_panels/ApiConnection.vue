@@ -1,9 +1,14 @@
 <template>
     <aside
-        class="fixed right-0 top-0 z-50 flex flex-col h-full w-1/4 bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
+        class="flex flex-col h-full bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
+        :class="
+            props.embedded
+                ? 'w-full'
+                : 'fixed right-0 top-0 z-50 w-1/4'
+        "
     >
         <div class="flex justify-between">
-            <button class="bg-transparent" @click="$emit('close')">
+            <button v-if="!props.embedded" class="bg-transparent" @click="$emit('close')">
                 <XMarkIcon class="inline h-8 w-8" />
             </button>
             <h3 class="text-3xl"><strong>API Connection</strong></h3>
@@ -33,69 +38,57 @@
                 <span>connection status:&nbsp;</span>
                 <strong :class="statusTextColor">{{ connectionStatusText }}</strong>
             </p>
+            <div v-if="apiStatus && connected" class="mt-2 text-sm">
+                <p><span>version:&nbsp;</span><strong>{{ apiStatus.version }}</strong></p>
+                <p>
+                    <span>gpu offload:&nbsp;</span>
+                    <strong>{{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}</strong>
+                </p>
+                <p v-if="apiStatus.gpuOffloadArch">
+                    <span>gpu arch:&nbsp;</span><strong>{{ apiStatus.gpuOffloadArch }}</strong>
+                </p>
+            </div>
 
             <br />
-            <div v-show="connected">
-                <h4 class="text-2xl mb-1">Rule Checker</h4>
-                <button
-                    class="w-full min-h-[40px] flex justify-center p-1 border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest disabled:bg-opacity-30 disabled:text-opacity-30 disabled:hover:dark:bg-default-dark"
-                    @click="checkGraph"
-                    v-bind="{ disabled: checkLoading || !selected }"
-                >
-                    <span v-if="!checkLoading">Check Current Graph</span>
-                    <VueSpinnerPacman v-else class="block mr-10" color="yellow" size="15" />
-                </button>
-            </div>
-        </div>
-        <div v-show="connected" class="ml-4 p-4 relative h-full">
-            <div ref="viewer" class="border dark:bg-white absolute inset-4 overflow-auto">
-                <json-viewer
-                    v-if="!checkLoading"
-                    class="dark:text-default-darkest"
-                    :value="checkResult"
-                    @click="handleJSONNodeClicked"
-                />
-                <div v-else class="h-full flex justify-center items-center">
-                    <VueSpinner size="75" class="dark:text-default-dark" />
-                </div>
-            </div>
         </div>
     </aside>
 </template>
 
 <script setup lang="ts">
 import { InputField } from '@/components';
-import { checkGraph as apiCheckGraph, apiEndpoint, isConnected } from '@/modules/apiConnection';
-import { selected } from '@/modules/ifcViewer';
-import { updateVisuals } from '@/modules/visualizer';
+import {
+    apiEndpoint,
+    getStatus,
+    isConnected,
+    setApiEndpoint,
+    type ApiStatus,
+} from '@/modules/apiConnection';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
-import { Ref, computed, inject, ref, watch } from 'vue';
+import { Ref, computed, inject, onMounted, ref, watch } from 'vue';
 
-import { VueSpinner, VueSpinnerPacman, VueSpinnerRadio } from 'vue3-spinners';
+import { VueSpinnerRadio } from 'vue3-spinners';
 
-import Parser from '@/ParserOpenBIMRL';
-import { graphInjectionKey, parserInjectionKey, apiConnectionInjectionKey } from '@/keys';
-import { highlight, unHighlight } from '@/modules/ifcViewerInteraction';
-//@ts-expect-error there are no types for that lib
-import JsonViewer from 'vue-json-viewer';
-import type { GraphInject } from '../graph/Types';
+import { apiConnectionInjectionKey } from '@/keys';
+
+const props = withDefaults(
+    defineProps<{
+        embedded?: boolean;
+    }>(),
+    {
+        embedded: false,
+    },
+);
 
 defineEmits(['close']);
 
-const parser = inject(parserInjectionKey) as Parser;
-const { graph } = inject(graphInjectionKey) as GraphInject;
-
 const urlValid = ref(true);
-const viewer = ref<HTMLDivElement | null>(null);
 
 const tempApiUrl = ref(apiEndpoint.value);
 
 const connectionStatus = inject(apiConnectionInjectionKey)!;
 const connectionLoading = ref(false);
 
-const checkLoading = ref(false);
-
-const checkResult: Ref<unknown> = ref<unknown>({});
+const apiStatus = ref<ApiStatus | null>(null);
 
 const connectionStatusText: Ref<string> = computed(() => {
     if (connectionStatus.value === false) return 'not connected';
@@ -104,42 +97,28 @@ const connectionStatusText: Ref<string> = computed(() => {
 });
 
 const testConnection = () => {
+    if (connectionLoading.value || !urlValid.value) return;
     connectionStatus.value = undefined;
+    apiStatus.value = null;
     connectionLoading.value = true;
     isConnected()
-        .then(val => (connectionStatus.value = val))
+        .then(async val => {
+            connectionStatus.value = val;
+            if (val) apiStatus.value = await getStatus();
+        })
         .catch(() => (connectionStatus.value = false))
         .finally(() => (connectionLoading.value = false));
 };
 
 const updateUrl = () => {
     try {
-        apiEndpoint.value = new URL(tempApiUrl.value);
+        setApiEndpoint(new URL(tempApiUrl.value));
         urlValid.value = true;
     } catch (e) {
         console.error(e);
         urlValid.value = false;
         connectionStatus.value = undefined;
     }
-};
-
-const checkGraph = () => {
-    if (!selected.value) return;
-
-    const graphString = parser.build(
-        graph.value.elements,
-        graph.value.subChecks,
-        graph.value.resultSets,
-        'graph.openbimrl',
-    );
-
-    checkLoading.value = true;
-    apiCheckGraph(selected.value, graphString)
-        .then(data => (checkResult.value = data.content))
-        .catch(err => (checkResult.value = err))
-        .finally(() => {
-            checkLoading.value = false;
-        });
 };
 
 const statusTextColor: Ref<string> = computed(() => {
@@ -150,33 +129,12 @@ const statusTextColor: Ref<string> = computed(() => {
 
 const connected = computed(() => connectionStatus.value ?? false);
 
-const handleJSONNodeClicked = (event: MouseEvent) => {
-    Array.from(
-        (event.target as HTMLElement).parentElement?.querySelectorAll('[keyname="guid"]') ?? [],
-    ).forEach(element => {
-        const toggleDiv = element.closest('div.toggle') as HTMLDivElement | null;
-        if (!toggleDiv) return;
-        const guid = (element as HTMLSpanElement).innerText.replaceAll('"', '');
-        toggleDiv.addEventListener('mouseenter', () => {
-            highlight(guid);
-        });
-        toggleDiv.addEventListener('mouseleave', () => {
-            unHighlight(guid);
-        });
-    });
-};
-
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
-watch(checkResult, () =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    updateVisuals((checkResult.value as any | undefined)?.graphicOutputs || null),
-);
+onMounted(testConnection);
 </script>
 
 <style scoped>
-@import 'vue-json-viewer/style.css';
-
 td:first-child {
     vertical-align: baseline;
 }

@@ -4,6 +4,7 @@
         :min-width="minWidth"
         :invalid="Boolean(data.invalid)"
         :invalid-reason="data.invalidReason"
+        :node-result="data.nodeResult"
     >
         <div class="node-head bg-cyan-100 dark:bg-cyan-600 bg-opacity-60 px-2 rounded-t">
             <p class="heading p-2 text-center">

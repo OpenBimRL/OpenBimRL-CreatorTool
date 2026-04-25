@@ -5,6 +5,7 @@ import { initialGraph } from './components/graph/config';
 import { apiConnectionInjectionKey, darkModeKey, graphInjectionKey, parserInjectionKey } from './keys';
 import { darkMode, router } from './modules';
 import './style.css';
+import 'vue-json-viewer/style.css';
 
 const graph = initialGraph();
 const parser = new Parser();

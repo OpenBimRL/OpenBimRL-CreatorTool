@@ -3,6 +3,7 @@
         :selected="selected"
         :invalid="Boolean(data.invalid)"
         :invalid-reason="data.invalidReason"
+        :node-result="data.nodeResult"
     >
         <div class="node-head bg-red-300 dark:bg-red-600 bg-opacity-60 px-2">
             <p class="heading text-center">
