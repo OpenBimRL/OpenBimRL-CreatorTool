@@ -18,6 +18,34 @@ interface CheckResult {
     checks: string;
 }
 
+interface ApiFunctionHandle {
+    index: string;
+    name: string;
+}
+
+interface ApiFunctionData {
+    name: string;
+    icon: string;
+    description: string;
+    label: string;
+    inputs: Array<ApiFunctionHandle>;
+    outputs: Array<ApiFunctionHandle>;
+    selected: boolean;
+}
+
+interface ApiFunctionItem {
+    id: string;
+    type: string;
+    data: ApiFunctionData;
+}
+
+export interface ApiFunctionGroup {
+    id: string;
+    name: string;
+    color: string;
+    items: Array<ApiFunctionItem>;
+}
+
 type Error = unknown;
 
 export async function checkGraph(
@@ -68,6 +96,11 @@ export async function getModels(): Promise<Map<string, string>> {
         console.error(e);
         return new Map();
     }
+}
+
+export async function getFunctions(): Promise<Array<ApiFunctionGroup>> {
+    const response = await getApi<Array<ApiFunctionGroup>>('/functions');
+    return response.content;
 }
 
 async function getApi<T>(path: string): Promise<ApiAnswer<T>> {

@@ -32,7 +32,9 @@
                 </label>
             </div>
             <div class="flex">
-                <ul class="border border-b-default-light rounded-t overflow-hidden">
+                <ul
+                    class="flex flex-row border border-b-default-light rounded-t overflow-x-auto overflow-y-hidden"
+                >
                     <li
                         v-for="(libname, index) in loadedLibraries"
                         :key="index"
@@ -98,6 +100,17 @@
                     <PlusIcon class="w-9" />
                 </button>
             </form>
+            <div class="flex items-center gap-2">
+                <button
+                    type="button"
+                    class="border rounded px-3 py-2 hover:bg-default-light dark:hover:bg-default-darkest disabled:opacity-60"
+                    :disabled="fetchingApiLibrary"
+                    @click="fetchApiFunctionLibrary"
+                >
+                    {{ fetchingApiLibrary ? 'Fetching...' : 'Fetch API supported function library' }}
+                </button>
+                <span v-if="fetchStatusText" class="text-xs">{{ fetchStatusText }}</span>
+            </div>
 
             <div
                 class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest"
@@ -118,10 +131,14 @@
 
 <script setup lang="ts">
 import { InputField } from '@/components';
+import { graphInjectionKey } from '@/keys';
+import { getFunctions } from '@/modules/apiConnection';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
-import { ref } from 'vue';
+import { isNode } from '@vue-flow/core';
+import { inject, ref, watch } from 'vue';
 import GraphItemGroup from './GraphItemGroup.vue';
 import type { ImportedRuleSet, RuleSetElement } from './Types';
+import type { GraphInject, NodeData } from '../Types';
 
 const width = ref(window.innerWidth / 4);
 
@@ -159,6 +176,9 @@ for (const file in importedLibraries) {
 const search = ref<string>('');
 const loadedLibraries = Object.keys(availableLibraries);
 const currentSelection = ref(loadedLibraries[0]);
+const fetchingApiLibrary = ref(false);
+const fetchStatusText = ref('');
+const { graph, resetGraph } = inject(graphInjectionKey) as GraphInject;
 
 const createLibrary = () => {
     loadedLibraries.push(currentSelection.value);
@@ -179,6 +199,107 @@ const uploaderOnChange = (event: Event, filetype: string) => {
     };
     reader.readAsText(file);
 };
+
+interface NodeHandleLike {
+    index?: string;
+    name?: string;
+}
+
+const handleSignature = (handles: Array<NodeHandleLike> = []) =>
+    [...handles]
+        .map(handle => `${handle.index ?? ''}:${handle.name ?? ''}`)
+        .sort()
+        .join('|');
+
+const validateGraphAgainstLibrary = (libraryName: string) => {
+    const selectedLibrary = availableLibraries[libraryName] ?? [];
+    const allLibraryItems = selectedLibrary.flatMap(group => group.items ?? []);
+    const libraryMap = new Map<string, (typeof allLibraryItems)[number]>(
+        allLibraryItems.map(item => {
+            const data = item.data as NodeData<NodeHandleLike, NodeHandleLike>;
+            return [`${item.type}::${data.name}`, item];
+        }),
+    );
+
+    const updatedElements = graph.value.elements.map(element => {
+        if (!isNode(element)) return element;
+        const nodeData = element.data as NodeData<NodeHandleLike, NodeHandleLike>;
+        const signatureKey = `${element.type}::${nodeData.name}`;
+        const libraryNode = libraryMap.get(signatureKey);
+
+        if (!libraryNode) {
+            return {
+                ...element,
+                data: {
+                    ...nodeData,
+                    invalid: true,
+                    invalidReason: `Function '${nodeData.name}' does not exist in '${libraryName}'.`,
+                },
+            };
+        }
+
+        const libraryData = libraryNode.data as NodeData<NodeHandleLike, NodeHandleLike>;
+        // RuleIdentifier handles are user-editable labels, so names can legitimately differ.
+        const skipHandleValidation = element.type === 'ruleIdentifier';
+        const inputsEqual =
+            skipHandleValidation ||
+            handleSignature(nodeData.inputs as Array<NodeHandleLike>) ===
+                handleSignature(libraryData.inputs as Array<NodeHandleLike>);
+        const outputsEqual =
+            skipHandleValidation ||
+            handleSignature(nodeData.outputs as Array<NodeHandleLike>) ===
+                handleSignature(libraryData.outputs as Array<NodeHandleLike>);
+
+        if (!inputsEqual || !outputsEqual) {
+            return {
+                ...element,
+                data: {
+                    ...nodeData,
+                    invalid: true,
+                    invalidReason: `Handle mismatch for '${nodeData.name}' in '${libraryName}'.`,
+                },
+            };
+        }
+
+        return {
+            ...element,
+            data: {
+                ...nodeData,
+                invalid: false,
+                invalidReason: '',
+            },
+        };
+    });
+
+    resetGraph({
+        ...graph.value,
+        elements: updatedElements,
+    });
+};
+
+const fetchApiFunctionLibrary = async () => {
+    if (fetchingApiLibrary.value) return;
+    fetchingApiLibrary.value = true;
+    fetchStatusText.value = '';
+    try {
+        const apiGroups = await getFunctions();
+        const libraryName = 'API Supported Functions';
+        availableLibraries[libraryName] = apiGroups as unknown as Array<RuleSetElement>;
+        if (!loadedLibraries.includes(libraryName)) loadedLibraries.push(libraryName);
+        currentSelection.value = libraryName;
+        fetchStatusText.value = `Loaded ${apiGroups.length} groups from API.`;
+    } catch (error) {
+        console.error(error);
+        fetchStatusText.value = 'Failed to fetch function library from API.';
+    } finally {
+        fetchingApiLibrary.value = false;
+    }
+};
+
+watch(currentSelection, libraryName => {
+    if (!libraryName) return;
+    validateGraphAgainstLibrary(libraryName);
+});
 </script>
 
 <style scoped>

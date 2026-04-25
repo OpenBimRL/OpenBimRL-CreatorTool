@@ -295,7 +295,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "String"
+                            "name": "IfcType"
                         }
                     ],
                     "selected": false

@@ -1,5 +1,9 @@
 <template>
-    <NodeBase :selected="selected">
+    <NodeBase
+        :selected="selected"
+        :invalid="Boolean(data.invalid)"
+        :invalid-reason="data.invalidReason"
+    >
         <div class="node-head bg-yellow-100 dark:bg-yellow-600 bg-opacity-60 px-2">
             <p class="heading text-center">
                 <span>{{ data.name }}</span>
