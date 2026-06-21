@@ -69,7 +69,7 @@ const props = defineProps<{
     nodeResult?: unknown;
 }>();
 
-const widthStyle = computed(() => (props.minWidth ? `width: ${props.minWidth}rem` : ''));
+const widthStyle = computed(() => (props.minWidth ? `min-width: ${props.minWidth}rem` : ''));
 const hasNodeResult = computed(() => props.nodeResult !== undefined && props.nodeResult !== null);
 const formattedNodeResult = computed(() => JSON.stringify(props.nodeResult, null, 2));
 const expanded = ref(false);

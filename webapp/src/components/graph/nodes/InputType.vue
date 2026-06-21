@@ -1,12 +1,13 @@
 <template>
     <NodeBase
         :selected="selected"
+        :min-width="minWidth"
         :invalid="Boolean(data.invalid)"
         :invalid-reason="data.invalidReason"
         :node-result="data.nodeResult"
     >
         <div class="node-head bg-yellow-100 dark:bg-yellow-600 bg-opacity-60 px-2">
-            <p class="heading text-center">
+            <p class="heading text-center break-words whitespace-normal">
                 <span>{{ data.name }}</span>
             </p>
         </div>
@@ -32,7 +33,7 @@
 import { NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
 import { ref } from 'vue';
 import { CustomHandle } from '.';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '..';
+import { calcTopOffsetStyle, calcNodeMinWidth, minHeight as heightFunction } from '..';
 import type { InputNodeData } from '../Types';
 import NodeBase from './NodeBase.vue';
 
@@ -41,6 +42,11 @@ const hovering = ref(false);
 
 // theoretically are the inputs defined but I'd rather not include them - safety first
 const minHeight = heightFunction([], props.data.outputs);
+const minWidth = calcNodeMinWidth({
+    name: props.data.name,
+    outputs: props.data.outputs,
+    label: props.data.label,
+});
 </script>
 
 <style scoped></style>

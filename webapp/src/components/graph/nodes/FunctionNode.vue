@@ -7,7 +7,7 @@
         :node-result="data.nodeResult"
     >
         <div class="node-head bg-cyan-100 dark:bg-cyan-600 bg-opacity-60 px-2 rounded-t">
-            <p class="heading p-2 text-center">
+            <p class="heading p-2 text-center break-words whitespace-normal">
                 <span>{{ data.name }}</span>
             </p>
         </div>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { NodeProps, Position } from '@vue-flow/core';
 import { CustomHandle } from '.';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '..';
+import { calcTopOffsetStyle, calcNodeMinWidth, minHeight as heightFunction } from '..';
 import type { FunctionNodeData } from '../Types';
 import NodeBase from './NodeBase.vue';
 
@@ -47,10 +47,11 @@ const props = defineProps<NodeProps<FunctionNodeData>>();
 
 const minHeight = heightFunction(props.data.inputs, props.data.outputs) + 1;
 
-const minWidth =
-    (Math.max(...props.data.inputs.map<number>(element => element.name.length)) +
-        Math.max(...props.data.outputs.map<number>(element => element.name.length))) /
-    1.45;
+const minWidth = calcNodeMinWidth({
+    name: props.data.name,
+    inputs: props.data.inputs,
+    outputs: props.data.outputs,
+});
 </script>
 
 <style scoped></style>
