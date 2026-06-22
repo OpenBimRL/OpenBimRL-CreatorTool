@@ -75,11 +75,10 @@
 
 <script lang="ts" setup>
 import Parser from '@/ParserOpenBIMRL';
-import { parserInjectionKey } from '@/keys';
+import { darkModeKey, graphInjectionKey, parserInjectionKey } from '@/keys';
 import { checkGraph as apiCheckGraph } from '@/modules/apiConnection';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
 import { updateVisuals } from '@/modules/visualizer';
-import { darkModeKey, graphInjectionKey } from '@/keys';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { ControlButton, Controls } from '@vue-flow/controls';
@@ -246,7 +245,11 @@ const runCheck = async () => {
         updateVisuals((response.content as any | undefined)?.graphicOutputs || null);
         applyPerNodeResults(response.content);
         checkStatusText.value = 'Check complete';
-        consoleText.value += `[${new Date().toLocaleTimeString()}] Check complete\n${JSON.stringify(response.content, null, 2)}\n\n`;
+        consoleText.value += `[${new Date().toLocaleTimeString()}] Check complete\n${JSON.stringify(
+            response.content,
+            null,
+            2,
+        )}\n\n`;
     } catch (error) {
         if ((error as Error).name === 'AbortError') {
             checkStatusText.value = 'Check stopped';
@@ -254,7 +257,9 @@ const runCheck = async () => {
         } else {
             console.error(error);
             checkStatusText.value = 'Check failed';
-            consoleText.value += `[${new Date().toLocaleTimeString()}] Check failed\n${String(error)}\n\n`;
+            consoleText.value += `[${new Date().toLocaleTimeString()}] Check failed\n${String(
+                error,
+            )}\n\n`;
         }
     } finally {
         checkLoading.value = false;

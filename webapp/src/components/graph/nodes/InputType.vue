@@ -33,7 +33,7 @@
 import { NodeEventsOn, NodeProps, Position } from '@vue-flow/core';
 import { ref } from 'vue';
 import { CustomHandle } from '.';
-import { calcTopOffsetStyle, calcNodeMinWidth, minHeight as heightFunction } from '..';
+import { calcNodeMinWidth, calcTopOffsetStyle, minHeight as heightFunction } from '..';
 import type { InputNodeData } from '../Types';
 import NodeBase from './NodeBase.vue';
 

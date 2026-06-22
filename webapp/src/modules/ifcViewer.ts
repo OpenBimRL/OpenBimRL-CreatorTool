@@ -130,7 +130,9 @@ async function getSelected(): Promise<FragmentsGroup | null> {
               const fragmentsManager = components.get(OBC.FragmentsManager);
 
               const worker = new LoadWorker();
-              worker.onmessage = (e: MessageEvent<{ bytes: Uint8Array; properties: IfcProperties | null }>) => {
+              worker.onmessage = (
+                  e: MessageEvent<{ bytes: Uint8Array; properties: IfcProperties | null }>,
+              ) => {
                   const fragments = fragmentsManager.load(e.data.bytes);
                   if (e.data.properties) fragments.setLocalProperties(e.data.properties);
                   resolve(fragments);

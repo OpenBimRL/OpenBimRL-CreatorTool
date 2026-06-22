@@ -150,7 +150,11 @@ async function getApiBinary(path: string, signal?: AbortSignal): Promise<Uint8Ar
     return new Uint8Array(buffer);
 }
 
-async function postApi<T>(path: string, params: FormData, signal?: AbortSignal): Promise<ApiAnswer<T>> {
+async function postApi<T>(
+    path: string,
+    params: FormData,
+    signal?: AbortSignal,
+): Promise<ApiAnswer<T>> {
     const response = await fetch(new URL(path, apiEndpoint.value), {
         method: 'POST',
         body: params,

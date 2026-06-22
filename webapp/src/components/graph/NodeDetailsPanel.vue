@@ -4,7 +4,10 @@
         class="absolute top-0 right-0 h-full bg-default-medium dark:bg-default-dark z-30 border-l"
         :style="`width: ${width}px`"
     >
-        <button class="absolute border-2 h-full cursor-col-resize" @mousedown="$emit('resize-start')" />
+        <button
+            class="absolute border-2 h-full cursor-col-resize"
+            @mousedown="$emit('resize-start')"
+        />
         <div class="h-full p-3 flex flex-col gap-3">
             <div class="flex items-center justify-between">
                 <h3 class="text-sm font-semibold">Node Details</h3>
@@ -19,9 +22,13 @@
                 <div class="text-xs space-y-1">
                     <div><span class="font-semibold">Name:</span> {{ selectedNode.data.name }}</div>
                     <div><span class="font-semibold">Type:</span> {{ selectedNode.type }}</div>
-                    <div><span class="font-semibold">Label:</span> {{ selectedNode.data.label }}</div>
+                    <div>
+                        <span class="font-semibold">Label:</span> {{ selectedNode.data.label }}
+                    </div>
                 </div>
-                <div class="flex-1 min-h-0 border rounded bg-default-light dark:bg-default-darkest overflow-hidden">
+                <div
+                    class="flex-1 min-h-0 border rounded bg-default-light dark:bg-default-darkest overflow-hidden"
+                >
                     <div class="px-2 py-1 border-b text-xs font-semibold">Result</div>
                     <div class="h-full overflow-auto p-2 node-details-json">
                         <JsonViewer
@@ -34,12 +41,16 @@
                             :show-array-index="true"
                             class="text-xs"
                         />
-                        <div v-else class="text-xs opacity-80">No result available for this node yet.</div>
+                        <div v-else class="text-xs opacity-80">
+                            No result available for this node yet.
+                        </div>
                     </div>
                 </div>
             </template>
             <template v-else>
-                <div class="text-xs opacity-80">Select a node to inspect its details and result.</div>
+                <div class="text-xs opacity-80">
+                    Select a node to inspect its details and result.
+                </div>
             </template>
         </div>
     </aside>

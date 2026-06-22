@@ -19,8 +19,7 @@ export const calcNodeMinWidth = (options: {
     outputs?: Array<{ name?: string }>;
     label?: string;
 }) => {
-    const portWidth =
-        (maxNameLength(options.inputs) + maxNameLength(options.outputs)) / 1.45;
+    const portWidth = (maxNameLength(options.inputs) + maxNameLength(options.outputs)) / 1.45;
     const headerWidth = options.name.length / 1.45;
     const labelWidth = options.label ? options.label.length / 1.45 : 0;
 

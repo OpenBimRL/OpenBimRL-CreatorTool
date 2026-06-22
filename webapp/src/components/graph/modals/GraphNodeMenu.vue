@@ -107,7 +107,9 @@
                     :disabled="fetchingApiLibrary"
                     @click="fetchApiFunctionLibrary"
                 >
-                    {{ fetchingApiLibrary ? 'Fetching...' : 'Fetch API supported function library' }}
+                    {{
+                        fetchingApiLibrary ? 'Fetching...' : 'Fetch API supported function library'
+                    }}
                 </button>
                 <span v-if="fetchStatusText" class="text-xs">{{ fetchStatusText }}</span>
             </div>
@@ -136,9 +138,9 @@ import { getFunctions } from '@/modules/apiConnection';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { isNode } from '@vue-flow/core';
 import { inject, onMounted, onUnmounted, ref, watch } from 'vue';
+import type { GraphInject, NodeData } from '../Types';
 import GraphItemGroup from './GraphItemGroup.vue';
 import type { ImportedRuleSet, RuleSetElement } from './Types';
-import type { GraphInject, NodeData } from '../Types';
 
 const width = ref(window.innerWidth / 4);
 

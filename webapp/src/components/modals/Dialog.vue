@@ -1,6 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <dialog ref="dialog" class="-translate-y-full rounded border border-black p-12" @cancel="onCancel">
+    <dialog
+        ref="dialog"
+        class="-translate-y-full rounded border border-black p-12"
+        @cancel="onCancel"
+    >
         <div>
             <span class="text-2xl">
                 <slot name="title" />
@@ -19,7 +23,11 @@
                         <slot name="reject_button_text" />
                     </span>
                 </button>
-                <button type="submit" :class="accept_button_class" :value="DialogReturnValue.accept">
+                <button
+                    type="submit"
+                    :class="accept_button_class"
+                    :value="DialogReturnValue.accept"
+                >
                     <span class="text-lg">
                         <slot name="accept_button_text" />
                     </span>

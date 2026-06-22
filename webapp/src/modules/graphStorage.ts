@@ -39,7 +39,9 @@ function persistNodeData(data: NodeDataLike): NodeDataLike {
     };
 
     if (Array.isArray(data.inputs)) {
-        persisted.inputs = data.inputs.map(input => persistHandle(input as Record<string, unknown>));
+        persisted.inputs = data.inputs.map(input =>
+            persistHandle(input as Record<string, unknown>),
+        );
     }
 
     if (Array.isArray(data.outputs)) {

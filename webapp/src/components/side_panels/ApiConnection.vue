@@ -1,11 +1,7 @@
 <template>
     <aside
         class="flex flex-col h-full bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
-        :class="
-            props.embedded
-                ? 'w-full'
-                : 'fixed right-0 top-0 z-50 w-1/4'
-        "
+        :class="props.embedded ? 'w-full' : 'fixed right-0 top-0 z-50 w-1/4'"
     >
         <div class="flex justify-between">
             <button v-if="!props.embedded" class="bg-transparent" @click="$emit('close')">
@@ -39,7 +35,9 @@
                 <strong :class="statusTextColor">{{ connectionStatusText }}</strong>
             </p>
             <div v-if="apiStatus && connected" class="mt-2 text-sm">
-                <p><span>version:&nbsp;</span><strong>{{ apiStatus.version }}</strong></p>
+                <p>
+                    <span>version:&nbsp;</span><strong>{{ apiStatus.version }}</strong>
+                </p>
                 <p>
                     <span>gpu offload:&nbsp;</span>
                     <strong>{{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}</strong>

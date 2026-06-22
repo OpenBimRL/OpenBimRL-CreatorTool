@@ -57,9 +57,7 @@ export function DoubleClickEvent(
     dialog: Ref<typeof Dialog | null>,
 ): (event: NodeMouseEvent) => void {
     return event => {
-        const index = nodes.value.findIndex(
-            (element: GraphNode) => element.id == event.node.id,
-        );
+        const index = nodes.value.findIndex((element: GraphNode) => element.id == event.node.id);
         if (index < 0) return;
 
         selectedNode.value = index;

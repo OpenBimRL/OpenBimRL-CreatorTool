@@ -31,9 +31,9 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from 'vue';
 import { GraphNodeMenu, SideNavigation, TopNavigation } from './components';
+import type { GraphInject } from './components/graph/Types';
 import { Dialog, DialogReturnValue } from './components/modals';
 import { Help } from './components/side_panels';
-import type { GraphInject } from './components/graph/Types';
 import { graphInjectionKey } from './keys';
 import {
     defaultExampleGraph,

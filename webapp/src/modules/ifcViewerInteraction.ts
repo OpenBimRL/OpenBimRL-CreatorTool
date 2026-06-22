@@ -56,11 +56,7 @@ function resetFragmentDisplayColors(model: FragmentsGroup) {
 }
 
 function canonicalGlobalId(s: string): string {
-    return s
-        .trim()
-        .replace(/[{}]/g, '')
-        .replace(/-/g, '')
-        .toLowerCase();
+    return s.trim().replace(/[{}]/g, '').replace(/-/g, '').toLowerCase();
 }
 
 /**
@@ -116,7 +112,8 @@ async function applyDisplayedGuids() {
         if (!Object.keys(map).length) continue;
         selectedExpressIds.add(eid);
         for (const [fragmentId, ids] of Object.entries(map)) {
-            if (!selectedIdsByFragment.has(fragmentId)) selectedIdsByFragment.set(fragmentId, new Set<number>());
+            if (!selectedIdsByFragment.has(fragmentId))
+                selectedIdsByFragment.set(fragmentId, new Set<number>());
             const fragmentSelected = selectedIdsByFragment.get(fragmentId)!;
             for (const id of ids) fragmentSelected.add(id);
         }

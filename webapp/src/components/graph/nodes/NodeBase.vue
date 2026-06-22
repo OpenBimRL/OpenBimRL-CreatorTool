@@ -6,10 +6,7 @@
             :aria-selected="selected"
             :title="invalidReason || ''"
         >
-            <span
-                v-if="hasDisplayableIfcResult"
-                class="absolute top-2 right-2 z-30"
-            >
+            <span v-if="hasDisplayableIfcResult" class="absolute top-2 right-2 z-30">
                 <button
                     class="h-5 w-5 rounded text-white p-0.5"
                     :class="
@@ -47,19 +44,20 @@
             <pre
                 class="mt-1 overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words pr-1"
                 :class="expanded ? 'max-h-80' : 'max-h-36'"
-            >{{ formattedNodeResult }}</pre>
+                >{{ formattedNodeResult }}</pre
+            >
         </details>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { ComputerDesktopIcon } from '@heroicons/vue/24/outline';
 import {
     displayedGuidsReadonly,
     getDisplayedGuids,
     setDisplayedGuids,
 } from '@/modules/ifcViewerInteraction';
+import { ComputerDesktopIcon } from '@heroicons/vue/24/outline';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     selected: boolean;
