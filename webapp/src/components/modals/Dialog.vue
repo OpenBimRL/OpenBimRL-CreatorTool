@@ -1,26 +1,30 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <dialog ref="dialog" class="-translate-y-full rounded border border-black p-12">
+    <dialog ref="dialog" class="-translate-y-full rounded border border-black p-12" @cancel="onCancel">
         <div>
             <span class="text-2xl">
                 <slot name="title" />
             </span>
         </div>
         <hr class="my-4" />
-        <div class="text-lg">
+        <form method="dialog" class="text-lg">
             <slot name="content" />
-        </div>
-        <form method="dialog" class="mt-4 flex justify-end gap-4">
-            <button :class="reject_button_class" :value="DialogReturnValue.cancel">
-                <span class="text-lg">
-                    <slot name="reject_button_text" />
-                </span>
-            </button>
-            <button :class="accept_button_class" :value="DialogReturnValue.accept">
-                <span class="text-lg">
-                    <slot name="accept_button_text" />
-                </span>
-            </button>
+            <div class="mt-4 flex justify-end gap-4">
+                <button
+                    type="button"
+                    :class="reject_button_class"
+                    @click="close(DialogReturnValue.cancel)"
+                >
+                    <span class="text-lg">
+                        <slot name="reject_button_text" />
+                    </span>
+                </button>
+                <button type="submit" :class="accept_button_class" :value="DialogReturnValue.accept">
+                    <span class="text-lg">
+                        <slot name="accept_button_text" />
+                    </span>
+                </button>
+            </div>
         </form>
     </dialog>
 </template>
@@ -45,9 +49,18 @@ const open = () => {
     dialog.value?.showModal();
 };
 
+const close = (value: DialogReturnValue = DialogReturnValue.cancel) => {
+    dialog.value?.close(value);
+};
+
+const onCancel = (event: Event) => {
+    event.preventDefault();
+    close(DialogReturnValue.cancel);
+};
+
 const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undefined;
 
-defineExpose({ open, returnValue });
+defineExpose({ open, close, returnValue });
 </script>
 
 <style scoped>

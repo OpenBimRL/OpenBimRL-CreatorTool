@@ -40,14 +40,13 @@
                     </ControlButton>
                 </Controls>
                 <CustomMap />
-                <Dialog ref="dialog">
+                <Dialog ref="dialog" @close="onInputDialogClose">
                     <template v-slot:title>Change Input</template>
                     <template v-slot:content>
                         <input
                             class="px-1 py-2 border border-black hover:border-blue-600 focus:border-transparent"
                             type="text"
-                            v-if="nodes[selectedNode]"
-                            v-model="nodes[selectedNode].data[nodeDataIndex]"
+                            v-model="dialogDraftValue"
                         />
                     </template>
                     <template v-slot:accept_button_text>Change Input</template>
@@ -95,7 +94,7 @@ import {
     useVueFlow,
 } from '@vue-flow/core';
 import { Ref, computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
-import { Dialog } from '../modals';
+import { Dialog, DialogReturnValue } from '../modals';
 import CustomMap from './CustomMap.vue';
 import GraphConsoleOverlay from './GraphConsoleOverlay.vue';
 import GraphRunBar from './GraphRunBar.vue';
@@ -109,6 +108,7 @@ import TWConf from '@/../tailwind.config';
 const dialog = ref<typeof Dialog | null>(null);
 const selectedNode = ref<number>(0);
 const nodeDataIndex = ref<string>('name');
+const dialogDraftValue = ref('');
 const backgroundLines = ref<boolean>(true);
 const selectedModelId = ref<string | null>(selected.value);
 const checkLoading = ref(false);
@@ -168,7 +168,21 @@ registerResetCallback(() => {
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
 
 const onConnect = ConnectEvent(addEdges, removeEdges, edges);
-const onNodeDoubleClick = DoubleClickEvent(nodes, selectedNode, nodeDataIndex, dialog);
+const onNodeDoubleClick = DoubleClickEvent(
+    nodes,
+    selectedNode,
+    nodeDataIndex,
+    dialogDraftValue,
+    dialog,
+);
+const onInputDialogClose = () => {
+    if (dialog.value?.returnValue() !== DialogReturnValue.accept) return;
+
+    const node = nodes.value[selectedNode.value];
+    if (!node) return;
+
+    node.data[nodeDataIndex.value] = dialogDraftValue.value;
+};
 const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);
 const onNodeClick = (event: NodeMouseEvent) => {
