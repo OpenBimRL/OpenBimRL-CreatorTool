@@ -1,16 +1,28 @@
 <template>
     <aside
-        class="flex flex-col h-full bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
-        :class="props.embedded ? 'w-full' : 'fixed right-0 top-0 z-50 w-1/4'"
+        class="flex h-full flex-col"
+        :class="props.embedded ? 'w-full bg-transparent' : 'panel-drawer w-full max-w-md p-0'"
     >
-        <div class="flex justify-between">
-            <button v-if="!props.embedded" class="bg-transparent" @click="$emit('close')">
-                <XMarkIcon class="inline h-8 w-8" />
+        <div :class="props.embedded ? 'px-1 py-2' : 'panel-header'">
+            <div>
+                <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">
+                    API Connection
+                </h2>
+                <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                    Configure the OpenBIMRL engine endpoint
+                </p>
+            </div>
+            <button
+                v-if="!props.embedded"
+                type="button"
+                class="btn-icon !h-9 !w-9"
+                @click="$emit('close')"
+            >
+                <XMarkIcon class="h-5 w-5" />
             </button>
-            <h3 class="text-3xl"><strong>API Connection</strong></h3>
         </div>
-        <div class="ml-4">
-            <h4 class="text-2xl mb-1">API Settings</h4>
+
+        <div class="flex flex-1 flex-col gap-4 overflow-auto p-5">
             <InputField
                 type="url"
                 v-model="tempApiUrl"
@@ -19,35 +31,38 @@
             >
                 <span>Endpoint</span>
             </InputField>
-            <br />
 
             <button
-                class="w-full p-1 border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest disabled:bg-opacity-30"
+                type="button"
+                class="btn-primary w-full"
                 @click="testConnection"
-                v-bind="{ disabled: connectionLoading || !urlValid }"
+                :disabled="connectionLoading || !urlValid"
             >
                 <span v-if="!connectionLoading">Connect</span>
                 <VueSpinnerRadio v-else class="inline-block" />
             </button>
 
-            <p>
-                <span>connection status:&nbsp;</span>
-                <strong :class="statusTextColor">{{ connectionStatusText }}</strong>
-            </p>
-            <div v-if="apiStatus && connected" class="mt-2 text-sm">
-                <p>
-                    <span>version:&nbsp;</span><strong>{{ apiStatus.version }}</strong>
-                </p>
-                <p>
-                    <span>gpu offload:&nbsp;</span>
-                    <strong>{{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}</strong>
-                </p>
-                <p v-if="apiStatus.gpuOffloadArch">
-                    <span>gpu arch:&nbsp;</span><strong>{{ apiStatus.gpuOffloadArch }}</strong>
-                </p>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-slate-500 dark:text-slate-400">Status</span>
+                <span :class="statusBadgeClass">{{ connectionStatusText }}</span>
             </div>
 
-            <br />
+            <div v-if="apiStatus && connected" class="card space-y-2 !p-4">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 dark:text-slate-400">Version</span>
+                    <span class="font-medium">{{ apiStatus.version }}</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-500 dark:text-slate-400">GPU offload</span>
+                    <span class="font-medium">{{
+                        apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled'
+                    }}</span>
+                </div>
+                <div v-if="apiStatus.gpuOffloadArch" class="flex justify-between text-sm">
+                    <span class="text-slate-500 dark:text-slate-400">GPU arch</span>
+                    <span class="font-mono text-xs font-medium">{{ apiStatus.gpuOffloadArch }}</span>
+                </div>
+            </div>
         </div>
     </aside>
 </template>
@@ -94,6 +109,14 @@ const connectionStatusText: Ref<string> = computed(() => {
     return 'unknown';
 });
 
+const statusBadgeClass = computed(() => {
+    if (connectionStatus.value === false) return 'badge-danger';
+    if (connectionStatus.value) return 'badge-success';
+    return 'badge-neutral';
+});
+
+const connected = computed(() => connectionStatus.value ?? false);
+
 const testConnection = () => {
     if (connectionLoading.value || !urlValid.value) return;
     connectionStatus.value = undefined;
@@ -119,21 +142,7 @@ const updateUrl = () => {
     }
 };
 
-const statusTextColor: Ref<string> = computed(() => {
-    if (connectionStatus.value === false) return 'text-red-700';
-    if (connectionStatus.value) return 'text-green-700';
-    return '';
-});
-
-const connected = computed(() => connectionStatus.value ?? false);
-
 watch(tempApiUrl, updateUrl);
 watch(apiEndpoint, testConnection);
 onMounted(testConnection);
 </script>
-
-<style scoped>
-td:first-child {
-    vertical-align: baseline;
-}
-</style>

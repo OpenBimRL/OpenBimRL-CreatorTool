@@ -2,35 +2,32 @@
 <template>
     <dialog
         ref="dialog"
-        class="-translate-y-full rounded border border-black p-12"
+        class="fixed left-1/2 top-1/2 z-[100] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border border-slate-200/80 bg-white p-0 shadow-panel backdrop:bg-slate-900/50 dark:border-slate-700 dark:bg-slate-900"
         @cancel="onCancel"
     >
-        <div>
-            <span class="text-2xl">
+        <div class="border-b border-slate-200/80 px-6 py-4 dark:border-slate-700">
+            <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">
                 <slot name="title" />
-            </span>
+            </h2>
         </div>
-        <hr class="my-4" />
-        <form method="dialog" class="text-lg">
-            <slot name="content" />
-            <div class="mt-4 flex justify-end gap-4">
+        <form method="dialog" class="px-6 py-4">
+            <div class="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <slot name="content" />
+            </div>
+            <div class="mt-6 flex justify-end gap-2">
                 <button
                     type="button"
-                    :class="reject_button_class"
+                    :class="reject_button_class || 'btn-secondary'"
                     @click="close(DialogReturnValue.cancel)"
                 >
-                    <span class="text-lg">
-                        <slot name="reject_button_text" />
-                    </span>
+                    <slot name="reject_button_text" />
                 </button>
                 <button
                     type="submit"
-                    :class="accept_button_class"
+                    :class="accept_button_class || 'btn-primary'"
                     :value="DialogReturnValue.accept"
                 >
-                    <span class="text-lg">
-                        <slot name="accept_button_text" />
-                    </span>
+                    <slot name="accept_button_text" />
                 </button>
             </div>
         </form>
@@ -46,10 +43,7 @@ interface Props {
     reject_button_class?: string;
 }
 
-withDefaults(defineProps<Props>(), {
-    accept_button_class: 'bg-blue-600',
-    reject_button_class: 'bg-red-600',
-});
+defineProps<Props>();
 
 const dialog = ref<HTMLDialogElement | null>(null);
 
@@ -70,9 +64,3 @@ const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undef
 
 defineExpose({ open, close, returnValue });
 </script>
-
-<style scoped>
-form button {
-    @apply rounded-sm px-3 py-[0.125rem];
-}
-</style>

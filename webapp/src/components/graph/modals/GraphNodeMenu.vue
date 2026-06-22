@@ -1,9 +1,10 @@
 <template>
-    <aside
-        class="fixed grid p-4 gap-4 h-full min-w-[25%] max-w-full right-0 bg-default-medium dark:bg-default-dark z-50 transition-transform"
-        :style="`width: ${width}px`"
-    >
-        <button class="absolute border-2 h-full cursor-col-resize" @mousedown="mouseResizeStart" />
+    <aside class="panel-drawer min-w-[25%] max-w-full grid gap-4 p-0 transition-transform" :style="`width: ${width}px`">
+        <button class="absolute border-2 h-full cursor-col-resize opacity-0 hover:opacity-100" @mousedown="mouseResizeStart" />
+        <div class="panel-header">
+            <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">Node Library</h2>
+        </div>
+        <div class="flex flex-col gap-4 px-4 pb-4 flex-1 min-h-0">
         <form>
             <InputField v-model="search" placeholder="ifc.get...">
                 <span>Search</span>
@@ -15,40 +16,41 @@
             </InputField>
         </form>
 
-        <div class="flex flex-col h-full max-w-full">
-            <div class="p-2 flex gap-4 justify-center">
-                <label class="hover:cursor-pointer" for="icon-list__switch">
-                    <span>Icons</span>
-                </label>
-                <input
-                    class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-ease-blue before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-200 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-success checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s]"
-                    type="checkbox"
-                    role="switch"
-                    id="icon-list__switch"
+        <div class="flex min-h-0 flex-1 flex-col max-w-full">
+            <div class="flex items-center justify-center py-1">
+                <Switch
                     v-model="showLibsAsList"
+                    off-label="Icons"
+                    on-label="List"
+                    aria-label="Toggle library view mode"
                 />
-                <label class="hover:cursor-pointer" for="icon-list__switch">
-                    <span>List</span>
-                </label>
             </div>
             <div class="flex">
                 <ul
-                    class="flex flex-row border border-b-default-light rounded-t overflow-x-auto overflow-y-hidden"
+                    class="flex flex-row overflow-x-auto overflow-y-hidden rounded-t-lg border border-slate-200/80 dark:border-slate-700"
                 >
                     <li
                         v-for="(libname, index) in loadedLibraries"
                         :key="index"
-                        class="aria-selected:bg-default-light dark:aria-selected:bg-default-darkest p-2 border-r last:border-r-0"
-                        :aria-selected="libname === currentSelection"
+                        class="border-r border-slate-200/80 p-2 last:border-r-0 dark:border-slate-700"
+                        :class="
+                            libname === currentSelection
+                                ? 'bg-white dark:bg-slate-800'
+                                : 'bg-slate-50 dark:bg-slate-900'
+                        "
                     >
-                        <button class="text-sm bg-transparent" @click="currentSelection = libname">
+                        <button
+                            type="button"
+                            class="bg-transparent text-sm font-medium text-slate-600 hover:text-default-dark dark:text-slate-400 dark:hover:text-slate-200"
+                            @click="currentSelection = libname"
+                        >
                             <span>{{ libname }}</span>
                         </button>
                     </li>
                 </ul>
             </div>
             <div
-                class="bg-default-light dark:bg-default-dark border overflow-y-auto overflow-x-hidden h-full"
+                class="h-full overflow-y-auto overflow-x-hidden rounded-b-lg border border-t-0 border-slate-200/80 bg-white dark:border-slate-700 dark:bg-slate-900"
             >
                 <div
                     v-for="(libname, index) in loadedLibraries"
@@ -67,22 +69,20 @@
             </div>
         </div>
 
-        <hr />
+        <hr class="border-slate-200/80 dark:border-slate-700" />
 
-        <div class="flex flex-col gap-4">
-            <form class="flex gap-4 items-center">
-                <div
-                    class="bg-default-light dark:bg-default-dark w-full flex border rounded overflow-hidden"
-                >
+        <div class="flex flex-col gap-3">
+            <form class="flex items-center gap-2">
+                <div class="flex w-full overflow-hidden rounded-lg border border-slate-300/80 dark:border-slate-600">
                     <label
                         for="lib-select"
-                        class="inline-block bg-default-medium dark:bg-default-dark p-2 border-r"
+                        class="inline-block border-r border-inherit bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
                     >
                         <span>Library</span>
                     </label>
                     <select
                         id="lib-select"
-                        class="bg-default-light dark:bg-default-dark pl-3 w-full"
+                        class="w-full bg-transparent px-3 py-2 text-sm dark:text-slate-200"
                         v-model="currentSelection"
                     >
                         <option
@@ -94,16 +94,16 @@
                 </div>
                 <button
                     type="button"
-                    class="bg-success h-full aspect-square flex rounded justify-center items-center"
+                    class="btn-icon !h-10 !w-10 bg-emerald-600 text-white hover:bg-emerald-700"
                     @click="createLibrary"
                 >
-                    <PlusIcon class="w-9" />
+                    <PlusIcon class="h-5 w-5" />
                 </button>
             </form>
             <div class="flex items-center gap-2">
                 <button
                     type="button"
-                    class="border rounded px-3 py-2 hover:bg-default-light dark:hover:bg-default-darkest disabled:opacity-60"
+                    class="btn-secondary !text-xs"
                     :disabled="fetchingApiLibrary"
                     @click="fetchApiFunctionLibrary"
                 >
@@ -111,28 +111,26 @@
                         fetchingApiLibrary ? 'Fetching...' : 'Fetch API supported function library'
                     }}
                 </button>
-                <span v-if="fetchStatusText" class="text-xs">{{ fetchStatusText }}</span>
+                <span v-if="fetchStatusText" class="text-xs text-slate-500">{{ fetchStatusText }}</span>
             </div>
 
-            <div
-                class="border rounded hover:bg-opacity-70 bg-default-contrast dark:bg-default-dark dark:hover:bg-default-darkest"
-            >
-                <button class="w-full p-1" @click="handleUpload">
-                    <span>Upload Library</span>
-                </button>
-                <input
-                    id="uploadLibraryJSONAnchorElem"
-                    class="hidden"
-                    type="file"
-                    @change="uploaderOnChange($event, 'json')"
-                />
-            </div>
+            <button type="button" class="btn-primary w-full" @click="handleUpload">
+                Upload Library
+            </button>
+            <input
+                id="uploadLibraryJSONAnchorElem"
+                class="hidden"
+                type="file"
+                @change="uploaderOnChange($event, 'json')"
+            />
+        </div>
         </div>
     </aside>
 </template>
 
 <script setup lang="ts">
 import { InputField } from '@/components';
+import Switch from '@/components/ui/Switch.vue';
 import { graphInjectionKey } from '@/keys';
 import { getFunctions } from '@/modules/apiConnection';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';

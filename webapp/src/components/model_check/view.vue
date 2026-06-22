@@ -1,15 +1,18 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div class="grid w-full h-full dark:bg-default-dark p-5">
-        <div style="grid-area: header" class="flex">
-            <h1 class="text-2xl my-auto">Checks</h1>
+    <div class="grid h-full w-full gap-4 p-4 dark:bg-default-darkest">
+        <div style="grid-area: header" class="flex items-center">
+            <h1 class="text-xl font-semibold text-default-dark dark:text-slate-100">Checks</h1>
         </div>
-        <div style="grid-area: sidebar" class="p-2 mr-2 rounded-lg border select-none">
+        <div
+            style="grid-area: sidebar"
+            class="card mr-0 select-none !p-3"
+        >
             <Tree ref="tree" :data="graph" @select="currentNode = $event" />
         </div>
         <div
             style="grid-area: main"
-            class="relative overflow-hidden p-10 border rounded-lg bg-default-medium dark:bg-default-darkest dark:bg-opacity-50"
+            class="card relative overflow-hidden !p-6"
         >
             <div v-if="currentNode && tree">
                 <p>

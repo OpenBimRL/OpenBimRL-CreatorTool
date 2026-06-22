@@ -1,7 +1,7 @@
 <template>
     <aside
         v-if="open"
-        class="absolute top-0 right-0 h-full bg-default-medium dark:bg-default-dark z-30 border-l"
+        class="absolute top-0 right-0 z-30 h-full border-l border-slate-200/80 bg-white/95 shadow-panel backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95"
         :style="`width: ${width}px`"
     >
         <button
@@ -11,10 +11,7 @@
         <div class="h-full p-3 flex flex-col gap-3">
             <div class="flex items-center justify-between">
                 <h3 class="text-sm font-semibold">Node Details</h3>
-                <button
-                    class="text-xs px-2 py-1 rounded border hover:bg-default-light dark:hover:bg-default-darkest"
-                    @click="$emit('close')"
-                >
+                <button type="button" class="btn-ghost !px-2 !py-1 !text-xs" @click="$emit('close')">
                     Close
                 </button>
             </div>
