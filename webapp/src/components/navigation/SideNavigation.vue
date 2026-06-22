@@ -3,7 +3,10 @@
         class="flex h-full flex-col border-r border-slate-200/80 bg-white transition-all duration-200 dark:border-slate-800 dark:bg-slate-900"
         :class="open ? 'w-52' : 'w-[4.25rem]'"
     >
-        <div class="flex h-14 items-center border-b border-slate-200/80 px-3 dark:border-slate-800">
+        <div
+            class="flex h-14 items-center border-b border-slate-200/80 dark:border-slate-800"
+            :class="open ? 'px-3' : 'justify-center px-2'"
+        >
             <button
                 type="button"
                 class="btn-icon !h-9 !w-9 shrink-0"
@@ -26,7 +29,10 @@
                     :to="item.to"
                     :title="item.label"
                     class="nav-link"
-                    :class="{ 'nav-link-active': route.path === item.to }"
+                    :class="{
+                        'nav-link-active': route.path === item.to,
+                        'nav-link-collapsed': !open,
+                    }"
                 >
                     <component :is="item.icon" class="h-5 w-5 shrink-0" />
                     <span v-show="open" class="truncate">{{ item.label }}</span>
@@ -54,6 +60,6 @@ const navItems = [
     { to: '/', label: 'Graph', icon: CubeTransparentIcon },
     { to: '/checks', label: 'Sub Checks', icon: ShieldCheckIcon },
     { to: '/viewer', label: 'Model Viewer', icon: HomeModernIcon },
-    { to: '/api', label: 'API', icon: Cog6ToothIcon },
+    { to: '/settings', label: 'Settings', icon: Cog6ToothIcon },
 ];
 </script>

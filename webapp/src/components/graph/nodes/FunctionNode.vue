@@ -6,12 +6,12 @@
         :invalid-reason="data.invalidReason"
         :node-result="data.nodeResult"
     >
-        <div class="node-head bg-cyan-100 dark:bg-cyan-600 bg-opacity-60 px-2 rounded-t">
-            <p class="heading p-2 text-center break-words whitespace-normal">
+        <div class="node-head bg-cyan-100 bg-opacity-60 dark:bg-cyan-600">
+            <p class="heading">
                 <span>{{ data.name }}</span>
             </p>
         </div>
-        <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
+        <div class="node-body" :style="`min-height: ${minHeight}rem`">
             <CustomHandle
                 v-for="(input, index) in data.inputs"
                 :key="input.index"
@@ -45,7 +45,7 @@ import NodeBase from './NodeBase.vue';
 
 const props = defineProps<NodeProps<FunctionNodeData>>();
 
-const minHeight = heightFunction(props.data.inputs, props.data.outputs) + 1;
+const minHeight = heightFunction(props.data.inputs, props.data.outputs);
 
 const minWidth = calcNodeMinWidth({
     name: props.data.name,

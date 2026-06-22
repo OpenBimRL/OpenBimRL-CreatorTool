@@ -82,6 +82,10 @@
         background-color: rgb(252 163 17 / 0.2);
     }
 
+    .nav-link-collapsed {
+        @apply justify-center gap-0 px-2;
+    }
+
     .nav-button {
         @apply btn-ghost !py-1.5;
     }
@@ -171,6 +175,30 @@
 
     .checks-tree-list > li:last-child > .checks-tree-children::after {
         display: none;
+    }
+
+    .settings-grid {
+        @apply grid auto-rows-min gap-6 md:grid-cols-2;
+    }
+
+    .settings-fields {
+        @apply max-w-md space-y-4;
+    }
+
+    .node-head {
+        @apply overflow-hidden rounded-t-xl px-2 py-1.5;
+    }
+
+    .node-head .heading {
+        @apply text-center text-sm font-medium leading-snug break-words whitespace-normal;
+    }
+
+    .node-body {
+        @apply relative flex items-center justify-center overflow-visible px-3 py-2;
+    }
+
+    .vue-flow__node {
+        overflow: visible !important;
     }
 }
 
