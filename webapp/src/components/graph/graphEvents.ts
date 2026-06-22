@@ -53,22 +53,23 @@ export function DoubleClickEvent(
     nodes: Ref<Array<GraphNode<any, any, string>>>,
     selectedNode: Ref<number>,
     nodeDataIndex: Ref<string>,
+    dialogDraftValue: Ref<string>,
     dialog: Ref<typeof Dialog | null>,
 ): (event: NodeMouseEvent) => void {
     return event => {
-        selectedNode.value = nodes.value.findIndex(
-            (element: GraphNode) => element.id == event.node.id,
-        );
+        const index = nodes.value.findIndex((element: GraphNode) => element.id == event.node.id);
+        if (index < 0) return;
+
+        selectedNode.value = index;
 
         switch (event.node.type) {
             case 'inputType':
             case 'ruleIdentifier':
-            default:
                 nodeDataIndex.value = 'label';
+                dialogDraftValue.value = String(nodes.value[index].data.label ?? '');
+                dialog.value?.open();
                 break;
         }
-
-        dialog.value?.open();
     };
 }
 

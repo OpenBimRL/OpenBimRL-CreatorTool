@@ -1,4 +1,5 @@
 import { createApp, ref } from 'vue';
+import 'vue-json-viewer/style.css';
 import App from './App.vue';
 import Parser from './ParserOpenBIMRL';
 import { initialGraph } from './components/graph/config';

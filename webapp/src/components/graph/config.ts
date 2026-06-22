@@ -1,4 +1,5 @@
 import json from '@/assets/graph/defaultGraphExample.json';
+import { setupGraphPersistence } from '@/modules/graphStorage';
 import { Edge, GraphNode, NodeTypesObject } from '@vue-flow/core';
 import { Ref, markRaw, ref } from 'vue';
 import type { CustomNode, GraphInject, GraphJSON, GraphResetCallback } from './Types';
@@ -28,6 +29,8 @@ export function initialGraph(): GraphInject {
         graph.value = toGraph;
         graphResetCallbacks.forEach(cb => cb());
     };
+
+    setupGraphPersistence(graph);
 
     return { graph, updateGraph, registerResetCallback, resetGraph };
 }

@@ -21,10 +21,8 @@
             <li v-if="route.name == Routes.VIEWER">
                 <AddModel />
             </li>
-            <li>
-                <button class="nav-button" @click="$emit('showApiConnection')">
-                    Api-Connection
-                </button>
+            <li v-if="route.name == Routes.VIEWER && hasViewerSelection">
+                <button class="nav-button" @click="resetViewerSelection">Reset selection</button>
             </li>
             <li>
                 <button class="nav-button" @click="$emit('showHelp')">Help?</button>
@@ -52,14 +50,20 @@
 
 <script setup lang="ts">
 import { darkModeKey } from '@/keys';
+import { displayedGuidsReadonly, setDisplayedGuids } from '@/modules/ifcViewerInteraction';
 import { Routes, default as router } from '@/modules/router';
-import { Ref, inject } from 'vue';
+import { Ref, computed, inject } from 'vue';
 import { AddModel, Download, NewGraph, Upload } from './buttons';
 
-defineEmits(['showNodeLib', 'showHelp', 'showApiConnection']);
+defineEmits(['showNodeLib', 'showHelp']);
 
 const darkMode = inject(darkModeKey) as Ref<boolean>;
 const route = router.currentRoute;
+const hasViewerSelection = computed(() => displayedGuidsReadonly.value.length > 0);
+
+const resetViewerSelection = () => {
+    void setDisplayedGuids([]);
+};
 </script>
 
 <style>

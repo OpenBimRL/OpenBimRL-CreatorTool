@@ -17,6 +17,9 @@ export interface NodeData<InputConnectorType = unknown, OutputConnectorType = un
     selected: boolean;
     inputs: Array<InputConnectorType>;
     outputs: Array<OutputConnectorType>;
+    invalid?: boolean;
+    invalidReason?: string;
+    nodeResult?: unknown;
 }
 
 interface BaseConnectorType {

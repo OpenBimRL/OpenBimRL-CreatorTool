@@ -1,7 +1,13 @@
 <template>
-    <NodeBase :selected="selected">
+    <NodeBase
+        :selected="selected"
+        :min-width="minWidth"
+        :invalid="Boolean(data.invalid)"
+        :invalid-reason="data.invalidReason"
+        :node-result="data.nodeResult"
+    >
         <div class="node-head bg-red-300 dark:bg-red-600 bg-opacity-60 px-2">
-            <p class="heading text-center">
+            <p class="heading text-center break-words whitespace-normal">
                 <span>{{ data.name }}</span>
             </p>
         </div>
@@ -27,7 +33,7 @@
 import { NodeProps, Position } from '@vue-flow/core';
 import { ref } from 'vue';
 import { CustomHandle } from '.';
-import { calcTopOffsetStyle, minHeight as heightFunction } from '..';
+import { calcNodeMinWidth, calcTopOffsetStyle, minHeight as heightFunction } from '..';
 import type { RuleIdentifierNodeData } from '../Types';
 import NodeBase from './NodeBase.vue';
 
@@ -36,6 +42,10 @@ const props = defineProps<NodeProps<RuleIdentifierNodeData>>();
 const hovering = ref(false);
 
 const minHeight = heightFunction(props.data.inputs, props.data.outputs);
+const minWidth = calcNodeMinWidth({
+    name: props.data.name,
+    label: props.data.label,
+});
 </script>
 
 <style scoped></style>

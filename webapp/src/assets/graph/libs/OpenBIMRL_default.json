@@ -16,7 +16,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "text"
+                            "name": "String"
                         }
                     ]
                 }
@@ -40,13 +40,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "ingoing"
+                            "name": "Ingoing"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "outgoing"
+                            "name": "Outgoing"
                         }
                     ]
                 }
@@ -87,7 +87,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "shape_List"
+                            "name": "Shape_List"
                         }
                     ],
                     "selected": false
@@ -110,7 +110,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "double_List"
+                            "name": "Double_List"
                         }
                     ],
                     "selected": false
@@ -295,7 +295,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "String"
+                            "name": "IfcType"
                         }
                     ],
                     "selected": false
@@ -372,7 +372,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "value"
+                            "name": "Value"
                         }
                     ],
                     "selected": false
@@ -426,7 +426,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "value"
+                            "name": "Value"
                         }
                     ],
                     "selected": false
@@ -457,7 +457,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "value"
+                            "name": "Value"
                         }
                     ],
                     "selected": false
@@ -480,11 +480,11 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "minHeight"
+                            "name": "MinHeight"
                         },
                         {
                             "index": "1",
-                            "name": "maxHeight"
+                            "name": "MaxHeight"
                         }
                     ],
                     "selected": false
@@ -507,11 +507,11 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "voids_List"
+                            "name": "Voids_List"
                         },
                         {
                             "index": "1",
-                            "name": "fills_List"
+                            "name": "Fills_List"
                         }
                     ],
                     "selected": false
@@ -580,7 +580,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "item_List"
+                            "name": "Item_List"
                         }
                     ],
                     "selected": false
@@ -762,17 +762,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "number"
+                            "name": "Number(s)"
                         },
                         {
                             "index": "1",
-                            "name": "number"
+                            "name": "Number(s)"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -789,17 +789,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "number"
+                            "name": "Number(s)"
                         },
                         {
                             "index": "1",
-                            "name": "number"
+                            "name": "Number(s)"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -816,17 +816,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "number"
+                            "name": "Number(s)"
                         },
                         {
                             "index": "1",
-                            "name": "number"
+                            "name": "Number(s)"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -843,17 +843,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "number"
+                            "name": "Number(s)"
                         },
                         {
                             "index": "1",
-                            "name": "number"
+                            "name": "Number(s)"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -870,17 +870,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "number"
+                            "name": "Number(s)"
                         },
                         {
                             "index": "1",
-                            "name": "number"
+                            "name": "Number(s)"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -897,13 +897,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "values"
+                            "name": "Values"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "maxima"
+                            "name": "Maxima"
                         }
                     ],
                     "selected": false
@@ -927,17 +927,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "BoundingBox"
+                            "name": "Bounds0"
                         },
                         {
                             "index": "1",
-                            "name": "BoundingBox"
+                            "name": "Bounds1"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "BoundingBox"
+                            "name": "OutputBounds"
                         }
                     ],
                     "selected": false
@@ -954,15 +954,15 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "StartIfcElement"
+                            "name": "Starts"
                         },
                         {
                             "index": "1",
-                            "name": "EndIfcElement"
+                            "name": "Ends"
                         },
                         {
                             "index": "2",
-                            "name": "Bounds"
+                            "name": "BBox"
                         },
                         {
                             "index": "3",
@@ -978,7 +978,7 @@
                         },
                         {
                             "index": "6",
-                            "name": "GeometricLayout"
+                            "name": "Layout"
                         }
                     ],
                     "outputs": [
@@ -1046,31 +1046,31 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "Start IfcElement or List"
+                            "name": "Start"
                         },
                         {
                             "index": "1",
-                            "name": "Bounds"
+                            "name": "BuildingBoundingBox"
                         },
                         {
                             "index": "2",
-                            "name": "Obstacle List"
+                            "name": "Obstacles"
                         },
                         {
                             "index": "3",
-                            "name": "Passages"
+                            "name": "PassageWays"
                         },
                         {
                             "index": "4",
-                            "name": "GeometricLayout"
+                            "name": "Layout"
                         },
                         {
                             "index": "5",
-                            "name": "Margin from obstacles (optional)"
+                            "name": "ObstaclePadding"
                         },
                         {
                             "index": "6",
-                            "name": "MaximumDistance"
+                            "name": "MaxDistance"
                         }
                     ],
                     "outputs": [],
@@ -1218,7 +1218,7 @@
                 "data": {
                     "name": "geometry.loadRepresentationItemGeometry",
                     "icon": "exclamation-circle-fill",
-                    "description": "Loads an representation item´newly created into the model context, and therfore into the viewer.",
+                    "description": "Loads an representation item\u00b4newly created into the model context, and therfore into the viewer.",
                     "label": "Example Text Here",
                     "inputs": [
                         {
@@ -1279,31 +1279,31 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "coordinates"
+                            "name": "Coordinates"
                         },
                         {
                             "index": "1",
-                            "name": "indices"
+                            "name": "Indices"
                         },
                         {
                             "index": "2",
-                            "name": "stripCounts"
+                            "name": "StripCounts"
                         },
                         {
                             "index": "3",
-                            "name": "contourCounts"
+                            "name": "ContourCounts"
                         },
                         {
                             "index": "4",
-                            "name": "normals"
+                            "name": "Normals"
                         },
                         {
                             "index": "5",
-                            "name": "cetroid"
+                            "name": "Cetroid"
                         },
                         {
                             "index": "6",
-                            "name": "profile"
+                            "name": "Profile"
                         }
                     ],
                     "selected": false
@@ -1326,15 +1326,15 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "x"
+                            "name": "X"
                         },
                         {
                             "index": "1",
-                            "name": "y"
+                            "name": "Y"
                         },
                         {
                             "index": "2",
-                            "name": "z"
+                            "name": "Z"
                         }
                     ],
                     "selected": false
@@ -1386,17 +1386,17 @@
                         },
                         {
                             "index": "2",
-                            "name": "height"
+                            "name": "Height"
                         },
                         {
                             "index": "3",
-                            "name": "jitter"
+                            "name": "Jitter"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "nodes"
+                            "name": "Nodes"
                         }
                     ],
                     "selected": false
@@ -1446,7 +1446,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "edges"
+                            "name": "Edges"
                         }
                     ],
                     "selected": false
@@ -1477,7 +1477,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "edges"
+                            "name": "Edges"
                         }
                     ],
                     "selected": false
@@ -1500,7 +1500,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "node_edge_map"
+                            "name": "Node_edge_map"
                         }
                     ],
                     "selected": false
@@ -1567,21 +1567,21 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "start ifc element"
+                            "name": "Start Ifc Element"
                         },
                         {
                             "index": "1",
-                            "name": "end ifc element"
+                            "name": "End Ifc Element"
                         },
                         {
                             "index": "2",
-                            "name": "resolution"
+                            "name": "Resolution"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "path"
+                            "name": "Path"
                         }
                     ],
                     "selected": false
@@ -1702,7 +1702,7 @@
                         },
                         {
                             "index": "1",
-                            "name": "z_offset_position"
+                            "name": "Z_offset_position"
                         }
                     ],
                     "outputs": [
@@ -1789,13 +1789,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -1812,13 +1812,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "result"
+                            "name": "Result"
                         }
                     ],
                     "selected": false
@@ -1835,17 +1835,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         },
                         {
                             "index": "1",
-                            "name": "index"
+                            "name": "Index"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "item"
+                            "name": "Item"
                         }
                     ],
                     "selected": false
@@ -1862,17 +1862,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         },
                         {
                             "index": "1",
-                            "name": "item"
+                            "name": "Item"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "index"
+                            "name": "Index"
                         }
                     ],
                     "selected": false
@@ -1889,13 +1889,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "flattened_list"
+                            "name": "Flattened List"
                         }
                     ],
                     "selected": false
@@ -1912,21 +1912,21 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         },
                         {
                             "index": "1",
-                            "name": "referenceList"
+                            "name": "Reference List"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "key"
+                            "name": "Key"
                         },
                         {
                             "index": "1",
-                            "name": "value"
+                            "name": "Value"
                         }
                     ],
                     "selected": false
@@ -1943,25 +1943,25 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "keys"
+                            "name": "Keys"
                         },
                         {
                             "index": "1",
-                            "name": "values"
+                            "name": "Values"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "keys"
+                            "name": "Keys"
                         },
                         {
                             "index": "1",
-                            "name": "values"
+                            "name": "Values"
                         },
                         {
                             "index": "2",
-                            "name": "map"
+                            "name": "Map"
                         }
                     ],
                     "selected": false
@@ -1978,17 +1978,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         },
                         {
                             "index": "1",
-                            "name": "key"
+                            "name": "Key"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "value"
+                            "name": "Value"
                         }
                     ],
                     "selected": false
@@ -2005,17 +2005,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         },
                         {
                             "index": "1",
-                            "name": "keys"
+                            "name": "Keys"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "values"
+                            "name": "Values"
                         }
                     ],
                     "selected": false
@@ -2032,13 +2032,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "invertedMap"
+                            "name": "Inverted Map"
                         }
                     ],
                     "selected": false
@@ -2055,17 +2055,17 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         },
                         {
                             "index": "1",
-                            "name": "counting_limit"
+                            "name": "Counting Limit"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "filter"
+                            "name": "Filter"
                         }
                     ],
                     "selected": false
@@ -2082,13 +2082,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "mapCounted"
+                            "name": "Map Counted"
                         }
                     ],
                     "selected": false
@@ -2105,13 +2105,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "keySet"
+                            "name": "Key Set"
                         }
                     ],
                     "selected": false
@@ -2128,13 +2128,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "map"
+                            "name": "Map"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "values"
+                            "name": "Values"
                         }
                     ],
                     "selected": false
@@ -2151,25 +2151,25 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         },
                         {
                             "index": "1",
-                            "name": "referenceList"
+                            "name": "Reference List"
                         },
                         {
                             "index": "2",
-                            "name": "order"
+                            "name": "Order"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "sortedList"
+                            "name": "Sorted List"
                         },
                         {
                             "index": "1",
-                            "name": "sortedReferenceValues"
+                            "name": "Sorted Reference Values"
                         }
                     ],
                     "selected": false
@@ -2196,7 +2196,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "Altered_List_A"
+                            "name": "Altered List A"
                         }
                     ],
                     "selected": false
@@ -2223,7 +2223,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "Joined_List"
+                            "name": "Joined List"
                         }
                     ],
                     "selected": false
@@ -2240,13 +2240,13 @@
                     "inputs": [
                         {
                             "index": "0",
-                            "name": "values"
+                            "name": "Values"
                         }
                     ],
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "list"
+                            "name": "List"
                         }
                     ],
                     "selected": false
@@ -2273,7 +2273,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "Joined_List"
+                            "name": "Joined List"
                         }
                     ],
                     "selected": false
@@ -2354,7 +2354,7 @@
                     "outputs": [
                         {
                             "index": "0",
-                            "name": "check"
+                            "name": "Check"
                         }
                     ],
                     "selected": false

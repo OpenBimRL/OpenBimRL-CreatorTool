@@ -1,6 +1,25 @@
 import { ref } from 'vue';
 
-export const apiEndpoint = ref(new URL('http://localhost:8080'));
+const API_ENDPOINT_STORAGE_KEY = 'openbimrl.apiEndpoint';
+
+const getInitialApiEndpoint = () => {
+    if (typeof window === 'undefined') return new URL('http://localhost:8080');
+    const stored = window.localStorage.getItem(API_ENDPOINT_STORAGE_KEY);
+    if (!stored) return new URL('http://localhost:8080');
+    try {
+        return new URL(stored);
+    } catch {
+        return new URL('http://localhost:8080');
+    }
+};
+
+export const apiEndpoint = ref(getInitialApiEndpoint());
+
+export function setApiEndpoint(url: URL) {
+    apiEndpoint.value = url;
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(API_ENDPOINT_STORAGE_KEY, url.toString());
+}
 
 interface ApiAnswer<T> {
     status: string;
@@ -18,23 +37,58 @@ interface CheckResult {
     checks: string;
 }
 
+interface ApiFunctionHandle {
+    index: string;
+    name: string;
+}
+
+interface ApiFunctionData {
+    name: string;
+    icon: string;
+    description: string;
+    label: string;
+    inputs: Array<ApiFunctionHandle>;
+    outputs: Array<ApiFunctionHandle>;
+    selected: boolean;
+}
+
+interface ApiFunctionItem {
+    id: string;
+    type: string;
+    data: ApiFunctionData;
+}
+
+export interface ApiFunctionGroup {
+    id: string;
+    name: string;
+    color: string;
+    items: Array<ApiFunctionItem>;
+}
+
+export interface ApiStatus {
+    version: string;
+    gpuOffloadEnabled: boolean;
+    gpuOffloadArch: string | null;
+}
+
 type Error = unknown;
 
 export async function checkGraph(
     modelUUID: string,
     graph: string,
+    signal?: AbortSignal,
 ): Promise<ApiAnswer<CheckResult | Error | null>> {
     const fd = new FormData();
 
     fd.append('file', graph);
 
-    const graphUUID = (await postApi<string>('/graph', fd)).content;
+    const graphUUID = (await postApi<string>('/graph', fd, signal)).content;
 
     const getParams = `graphIDs=${graphUUID}`;
 
     const requestEndpoint = `/check/${modelUUID}?${getParams}`;
 
-    return await getApi<CheckResult | Error | null>(requestEndpoint);
+    return await getApi<CheckResult | Error | null>(requestEndpoint, signal);
 }
 
 export async function isConnected(): Promise<boolean> {
@@ -70,26 +124,41 @@ export async function getModels(): Promise<Map<string, string>> {
     }
 }
 
-async function getApi<T>(path: string): Promise<ApiAnswer<T>> {
-    const response = await fetch(new URL(path, apiEndpoint.value));
+export async function getFunctions(): Promise<Array<ApiFunctionGroup>> {
+    const response = await getApi<Array<ApiFunctionGroup>>('/functions');
+    return response.content;
+}
+
+export async function getStatus(): Promise<ApiStatus> {
+    const response = await getApi<ApiStatus>('/status');
+    return response.content;
+}
+
+async function getApi<T>(path: string, signal?: AbortSignal): Promise<ApiAnswer<T>> {
+    const response = await fetch(new URL(path, apiEndpoint.value), { signal });
     if (!response.ok) throw new Error(response.statusText);
 
     const data = await (response.json() as Promise<ApiAnswer<T>>);
     return data;
 }
 
-async function getApiBinary(path: string): Promise<Uint8Array> {
-    const response = await fetch(new URL(path, apiEndpoint.value));
+async function getApiBinary(path: string, signal?: AbortSignal): Promise<Uint8Array> {
+    const response = await fetch(new URL(path, apiEndpoint.value), { signal });
     if (!response.ok) throw new Error(response.statusText);
 
     const buffer = await response.arrayBuffer();
     return new Uint8Array(buffer);
 }
 
-async function postApi<T>(path: string, params: FormData): Promise<ApiAnswer<T>> {
+async function postApi<T>(
+    path: string,
+    params: FormData,
+    signal?: AbortSignal,
+): Promise<ApiAnswer<T>> {
     const response = await fetch(new URL(path, apiEndpoint.value), {
         method: 'POST',
         body: params,
+        signal,
     });
     if (!response.ok) throw new Error(response.statusText);
 

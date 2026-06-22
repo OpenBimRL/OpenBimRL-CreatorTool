@@ -45,12 +45,23 @@
                     <label v-show="open" for="router-link-viewer"><span>Model Viewer</span></label>
                 </RouterLink>
             </li>
+            <li>
+                <RouterLink
+                    to="/api"
+                    id="router-link-api"
+                    title="API"
+                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
+                >
+                    <Cog6ToothIcon />
+                    <label v-show="open" for="router-link-api"><span>API</span></label>
+                </RouterLink>
+            </li>
         </ul>
     </nav>
 </template>
 
 <script setup lang="ts">
-import { HomeModernIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import { Cog6ToothIcon, HomeModernIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
 import { Bars3Icon, CubeTransparentIcon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
 

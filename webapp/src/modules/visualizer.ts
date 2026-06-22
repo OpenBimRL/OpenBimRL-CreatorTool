@@ -38,9 +38,9 @@ export function updateVisuals(data: VisualData | null) {
 
     Object.values(data).forEach(element => {
         element.forEach(visual => {
-            let geometry: THREE.BufferGeometry;
-            let color: string;
-            let pos: Point3d;
+            let geometry: THREE.BufferGeometry | undefined;
+            let color: string | undefined;
+            let pos: Point3d | undefined;
             Object.keys(visual).forEach(key => {
                 if (key === 'BoundingSphere') {
                     const definition = visual.BoundingSphere!;
@@ -67,10 +67,11 @@ export function updateVisuals(data: VisualData | null) {
                     }
                 }
             });
+            if (geometry === undefined) return;
             color ??= '#FFFFFF';
             pos ??= { x: 0, y: 0, z: 0 };
             const material = new THREE.MeshLambertMaterial({ color });
-            const mesh = new THREE.Mesh(geometry!, material);
+            const mesh = new THREE.Mesh(geometry, material);
             mesh.position.set(pos.x, pos.y, -pos.z);
             items.push(mesh);
         });

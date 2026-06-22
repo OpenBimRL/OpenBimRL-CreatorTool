@@ -25,7 +25,7 @@
                 "outputs": [
                     {
                         "index": "0",
-                        "name": "value"
+                        "name": "Value"
                     }
                 ],
                 "selected": false
@@ -49,7 +49,7 @@
                 "outputs": [
                     {
                         "index": "0",
-                        "name": "text",
+                        "name": "String",
                         "value": "Pset_WallCommon"
                     }
                 ],
@@ -74,7 +74,7 @@
                 "outputs": [
                     {
                         "index": "0",
-                        "name": "text",
+                        "name": "String",
                         "value": "LoadBearing"
                     }
                 ],
@@ -99,7 +99,7 @@
                 "outputs": [
                     {
                         "index": "0",
-                        "name": "text",
+                        "name": "String",
                         "value": "IfcWall"
                     }
                 ],
@@ -182,7 +182,7 @@
                 "outputs": [
                     {
                         "index": "0",
-                        "name": "text",
+                        "name": "String",
                         "value": "IfcObject"
                     }
                 ],

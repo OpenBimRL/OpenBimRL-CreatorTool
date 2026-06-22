@@ -6,5 +6,10 @@ onmessage = async (e: MessageEvent<{ file: Uint8Array }>) => {
     const loader = components.get(IfcLoader);
     const fragmentsManager = components.get(FragmentsManager);
     await configureIfcLoader(loader);
-    loader.load(e.data.file).then(fragments => postMessage(fragmentsManager.export(fragments)));
+    loader.load(e.data.file).then(fragments => {
+        postMessage({
+            bytes: fragmentsManager.export(fragments),
+            properties: fragments.getLocalProperties() ?? null,
+        });
+    });
 };
