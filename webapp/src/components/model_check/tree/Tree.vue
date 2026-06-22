@@ -1,41 +1,40 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <div>
-        <ul>
-            <CategoryNode
-                :data="data.subChecks"
-                header="Sub Checks"
-                :nodes="nodeStateMap"
-                :open="true"
-                @select="selectNode($event)"
-                @add="
-                    data.subChecks.push({
-                        applicability: [],
-                        label: createUniqueID(),
-                        name: 'new Sub Check',
-                        resultSets: [],
-                        rulesOrRuleSets: [],
-                    })
-                "
-            />
-            <CategoryNode
-                :data="data.resultSets"
-                header="Result Sets"
-                :nodes="nodeStateMap"
-                :open="true"
-                @select="selectNode($event)"
-                @add="
-                    data.resultSets.push({
-                        elements: '',
-                        filter: '',
-                        label: createUniqueID(),
-                        name: 'new Result Set',
-                        type: 'resultSet',
-                    })
-                "
-            />
-        </ul>
+    <div class="flex h-full min-h-0 flex-col overflow-y-auto pr-1">
+        <CategoryNode
+            :data="data.subChecks"
+            header="Sub Checks"
+            :nodes="nodeStateMap"
+            :open="true"
+            @select="selectNode($event)"
+            @add="
+                data.subChecks.push({
+                    applicability: [],
+                    label: createUniqueID(),
+                    name: 'new Sub Check',
+                    resultSets: [],
+                    rulesOrRuleSets: [],
+                })
+            "
+        />
+        <div class="my-3 border-t border-slate-200/80 dark:border-slate-700" />
+        <CategoryNode
+            :data="data.resultSets"
+            header="Result Sets"
+            :nodes="nodeStateMap"
+            :open="true"
+            @select="selectNode($event)"
+            @add="
+                data.resultSets.push({
+                    elements: '',
+                    filter: '',
+                    label: createUniqueID(),
+                    name: 'new Result Set',
+                    type: 'resultSet',
+                })
+            "
+        />
     </div>
 </template>
 
@@ -52,7 +51,7 @@ defineProps<{
 }>();
 
 const emits = defineEmits<{
-    (e: 'select', node: TreeNode | null): void;
+    (event: 'select', node: TreeNode | null): void;
 }>();
 
 const nodeStateMap = reactive(new Map<string, TreeNode>());
@@ -77,5 +76,3 @@ const selectNode = (nodeID?: string) => {
 
 defineExpose<ITree>({ selectNode, deselectAll, nodeStateMap });
 </script>
-
-<style scoped></style>

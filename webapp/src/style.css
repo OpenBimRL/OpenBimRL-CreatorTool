@@ -119,6 +119,59 @@
     .badge-neutral {
         @apply badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400;
     }
+
+    .checks-tree-children {
+        @apply relative mt-0.5 space-y-0.5;
+        margin-left: 0.625rem;
+        padding-left: 0.75rem;
+    }
+
+    /* Top elbow + vertical spine */
+    .checks-tree-children::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.875rem;
+        bottom: 0.875rem;
+        width: 0.5rem;
+        border-left: 1px solid rgb(148 163 184 / 0.55);
+        border-top: 1px solid rgb(148 163 184 / 0.55);
+        border-radius: 3px 0 0 0;
+        pointer-events: none;
+    }
+
+    /* Bottom end cap */
+    .checks-tree-children::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0.875rem;
+        width: 0.375rem;
+        height: 1px;
+        background: rgb(148 163 184 / 0.55);
+        pointer-events: none;
+    }
+
+    .checks-tree-children > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    :is(.dark) .checks-tree-children::before {
+        border-color: rgb(100 116 139 / 0.68);
+    }
+
+    :is(.dark) .checks-tree-children::after {
+        background: rgb(100 116 139 / 0.68);
+    }
+
+    .checks-tree-list > li:last-child > .checks-tree-children::before {
+        bottom: 0.875rem;
+    }
+
+    .checks-tree-list > li:last-child > .checks-tree-children::after {
+        display: none;
+    }
 }
 
 @layer utilities {

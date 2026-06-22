@@ -1,46 +1,35 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <li v-if="node">
-        <!-- Expand Arrow -->
-        <p @click="node.state.expanded = !node.state.expanded">
-            <button class="w-4">
-                <component
-                    v-show="data.length"
-                    :is="node.state.expanded ? BarsArrowUpIcon : BarsArrowDownIcon"
-                    class="inline-block"
-                />
-            </button>
-            <span
-                :class="{
-                    hover: node.state.hover,
-                    'text-default-contrast': node.state.selected,
-                }"
-            >
-                {{ header }}
-            </span>
-            <button
-                v-show="node.addable"
-                @click.stop="
-                    $emit('add');
-                    node.state.expanded = true;
-                "
-            >
-                <FolderPlusIcon class="inline-block w-4" />
-            </button>
-        </p>
-        <TreeNode
-            v-show="node.state.expanded"
-            v-bind="{ nodes: nodes, data, parent: node }"
-            @select="$emit('select', $event)"
-            class="ml-4"
+    <div class="checks-category">
+        <ChecksTreeRow
+            :node="node!"
+            :depth="depth"
+            :has-children="data.length > 0"
+            :deletable="false"
+            @toggle-expand="node!.state.expanded = !node!.state.expanded"
+            @add="
+                $emit('add');
+                node!.state.expanded = true;
+            "
         />
-    </li>
+
+        <div v-show="node!.state.expanded" class="checks-tree-children">
+            <TreeNode
+                :nodes="nodes"
+                :data="data"
+                :parent="node!"
+                :depth="depth + 1"
+                @select="$emit('select', $event)"
+            />
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { createUniqueID } from '@/ParserOpenBIMRL';
 import { ResultSets, RulesOrRuleSets, SubChecks } from '@/components/graph/Types';
-import { BarsArrowDownIcon, BarsArrowUpIcon, FolderPlusIcon } from '@heroicons/vue/24/solid';
 import { computed, reactive, watchEffect } from 'vue';
+import ChecksTreeRow from './ChecksTreeRow.vue';
 import TreeNode from './TreeNode.vue';
 import { TreeNode as TreeNodeType } from './Types';
 
@@ -50,7 +39,10 @@ const props = defineProps<{
     parent?: TreeNodeType;
     header: string;
     open?: boolean;
+    depth?: number;
 }>();
+
+const depth = computed(() => props.depth ?? 0);
 
 const id = `${props.header}_${createUniqueID()}`;
 
@@ -69,27 +61,12 @@ props.nodes.set(id, {
     },
 } as TreeNodeType);
 
-// eslint-disable-next-line vue/no-mutating-props
 watchEffect(() => props.parent?.nodes.push(id));
 
 const node = computed(() => props.nodes.get(id));
 
 defineEmits<{
-    (e: 'select', node: string): void;
-    (e: 'add'): void;
+    (event: 'select', node: string): void;
+    (event: 'add'): void;
 }>();
 </script>
-
-<style scoped>
-.hover {
-    @apply text-default-contrast text-opacity-60;
-}
-
-p > * {
-    @apply hover:text-default-contrast hover:text-opacity-60;
-}
-
-p > button {
-    @apply mx-1;
-}
-</style>

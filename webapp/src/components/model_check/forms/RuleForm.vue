@@ -1,70 +1,57 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <div class="rule-form">
-        <p>
-            <span class="text-xl">Edit Rule</span>
-        </p>
-        <InputField v-model="rule.label">
-            <span>Label</span>
-        </InputField>
-        <div class="flex gap-2">
-            <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
-                <label
-                    class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
-                    <span>Quantifier</span>
-                </label>
-                <select
-                    v-model="rule.quantifier"
-                    class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option v-for="(value, name) in RuleQuantifier" :value="value" :key="value">
-                        {{ name }}
-                    </option>
-                </select>
-            </div>
-            <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
-                <label
-                    class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
-                    <span>Operator</span>
-                </label>
-                <select
-                    v-model="rule.operator"
-                    class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option v-for="(value, name) in RuleOperator" :value="value" :key="value">
-                        {{ name }}
-                    </option>
-                </select>
-            </div>
-        </div>
+    <div class="space-y-5">
+        <FormSection card title="Identity" description="Unique label used to reference this rule.">
+            <InputField v-model="rule.label">
+                <span>Label</span>
+            </InputField>
+        </FormSection>
 
-        <div class="flex gap-2">
-            <InputField v-model="rule.operand1">
-                <span>Operand&nbsp;1</span>
-            </InputField>
-            <InputField v-model="rule.operand2">
-                <span>Operand&nbsp;2</span>
-            </InputField>
-        </div>
+        <FormSection
+            card
+            title="Condition"
+            description="Define how operands are compared when the rule runs."
+        >
+            <div class="grid gap-4 sm:grid-cols-2">
+                <SelectField v-model="rule.quantifier">
+                    <span>Quantifier</span>
+                    <template #options>
+                        <option v-for="(value, name) in RuleQuantifier" :value="value" :key="value">
+                            {{ name }}
+                        </option>
+                    </template>
+                </SelectField>
+
+                <SelectField v-model="rule.operator">
+                    <span>Operator</span>
+                    <template #options>
+                        <option v-for="(value, name) in RuleOperator" :value="value" :key="value">
+                            {{ name }}
+                        </option>
+                    </template>
+                </SelectField>
+            </div>
+        </FormSection>
+
+        <FormSection card title="Operands" description="Values or expressions evaluated by the rule.">
+            <div class="grid gap-4 sm:grid-cols-2">
+                <InputField v-model="rule.operand1">
+                    <span>Operand 1</span>
+                </InputField>
+                <InputField v-model="rule.operand2">
+                    <span>Operand 2</span>
+                </InputField>
+            </div>
+        </FormSection>
     </div>
 </template>
 
 <script setup lang="ts">
 import InputField from '@/components/InputField.vue';
+import SelectField from '@/components/SelectField.vue';
 import { Rule } from '@/components/graph/Types';
 import { RuleOperator, RuleQuantifier } from '@/components/graph/enums';
+import FormSection from './FormSection.vue';
 
 defineProps<{ rule: Rule }>();
 </script>
-
-<style scoped>
-div.rule-form > * {
-    @apply my-1;
-}
-</style>

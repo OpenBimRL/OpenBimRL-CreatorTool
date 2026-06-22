@@ -1,55 +1,47 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <ul>
-        <li v-for="(node, index) in elements" :key="index">
-            <!-- Expand Arrow -->
-            <p>
-                <button @click="toggleExpanded(node)" class="w-4">
-                    <component
-                        v-show="node.nodes.length"
-                        :is="node.state.expanded ? BarsArrowUpIcon : BarsArrowDownIcon"
-                        class="inline-block"
-                    />
-                </button>
-                <span
-                    :class="{
-                        hover: node.state.hover,
-                        'text-default-contrast': node.state.selected,
-                    }"
-                    @dblclick="toggleExpanded(node)"
-                    @click="if (node.selectable) $emit('select', node.id);"
-                >
-                    {{ node.text }}
-                </span>
-                <button v-show="node.addable" @click="addToNode(index)">
-                    <FolderPlusIcon class="inline-block w-4" />
-                </button>
-                <button @click="data.splice(index, 1)">
-                    <TrashIcon class="inline-block w-4" />
-                </button>
-            </p>
-            <div v-if="isSubCheck(data[index])">
+    <ul class="checks-tree-list space-y-0.5">
+        <li v-for="(node, index) in elements" :key="node.id" class="list-none">
+            <ChecksTreeRow
+                :node="node"
+                :depth="depth"
+                :has-children="hasChildren(node, index)"
+                deletable
+                @select="$emit('select', node.id)"
+                @toggle-expand="toggleExpanded(node)"
+                @add="addToNode(index)"
+                @delete="data.splice(index, 1)"
+            />
+
+            <div v-if="isSubCheck(data[index])" v-show="node.state.expanded" class="checks-tree-children">
                 <CategoryNode
-                    v-show="node.state.expanded"
-                    v-bind="{ nodes: nodes, data: (data[index] as SubCheck).applicability, parent: node, header: 'Applicability' }"
+                    :nodes="nodes"
+                    :data="(data[index] as SubCheck).applicability"
+                    :parent="node"
+                    header="Applicability"
+                    :depth="depth + 1"
                     @select="$emit('select', $event)"
                     @add="(data[index] as SubCheck).applicability.push(getDefaultRule())"
-                    class="ml-4"
                 />
                 <CategoryNode
-                    v-show="node.state.expanded"
-                    v-bind="{ nodes: nodes, data: (data[index] as SubCheck).rulesOrRuleSets, parent: node, header: 'Rules and Rule Sets' }"
+                    :nodes="nodes"
+                    :data="(data[index] as SubCheck).rulesOrRuleSets"
+                    :parent="node"
+                    header="Rules & Sets"
+                    :depth="depth + 1"
                     @select="$emit('select', $event)"
                     @add="(data[index] as SubCheck).rulesOrRuleSets.push(getDefaultRule())"
-                    class="ml-4"
                 />
             </div>
+
             <TreeNode
                 v-else-if="node.type === RuleOrRuleSetType.RULESET"
                 v-show="node.state.expanded"
-                v-bind="{ nodes: nodes, data: (data[index] as RuleSet).rulesOrRuleSets, parent: node }"
+                :nodes="nodes"
+                :data="(data[index] as RuleSet).rulesOrRuleSets"
+                :parent="node"
+                :depth="depth + 1"
                 @select="$emit('select', $event)"
-                class="ml-4"
             />
         </li>
     </ul>
@@ -64,29 +56,34 @@ import {
     RuleQuantifier,
     RuleSetOperator,
 } from '@/components/graph/enums';
-import {
-    BarsArrowDownIcon,
-    BarsArrowUpIcon,
-    FolderPlusIcon,
-    TrashIcon,
-} from '@heroicons/vue/24/solid';
 import { computed, onUnmounted, reactive, ref } from 'vue';
 import { Node, NodeTypes, classifyNode, isRule, isRuleSet, isSubCheck } from '../utils';
 import CategoryNode from './CategoryNode.vue';
+import ChecksTreeRow from './ChecksTreeRow.vue';
 import { TreeNodeState, TreeNode as TreeNodeType } from './Types';
 
 const props = defineProps<{
     nodes: Map<string, TreeNodeType>;
     data: Array<Node>;
     parent?: TreeNodeType;
+    depth?: number;
 }>();
 
+const depth = computed(() => props.depth ?? 0);
 const states = ref(new Array<TreeNodeState>());
 
 const toggleExpanded = (node: TreeNodeType) => {
     node.state.expanded = !node.state.expanded;
     if (node.state.expanded) return;
     emits('select', node.id);
+};
+
+const hasChildren = (node: TreeNodeType, index: number) => {
+    if (node.nodes.length > 0) return true;
+    const item = props.data[index];
+    if (isSubCheck(item)) return item.applicability.length > 0 || item.rulesOrRuleSets.length > 0;
+    if (isRuleSet(item)) return item.rulesOrRuleSets.length > 0;
+    return false;
 };
 
 const getDefaultRule = () =>
@@ -100,12 +97,10 @@ const getDefaultRule = () =>
     } as Rule);
 
 const addToNode = (at: number) => {
-    //(props.data[at] as RuleSet).rulesOrRuleSets.push(getDefaultRule());
     const item = props.data[at];
     if (isRuleSet(item)) {
         item.rulesOrRuleSets.push(getDefaultRule());
     } else if (isRule(item)) {
-        // eslint-disable-next-line vue/no-mutating-props
         props.data[at] = {
             label: 'new Rule Set',
             operator: RuleSetOperator.OR,
@@ -120,7 +115,6 @@ const elements = computed(() =>
         const type = classifyNode(element);
         const id = `${type}_${createUniqueID()}`;
 
-        // eslint-disable-next-line vue/no-mutating-props
         props.parent?.nodes.push(id);
 
         const state =
@@ -158,20 +152,6 @@ const elements = computed(() =>
 onUnmounted(() => elements.value.forEach(element => props.nodes.delete(element.id)));
 
 const emits = defineEmits<{
-    (e: 'select', node: string): void;
+    (event: 'select', node: string): void;
 }>();
 </script>
-
-<style scoped>
-.hover {
-    @apply text-default-contrast text-opacity-60;
-}
-
-p > * {
-    @apply hover:text-default-contrast hover:text-opacity-60;
-}
-
-p > button {
-    @apply mx-1;
-}
-</style>
