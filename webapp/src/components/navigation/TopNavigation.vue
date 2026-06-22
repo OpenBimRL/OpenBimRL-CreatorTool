@@ -13,7 +13,9 @@
                     </button>
                 </li>
                 <li>
-                    <button type="button" class="btn-ghost !py-1.5">Create Group</button>
+                    <button type="button" class="btn-ghost !py-1.5" @click="$emit('createGroup')">
+                        Create Group
+                    </button>
                 </li>
             </template>
             <template v-if="route.name == Routes.VIEWER">
@@ -49,7 +51,7 @@ import { Routes, default as router } from '@/modules/router';
 import { Ref, computed, inject } from 'vue';
 import { AddModel, Download, NewGraph, Upload } from './buttons';
 
-defineEmits(['showNodeLib', 'showHelp']);
+defineEmits(['showNodeLib', 'showHelp', 'createGroup']);
 
 const darkMode = inject(darkModeKey) as Ref<boolean>;
 const route = router.currentRoute;

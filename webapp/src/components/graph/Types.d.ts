@@ -40,6 +40,11 @@ export type InputNodeData = NodeData<never, InputNodeConnectorType>;
 
 export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorType>;
 
+export interface GroupNodeData extends NodeData {
+    color: string;
+    children: Array<string>;
+}
+
 export type CustomNode = Node<NodeData<unknown, unknown>>;
 
 // Rules and RuleSets

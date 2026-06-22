@@ -65,6 +65,7 @@ export function DoubleClickEvent(
         switch (event.node.type) {
             case 'inputType':
             case 'ruleIdentifier':
+            case 'groupType':
                 nodeDataIndex.value = 'label';
                 dialogDraftValue.value = String(nodes.value[index].data.label ?? '');
                 dialog.value?.open();

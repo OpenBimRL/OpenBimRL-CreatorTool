@@ -20,6 +20,8 @@
                 @connect="onConnect"
                 @node-click="onNodeClick"
                 @node-double-click="onNodeDoubleClick"
+                @node-drag-start="onNodeDragStart"
+                @node-drag-stop="onNodeDragStop"
                 @dragover.prevent="onDragOver"
                 @drop="onDrop"
                 class="h-full bg-slate-50 dark:bg-slate-950"
@@ -77,6 +79,7 @@
 import Parser from '@/ParserOpenBIMRL';
 import { darkModeKey, graphInjectionKey, parserInjectionKey } from '@/keys';
 import { checkGraph as apiCheckGraph } from '@/modules/apiConnection';
+import { createGroupFromSelection, getGroupedNodeIds, isGroupableNode, moveGroupChildren, stripGraphNode } from '@/modules/groupUtils';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
 import { updateVisuals } from '@/modules/visualizer';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
@@ -86,6 +89,7 @@ import {
     Edge,
     GraphEdge,
     GraphNode,
+    NodeDragEvent,
     NodeMouseEvent,
     VueFlow,
     isEdge,
@@ -140,7 +144,7 @@ const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) 
 const darkMode = inject(darkModeKey) as Ref<boolean>;
 const parser = inject(parserInjectionKey) as Parser;
 
-const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes } =
+const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes, setNodes } =
     useVueFlow({
         maxZoom: 2,
         minZoom: 0.1,
@@ -186,6 +190,28 @@ const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);
 const onNodeClick = (event: NodeMouseEvent) => {
     selectedDetailNodeId.value = event.node.id;
+};
+
+const groupDragStarts = new Map<string, { x: number; y: number }>();
+
+const onNodeDragStart = (event: NodeDragEvent) => {
+    if (event.node.type !== 'groupType') return;
+    groupDragStarts.set(event.node.id, { x: event.node.position.x, y: event.node.position.y });
+};
+
+const onNodeDragStop = (event: NodeDragEvent) => {
+    if (event.node.type !== 'groupType') return;
+    const start = groupDragStarts.get(event.node.id);
+    groupDragStarts.delete(event.node.id);
+    if (!start) return;
+
+    const delta = {
+        x: event.node.position.x - start.x,
+        y: event.node.position.y - start.y,
+    };
+    if (delta.x === 0 && delta.y === 0) return;
+
+    setNodes(moveGroupChildren(nodes.value, event.node, delta));
 };
 
 const toggleConsole = () => {
@@ -285,13 +311,43 @@ watch(selected, modelId => {
     selectedModelId.value = modelId;
 });
 
+const onCreateGroup = () => {
+    const allSelected = nodes.value.filter(node => node.selected);
+    const alreadyGrouped = getGroupedNodeIds(nodes.value);
+    const groupable = allSelected.filter(
+        node => isGroupableNode(node) && !alreadyGrouped.has(node.id),
+    );
+    const skippedRuleIds = allSelected.filter(node => node.type === 'ruleIdentifier').length;
+
+    if (groupable.length === 0) {
+        checkStatusText.value = 'Select precalculation nodes to group (Shift/Ctrl + click)';
+        consoleText.value += `[${new Date().toLocaleTimeString()}] Select at least one precalculation node to create a group.\n\n`;
+        return;
+    }
+
+    const group = createGroupFromSelection(groupable, nodes.value);
+    if (!group) return;
+
+    setNodes([
+        group,
+        ...nodes.value.filter(node => node.type !== 'groupType').map(stripGraphNode),
+    ]);
+
+    const childCount = group.data?.children.length ?? 0;
+    const skippedNote = skippedRuleIds > 0 ? ` (${skippedRuleIds} RuleIdentifier node(s) skipped)` : '';
+    checkStatusText.value = `Grouped ${childCount} node(s)${skippedNote}`;
+    consoleText.value += `[${new Date().toLocaleTimeString()}] Created group "${group.data?.label ?? 'Group'}" with ${childCount} node(s)${skippedNote}.\n\n`;
+};
+
 onMounted(() => {
     updateModels();
     window.addEventListener('openbimrl:compile-graph:done', onCompileFinished);
+    window.addEventListener('openbimrl:create-group', onCreateGroup);
 });
 
 onUnmounted(() => {
     window.removeEventListener('openbimrl:compile-graph:done', onCompileFinished);
+    window.removeEventListener('openbimrl:create-group', onCreateGroup);
     mouseResizeStop();
 });
 

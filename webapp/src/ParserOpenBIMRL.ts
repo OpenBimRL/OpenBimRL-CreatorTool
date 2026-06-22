@@ -1,6 +1,7 @@
 import { Edge, isEdge, isNode, Position } from '@vue-flow/core';
 import dagre, { graphlib } from 'dagre';
 import { v4 as uuidv4 } from 'uuid';
+import { applyGroupsAfterLayout, DEFAULT_GROUP_COLOR } from './modules/groupUtils';
 import type {
     CustomNode,
     GraphJSON,
@@ -74,6 +75,8 @@ export default class Parser {
                 ruleIdentifierIds[el.id] = n;
 
                 nodeRuleIdentifiers.appendChild(n);
+            } else if (el.type === 'groupType') {
+                // serialized separately below
             } else {
                 let n = xmlDoc.createElementNS('http://inf.bi.rub.de/OpenBimRL', 'Node');
                 n.setAttribute('id', el.id);
@@ -177,6 +180,39 @@ export default class Parser {
 
                 nodePrecalculations.appendChild(e);
             }
+        }
+
+        const groupNodes = filteredNodes.filter(
+            element => element.type === 'groupType',
+        ) as Array<CustomNode>;
+        for (const groupEl of groupNodes) {
+            const childIds =
+                (groupEl.data as { children?: Array<string> } | undefined)?.children?.filter(Boolean) ??
+                [];
+
+            if (childIds.length === 0) continue;
+
+            const groupElement = xmlDoc.createElementNS(
+                'http://inf.bi.rub.de/OpenBimRL',
+                'Group',
+            );
+            groupElement.setAttribute('id', groupEl.id);
+            groupElement.setAttribute('label', groupEl.data?.label ?? 'Group');
+            groupElement.setAttribute(
+                'color',
+                (groupEl.data as { color?: string } | undefined)?.color || DEFAULT_GROUP_COLOR,
+            );
+
+            for (const childId of childIds) {
+                const childElement = xmlDoc.createElementNS(
+                    'http://inf.bi.rub.de/OpenBimRL',
+                    'children',
+                );
+                childElement.textContent = childId;
+                groupElement.appendChild(childElement);
+            }
+
+            nodePrecalculations.appendChild(groupElement);
         }
 
         let nodeModelSubChecks = xmlDoc.createElementNS(
@@ -289,9 +325,16 @@ export default class Parser {
         let precalculations = bimRule['Precalculations'];
         let ns = precalculations['Node'];
         let es = precalculations['Edge'];
+        let gs = precalculations['Group'];
 
         var graphElements: Elements = [];
         var nodeMap: { [key: string]: any } = {};
+        const parsedGroups: Array<{
+            id: string;
+            label: string;
+            color: string;
+            children: Array<string>;
+        }> = [];
 
         //If Precalculations is checked in opts
         if (opts.enablePrecalculations) {
@@ -406,6 +449,32 @@ export default class Parser {
                 };
 
                 graphElements.push(eAttr);
+            }
+
+            if (typeof gs !== 'undefined') {
+                let groupArr = gs;
+                if (!Array.isArray(groupArr)) {
+                    groupArr = [groupArr];
+                }
+
+                for (const groupIndex in groupArr) {
+                    const group = groupArr[groupIndex];
+                    const groupAttributes = group._attributes ? group._attributes : group;
+                    let children = group.children;
+                    if (!children) continue;
+                    if (!Array.isArray(children)) {
+                        children = [children];
+                    }
+
+                    parsedGroups.push({
+                        id: groupAttributes.id,
+                        label: groupAttributes.label,
+                        color: groupAttributes.color || DEFAULT_GROUP_COLOR,
+                        children: children.map((child: string | { _text?: string }) =>
+                            typeof child === 'string' ? child : child._text || '',
+                        ),
+                    });
+                }
             }
         }
 
@@ -551,8 +620,9 @@ export default class Parser {
             }
         }
 
+        const layoutedElements = this.getLayoutedElements(graphElements, 'LR')!;
         return {
-            elements: this.getLayoutedElements(graphElements, 'LR')!,
+            elements: applyGroupsAfterLayout(layoutedElements, parsedGroups),
             subChecks: subChecks,
             resultSets: resultSetsArr,
         }; //Apply layout and register elements

@@ -28,6 +28,7 @@
             style="grid-area: nav"
             @showHelp="toggleSidePanel(Panels.Help)"
             @showNodeLib="toggleSidePanel(Panels.NodeLib)"
+            @createGroup="createGroup"
         />
         <RouterView
             style="grid-area: main"
@@ -77,6 +78,10 @@ const toggleSidePanel = (panelName: Panels, state?: boolean) => {
 
 const closeAllPanels = () => {
     for (const [, index] of Object.entries(Panels)) modals.value[index as Panels] = false;
+};
+
+const createGroup = () => {
+    window.dispatchEvent(new CustomEvent('openbimrl:create-group'));
 };
 
 const onRestoreDialogClose = () => {
