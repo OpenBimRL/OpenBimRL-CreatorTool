@@ -8,6 +8,13 @@
         <span>Endpoint</span>
     </InputField>
 
+    <InputField type="password" v-model="tempAccessToken" autocomplete="off">
+        <span>Access token</span>
+    </InputField>
+    <p class="text-xs text-slate-500 dark:text-slate-400">
+        Sent as <code class="font-mono">Authorization: Bearer …</code> when the API requires it.
+    </p>
+
     <button
         type="button"
         class="btn-primary"
@@ -49,9 +56,11 @@ import { InputField } from '@/components';
 import { apiConnectionInjectionKey } from '@/keys';
 import {
     apiEndpoint,
+    apiAccessToken,
     getStatus,
     isConnected,
     setApiEndpoint,
+    setApiAccessToken,
     type ApiStatus,
 } from '@/modules/apiConnection';
 import { Ref, computed, inject, onMounted, ref, watch } from 'vue';
@@ -59,6 +68,7 @@ import { VueSpinnerRadio } from 'vue3-spinners';
 
 const urlValid = ref(true);
 const tempApiUrl = ref(apiEndpoint.value);
+const tempAccessToken = ref(apiAccessToken.value);
 
 const connectionStatus = inject(apiConnectionInjectionKey)!;
 const connectionLoading = ref(false);
@@ -104,6 +114,8 @@ const updateUrl = () => {
 };
 
 watch(tempApiUrl, updateUrl);
+watch(tempAccessToken, token => setApiAccessToken(token));
 watch(apiEndpoint, testConnection);
+watch(apiAccessToken, testConnection);
 onMounted(testConnection);
 </script>

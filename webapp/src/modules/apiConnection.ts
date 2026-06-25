@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 
 const API_ENDPOINT_STORAGE_KEY = 'openbimrl.apiEndpoint';
+const API_ACCESS_TOKEN_STORAGE_KEY = 'openbimrl.apiAccessToken';
 
 const getInitialApiEndpoint = () => {
     if (typeof window === 'undefined') return new URL('http://localhost:8080');
@@ -13,12 +14,30 @@ const getInitialApiEndpoint = () => {
     }
 };
 
+const getInitialApiAccessToken = () => {
+    if (typeof window === 'undefined') return '';
+    return window.localStorage.getItem(API_ACCESS_TOKEN_STORAGE_KEY) ?? '';
+};
+
 export const apiEndpoint = ref(getInitialApiEndpoint());
+export const apiAccessToken = ref(getInitialApiAccessToken());
 
 export function setApiEndpoint(url: URL) {
     apiEndpoint.value = url;
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(API_ENDPOINT_STORAGE_KEY, url.toString());
+}
+
+export function setApiAccessToken(token: string) {
+    apiAccessToken.value = token;
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(API_ACCESS_TOKEN_STORAGE_KEY, token);
+}
+
+function authHeaders(): HeadersInit {
+    const token = apiAccessToken.value.trim();
+    if (!token) return {};
+    return { Authorization: `Bearer ${token}` };
 }
 
 interface ApiAnswer<T> {
@@ -135,7 +154,10 @@ export async function getStatus(): Promise<ApiStatus> {
 }
 
 async function getApi<T>(path: string, signal?: AbortSignal): Promise<ApiAnswer<T>> {
-    const response = await fetch(new URL(path, apiEndpoint.value), { signal });
+    const response = await fetch(new URL(path, apiEndpoint.value), {
+        headers: authHeaders(),
+        signal,
+    });
     if (!response.ok) throw new Error(response.statusText);
 
     const data = await (response.json() as Promise<ApiAnswer<T>>);
@@ -143,7 +165,10 @@ async function getApi<T>(path: string, signal?: AbortSignal): Promise<ApiAnswer<
 }
 
 async function getApiBinary(path: string, signal?: AbortSignal): Promise<Uint8Array> {
-    const response = await fetch(new URL(path, apiEndpoint.value), { signal });
+    const response = await fetch(new URL(path, apiEndpoint.value), {
+        headers: authHeaders(),
+        signal,
+    });
     if (!response.ok) throw new Error(response.statusText);
 
     const buffer = await response.arrayBuffer();
@@ -157,6 +182,7 @@ async function postApi<T>(
 ): Promise<ApiAnswer<T>> {
     const response = await fetch(new URL(path, apiEndpoint.value), {
         method: 'POST',
+        headers: authHeaders(),
         body: params,
         signal,
     });
