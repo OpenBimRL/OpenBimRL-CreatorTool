@@ -52,12 +52,12 @@
 import { InputField } from '@/components';
 import { apiConnectionInjectionKey } from '@/keys';
 import {
-    apiEndpoint,
     apiAccessToken,
+    apiEndpoint,
     getStatus,
     isConnected,
-    setApiEndpoint,
     setApiAccessToken,
+    setApiEndpoint,
     type ApiStatus,
 } from '@/modules/apiConnection';
 import { Ref, computed, inject, onMounted, ref, watch } from 'vue';

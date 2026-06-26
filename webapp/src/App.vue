@@ -2,6 +2,7 @@
     <div
         v-if="anyPanelOpen"
         class="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-[1px] dark:bg-black/40"
+        :class="{ 'pointer-events-none': isNodeLibOpen }"
         @click="closeAllPanels()"
     />
     <Help
@@ -64,6 +65,7 @@ modals.value[Panels.Help] = false;
 modals.value[Panels.NodeLib] = false;
 
 const anyPanelOpen = computed(() => Object.values(modals.value).some(Boolean));
+const isNodeLibOpen = computed(() => Boolean(modals.value[Panels.NodeLib]));
 
 const restoreDialog = ref<typeof Dialog | null>(null);
 const { resetGraph } = inject(graphInjectionKey) as GraphInject;

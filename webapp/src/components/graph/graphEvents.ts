@@ -86,6 +86,7 @@ export function DropEvent(
     addNodes: AddNodes,
 ): (event: DragEvent) => void {
     return event => {
+        event.preventDefault();
         if (!event.dataTransfer) return;
         const nodeInfo = JSON.parse(
             event.dataTransfer.getData('application/vueflow'),
