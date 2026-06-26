@@ -1,129 +1,143 @@
 <template>
-    <aside class="panel-drawer min-w-[25%] max-w-full grid gap-4 p-0 transition-transform" :style="`width: ${width}px`">
-        <button class="absolute border-2 h-full cursor-col-resize opacity-0 hover:opacity-100" @mousedown="mouseResizeStart" />
+    <aside
+        class="panel-drawer min-w-[25%] max-w-full grid gap-4 p-0 transition-transform"
+        :style="`width: ${width}px`"
+    >
+        <button
+            class="absolute border-2 h-full cursor-col-resize opacity-0 hover:opacity-100"
+            @mousedown="mouseResizeStart"
+        />
         <div class="panel-header">
-            <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">Node Library</h2>
+            <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">
+                Node Library
+            </h2>
         </div>
         <div class="flex flex-col gap-4 px-4 pb-4 flex-1 min-h-0">
-        <form>
-            <InputField v-model="search" placeholder="ifc.get...">
-                <span>Search</span>
-                <template v-slot:icon>
-                    <span class="relative">
-                        <MagnifyingGlassIcon class="text-gray-400 w-6 absolute top-2 right-2" />
-                    </span>
-                </template>
-            </InputField>
-        </form>
+            <form>
+                <InputField v-model="search" placeholder="ifc.get...">
+                    <span>Search</span>
+                    <template v-slot:icon>
+                        <span class="relative">
+                            <MagnifyingGlassIcon class="text-gray-400 w-6 absolute top-2 right-2" />
+                        </span>
+                    </template>
+                </InputField>
+            </form>
 
-        <div class="flex min-h-0 flex-1 flex-col max-w-full">
-            <div class="flex items-center justify-center py-1">
-                <Switch
-                    v-model="showLibsAsList"
-                    off-label="Icons"
-                    on-label="List"
-                    aria-label="Toggle library view mode"
-                />
-            </div>
-            <div class="flex">
-                <ul
-                    class="flex flex-row overflow-x-auto overflow-y-hidden rounded-t-lg border border-slate-200/80 dark:border-slate-700"
-                >
-                    <li
-                        v-for="(libname, index) in loadedLibraries"
-                        :key="index"
-                        class="border-r border-slate-200/80 p-2 last:border-r-0 dark:border-slate-700"
-                        :class="
-                            libname === currentSelection
-                                ? 'bg-white dark:bg-slate-800'
-                                : 'bg-slate-50 dark:bg-slate-900'
-                        "
-                    >
-                        <button
-                            type="button"
-                            class="bg-transparent text-sm font-medium text-slate-600 hover:text-default-dark dark:text-slate-400 dark:hover:text-slate-200"
-                            @click="currentSelection = libname"
-                        >
-                            <span>{{ libname }}</span>
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div
-                class="h-full overflow-y-auto overflow-x-hidden rounded-b-lg border border-t-0 border-slate-200/80 bg-white dark:border-slate-700 dark:bg-slate-900"
-            >
-                <div
-                    v-for="(libname, index) in loadedLibraries"
-                    :key="index"
-                    class=""
-                    v-show="libname === currentSelection"
-                >
-                    <GraphItemGroup
-                        v-for="group in availableLibraries[libname]"
-                        :search="search"
-                        :key="group.id"
-                        :group="group"
-                        :show-as-list="showLibsAsList"
+            <div class="flex min-h-0 flex-1 flex-col max-w-full">
+                <div class="flex items-center justify-center py-1">
+                    <Switch
+                        v-model="showLibsAsList"
+                        off-label="Icons"
+                        on-label="List"
+                        aria-label="Toggle library view mode"
                     />
                 </div>
-            </div>
-        </div>
-
-        <hr class="border-slate-200/80 dark:border-slate-700" />
-
-        <div class="flex flex-col gap-3">
-            <form class="flex items-center gap-2">
-                <div class="flex w-full overflow-hidden rounded-lg border border-slate-300/80 dark:border-slate-600">
-                    <label
-                        for="lib-select"
-                        class="inline-block border-r border-inherit bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                <div class="flex">
+                    <ul
+                        class="flex flex-row overflow-x-auto overflow-y-hidden rounded-t-lg border border-slate-200/80 dark:border-slate-700"
                     >
-                        <span>Library</span>
-                    </label>
-                    <select
-                        id="lib-select"
-                        class="w-full bg-transparent px-3 py-2 text-sm dark:text-slate-200"
-                        v-model="currentSelection"
-                    >
-                        <option
-                            v-for="lib in Object.keys(availableLibraries)"
-                            :key="lib"
-                            v-text="lib"
-                        />
-                    </select>
+                        <li
+                            v-for="(libname, index) in loadedLibraries"
+                            :key="index"
+                            class="border-r border-slate-200/80 p-2 last:border-r-0 dark:border-slate-700"
+                            :class="
+                                libname === currentSelection
+                                    ? 'bg-white dark:bg-slate-800'
+                                    : 'bg-slate-50 dark:bg-slate-900'
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="bg-transparent text-sm font-medium text-slate-600 hover:text-default-dark dark:text-slate-400 dark:hover:text-slate-200"
+                                @click="currentSelection = libname"
+                            >
+                                <span>{{ libname }}</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-                <button
-                    type="button"
-                    class="btn-icon !h-10 !w-10 bg-emerald-600 text-white hover:bg-emerald-700"
-                    @click="createLibrary"
+                <div
+                    class="h-full overflow-y-auto overflow-x-hidden rounded-b-lg border border-t-0 border-slate-200/80 bg-white dark:border-slate-700 dark:bg-slate-900"
                 >
-                    <PlusIcon class="h-5 w-5" />
-                </button>
-            </form>
-            <div class="flex items-center gap-2">
-                <button
-                    type="button"
-                    class="btn-secondary !text-xs"
-                    :disabled="fetchingApiLibrary"
-                    @click="fetchApiFunctionLibrary"
-                >
-                    {{
-                        fetchingApiLibrary ? 'Fetching...' : 'Fetch API supported function library'
-                    }}
-                </button>
-                <span v-if="fetchStatusText" class="text-xs text-slate-500">{{ fetchStatusText }}</span>
+                    <div
+                        v-for="(libname, index) in loadedLibraries"
+                        :key="index"
+                        class=""
+                        v-show="libname === currentSelection"
+                    >
+                        <GraphItemGroup
+                            v-for="group in availableLibraries[libname]"
+                            :search="search"
+                            :key="group.id"
+                            :group="group"
+                            :show-as-list="showLibsAsList"
+                        />
+                    </div>
+                </div>
             </div>
 
-            <button type="button" class="btn-primary w-full" @click="handleUpload">
-                Upload Library
-            </button>
-            <input
-                id="uploadLibraryJSONAnchorElem"
-                class="hidden"
-                type="file"
-                @change="uploaderOnChange($event, 'json')"
-            />
-        </div>
+            <hr class="border-slate-200/80 dark:border-slate-700" />
+
+            <div class="flex flex-col gap-3">
+                <form class="flex items-center gap-2">
+                    <div
+                        class="flex w-full overflow-hidden rounded-lg border border-slate-300/80 dark:border-slate-600"
+                    >
+                        <label
+                            for="lib-select"
+                            class="inline-block border-r border-inherit bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                        >
+                            <span>Library</span>
+                        </label>
+                        <select
+                            id="lib-select"
+                            class="w-full bg-transparent px-3 py-2 text-sm dark:text-slate-200"
+                            v-model="currentSelection"
+                        >
+                            <option
+                                v-for="lib in Object.keys(availableLibraries)"
+                                :key="lib"
+                                v-text="lib"
+                            />
+                        </select>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn-icon !h-10 !w-10 bg-emerald-600 text-white hover:bg-emerald-700"
+                        @click="createLibrary"
+                    >
+                        <PlusIcon class="h-5 w-5" />
+                    </button>
+                </form>
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        class="btn-secondary !text-xs"
+                        :disabled="fetchingApiLibrary"
+                        @click="fetchApiFunctionLibrary"
+                    >
+                        {{
+                            fetchingApiLibrary
+                                ? 'Fetching...'
+                                : 'Fetch API supported function library'
+                        }}
+                    </button>
+                    <span v-if="fetchStatusText" class="text-xs text-slate-500">{{
+                        fetchStatusText
+                    }}</span>
+                </div>
+
+                <button type="button" class="btn-primary w-full" @click="handleUpload">
+                    Upload Library
+                </button>
+                <input
+                    id="uploadLibraryJSONAnchorElem"
+                    class="hidden"
+                    type="file"
+                    @change="uploaderOnChange($event, 'json')"
+                />
+            </div>
         </div>
     </aside>
 </template>

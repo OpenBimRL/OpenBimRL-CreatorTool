@@ -1,7 +1,11 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="space-y-5">
-        <FormSection card title="Identity" description="Unique label used to reference this rule set.">
+        <FormSection
+            card
+            title="Identity"
+            description="Unique label used to reference this rule set."
+        >
             <InputField v-model="ruleSet.label">
                 <span>Label</span>
             </InputField>
@@ -21,7 +25,9 @@
                 </template>
             </SelectField>
 
-            <p class="rounded-lg border border-slate-200/80 bg-slate-50 px-3 py-2.5 text-xs leading-relaxed text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400">
+            <p
+                class="rounded-lg border border-slate-200/80 bg-slate-50 px-3 py-2.5 text-xs leading-relaxed text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400"
+            >
                 Nested rules are managed in the tree. Use the
                 <span class="font-medium text-slate-700 dark:text-slate-300">+</span>
                 button on a rule set row to add child rules.

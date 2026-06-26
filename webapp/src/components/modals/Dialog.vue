@@ -1,11 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <Teleport to="body">
-        <dialog
-            ref="dialog"
-            class="app-dialog"
-            @cancel="onCancel"
-        >
+        <dialog ref="dialog" class="app-dialog" @cancel="onCancel">
             <div class="border-b border-slate-200/80 px-6 py-4 dark:border-slate-700">
                 <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">
                     <slot name="title" />

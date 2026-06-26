@@ -25,7 +25,9 @@
                     <template #options>
                         <option value="" disabled>Select graph element…</option>
                         <option
-                            v-for="value in graphNodes.filter(element => element.type === 'ruleIdentifier')"
+                            v-for="value in graphNodes.filter(
+                                element => element.type === 'ruleIdentifier',
+                            )"
                             :value="value.data?.label"
                             :key="value.id"
                         >

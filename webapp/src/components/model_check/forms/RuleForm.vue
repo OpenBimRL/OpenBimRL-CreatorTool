@@ -33,7 +33,11 @@
             </div>
         </FormSection>
 
-        <FormSection card title="Operands" description="Values or expressions evaluated by the rule.">
+        <FormSection
+            card
+            title="Operands"
+            description="Values or expressions evaluated by the rule."
+        >
             <div class="grid gap-4 sm:grid-cols-2">
                 <InputField v-model="rule.operand1">
                     <span>Operand 1</span>

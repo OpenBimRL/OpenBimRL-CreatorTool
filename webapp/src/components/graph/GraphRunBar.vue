@@ -2,7 +2,9 @@
     <div
         class="flex h-11 min-h-11 items-center gap-2 border-b border-slate-200/80 bg-white/90 px-3 backdrop-blur-sm dark:border-slate-800 dark:bg-default-dark/90"
     >
-        <div class="flex items-center gap-1 rounded-lg border border-slate-200/80 p-0.5 dark:border-slate-700">
+        <div
+            class="flex items-center gap-1 rounded-lg border border-slate-200/80 p-0.5 dark:border-slate-700"
+        >
             <button
                 type="button"
                 class="btn-icon !h-7 !w-7 !border-0 bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700"

@@ -13,7 +13,11 @@
                 @delete="data.splice(index, 1)"
             />
 
-            <div v-if="isSubCheck(data[index])" v-show="node.state.expanded" class="checks-tree-children">
+            <div
+                v-if="isSubCheck(data[index])"
+                v-show="node.state.expanded"
+                class="checks-tree-children"
+            >
                 <CategoryNode
                     :nodes="nodes"
                     :data="(data[index] as SubCheck).applicability"

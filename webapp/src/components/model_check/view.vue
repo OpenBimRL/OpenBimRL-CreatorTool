@@ -1,6 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div ref="layoutRef" class="checks-layout grid h-full min-h-0 w-full gap-0 dark:bg-default-darkest" :style="layoutStyle">
+    <div
+        ref="layoutRef"
+        class="checks-layout grid h-full min-h-0 w-full gap-0 dark:bg-default-darkest"
+        :style="layoutStyle"
+    >
         <aside
             class="checks-sidebar relative flex min-h-0 shrink-0 flex-col border-r border-slate-200 bg-white shadow-[2px_0_14px_-6px_rgb(15_23_42_/_0.12)] dark:border-slate-700 dark:bg-slate-900 dark:shadow-[2px_0_16px_-6px_rgb(0_0_0_/_0.45)]"
         >
@@ -23,7 +27,9 @@
             </div>
         </aside>
 
-        <section class="checks-detail flex min-h-0 flex-col overflow-hidden bg-surface-muted dark:bg-default-darkest">
+        <section
+            class="checks-detail flex min-h-0 flex-col overflow-hidden bg-surface-muted dark:bg-default-darkest"
+        >
             <div v-if="currentNode && tree" class="flex min-h-0 flex-1 flex-col">
                 <header
                     class="sticky top-0 z-10 shrink-0 border-b border-slate-200/80 bg-surface-muted/95 px-6 py-4 backdrop-blur-md dark:border-slate-800 dark:bg-default-darkest/95"
@@ -58,7 +64,9 @@
                         </span>
                         <div class="min-w-0 flex-1">
                             <span :class="typeBadgeClass">{{ typeLabel }}</span>
-                            <h2 class="mt-2 truncate text-xl font-semibold text-default-dark dark:text-slate-100">
+                            <h2
+                                class="mt-2 truncate text-xl font-semibold text-default-dark dark:text-slate-100"
+                            >
                                 {{ currentNode.text }}
                             </h2>
                             <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -110,8 +118,8 @@
                     Select an item to edit
                 </h2>
                 <p class="max-w-sm text-sm text-slate-500 dark:text-slate-400">
-                    Choose a sub check, rule, rule set, or result set from the tree to view and
-                    edit its properties.
+                    Choose a sub check, rule, rule set, or result set from the tree to view and edit
+                    its properties.
                 </p>
             </div>
         </section>

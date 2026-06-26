@@ -36,8 +36,8 @@
                 node.state.selected && node.type !== 'CATEGORY'
                     ? 'font-medium text-default-dark dark:text-accent'
                     : node.type !== 'CATEGORY'
-                      ? 'text-slate-700 dark:text-slate-300'
-                      : '',
+                    ? 'text-slate-700 dark:text-slate-300'
+                    : '',
             ]"
             @click.stop="node.selectable && $emit('select')"
             @dblclick.stop="$emit('toggle-expand')"

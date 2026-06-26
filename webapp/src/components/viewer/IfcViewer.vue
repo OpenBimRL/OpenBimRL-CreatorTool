@@ -8,8 +8,12 @@
                 <VueSpinnerCore :color="darkMode ? '#000' : '#fff'" :size="80" />
             </div>
         </div>
-        <aside class="flex flex-col border-l border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-            <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        <aside
+            class="flex flex-col border-l border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
+        >
+            <h4
+                class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+            >
                 Models
             </h4>
             <ul class="flex flex-col gap-1 overflow-auto">

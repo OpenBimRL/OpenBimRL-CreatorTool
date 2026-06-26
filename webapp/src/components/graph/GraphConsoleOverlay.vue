@@ -6,14 +6,23 @@
         <div
             class="flex h-9 min-h-9 items-center justify-between border-b border-slate-200/80 px-3 dark:border-slate-700"
         >
-            <span class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+            <span
+                class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
                 >Check Console</span
             >
             <div class="flex items-center gap-1">
-                <button type="button" class="btn-ghost !px-2 !py-1 !text-xs" @click="$emit('minimize')">
+                <button
+                    type="button"
+                    class="btn-ghost !px-2 !py-1 !text-xs"
+                    @click="$emit('minimize')"
+                >
                     Minimize
                 </button>
-                <button type="button" class="btn-ghost !px-2 !py-1 !text-xs" @click="$emit('clear')">
+                <button
+                    type="button"
+                    class="btn-ghost !px-2 !py-1 !text-xs"
+                    @click="$emit('clear')"
+                >
                     Clear
                 </button>
             </div>

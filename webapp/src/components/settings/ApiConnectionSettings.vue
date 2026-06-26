@@ -1,10 +1,5 @@
 <template>
-    <InputField
-        type="url"
-        v-model="tempApiUrl"
-        :valid="urlValid"
-        invalid-message="Not a valid URL"
-    >
+    <InputField type="url" v-model="tempApiUrl" :valid="urlValid" invalid-message="Not a valid URL">
         <span>Endpoint</span>
     </InputField>
 
@@ -41,7 +36,9 @@
             </div>
             <div class="flex justify-between gap-4">
                 <dt class="text-slate-500 dark:text-slate-400">GPU offload</dt>
-                <dd class="font-medium">{{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}</dd>
+                <dd class="font-medium">
+                    {{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}
+                </dd>
             </div>
             <div v-if="apiStatus.gpuOffloadArch" class="flex justify-between gap-4">
                 <dt class="text-slate-500 dark:text-slate-400">GPU arch</dt>

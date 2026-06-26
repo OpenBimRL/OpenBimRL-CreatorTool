@@ -11,7 +11,11 @@
         <div class="h-full p-3 flex flex-col gap-3">
             <div class="flex items-center justify-between">
                 <h3 class="text-sm font-semibold">Node Details</h3>
-                <button type="button" class="btn-ghost !px-2 !py-1 !text-xs" @click="$emit('close')">
+                <button
+                    type="button"
+                    class="btn-ghost !px-2 !py-1 !text-xs"
+                    @click="$emit('close')"
+                >
                     Close
                 </button>
             </div>

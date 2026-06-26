@@ -4,7 +4,10 @@
             <h2 class="text-sm font-semibold text-default-dark dark:text-slate-100">
                 {{ title }}
             </h2>
-            <p v-if="description" class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+            <p
+                v-if="description"
+                class="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400"
+            >
                 {{ description }}
             </p>
         </div>
