@@ -2,6 +2,220 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html {
+        @apply antialiased;
+    }
+
+    body {
+        @apply bg-surface-muted font-sans text-slate-900 dark:bg-default-darkest dark:text-slate-100;
+    }
+
+    ::selection {
+        background-color: rgb(252 163 17 / 0.3);
+        @apply text-default-dark;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+            disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-offset-default-darkest;
+        --tw-ring-color: rgb(252 163 17 / 0.6);
+    }
+
+    .btn-primary {
+        @apply btn bg-default-dark text-white dark:bg-accent dark:text-default-dark;
+    }
+
+    .btn-primary:hover {
+        background-color: rgb(20 33 61 / 0.9);
+    }
+
+    :is(.dark) .btn-primary:hover {
+        background-color: rgb(252 163 17 / 0.9);
+    }
+
+    .btn-secondary {
+        @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50
+            dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700;
+    }
+
+    .btn-ghost {
+        @apply btn text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800;
+    }
+
+    .btn-danger {
+        @apply btn bg-danger text-white hover:bg-red-700;
+    }
+
+    .btn-icon {
+        @apply inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-300/80 bg-white text-slate-700
+            transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+            disabled:pointer-events-none disabled:opacity-40
+            dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700;
+        --tw-ring-color: rgb(252 163 17 / 0.6);
+    }
+
+    .btn-icon-active {
+        @apply btn-icon border-accent text-default-dark dark:text-accent;
+        background-color: rgb(252 163 17 / 0.15);
+    }
+
+    :is(.dark) .btn-icon-active {
+        background-color: rgb(252 163 17 / 0.2);
+    }
+
+    .nav-link {
+        @apply flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors
+            hover:bg-slate-100 hover:text-default-dark
+            dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-slate-100;
+    }
+
+    .nav-link-active {
+        @apply nav-link text-default-dark shadow-soft dark:text-accent;
+        background-color: rgb(252 163 17 / 0.15);
+    }
+
+    :is(.dark) .nav-link-active {
+        background-color: rgb(252 163 17 / 0.2);
+    }
+
+    .nav-link-collapsed {
+        @apply justify-center gap-0 px-2;
+    }
+
+    .nav-button {
+        @apply btn-ghost !py-1.5;
+    }
+
+    .panel-drawer {
+        @apply fixed right-0 top-0 z-50 flex h-full flex-col border-l border-slate-200/80 shadow-panel backdrop-blur-md
+            dark:border-slate-700;
+        background-color: rgb(255 255 255 / 0.95);
+    }
+
+    :is(.dark) .panel-drawer {
+        background-color: rgb(20 33 61 / 0.95);
+    }
+
+    .panel-header {
+        @apply flex items-center justify-between border-b border-slate-200/80 px-5 py-4 dark:border-slate-700;
+    }
+
+    .card {
+        @apply rounded-xl border border-slate-200/80 bg-white p-5 shadow-soft dark:border-slate-700 dark:bg-slate-900/50;
+    }
+
+    .badge {
+        @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    }
+
+    .badge-success {
+        @apply badge bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300;
+    }
+
+    .badge-danger {
+        @apply badge bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
+    }
+
+    .badge-neutral {
+        @apply badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400;
+    }
+
+    .checks-tree-children {
+        @apply relative mt-0.5 space-y-0.5;
+        margin-left: 0.625rem;
+        padding-left: 0.75rem;
+    }
+
+    /* Top elbow + vertical spine */
+    .checks-tree-children::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.875rem;
+        bottom: 0.875rem;
+        width: 0.5rem;
+        border-left: 1px solid rgb(148 163 184 / 0.55);
+        border-top: 1px solid rgb(148 163 184 / 0.55);
+        border-radius: 3px 0 0 0;
+        pointer-events: none;
+    }
+
+    /* Bottom end cap */
+    .checks-tree-children::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0.875rem;
+        width: 0.375rem;
+        height: 1px;
+        background: rgb(148 163 184 / 0.55);
+        pointer-events: none;
+    }
+
+    .checks-tree-children > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    :is(.dark) .checks-tree-children::before {
+        border-color: rgb(100 116 139 / 0.68);
+    }
+
+    :is(.dark) .checks-tree-children::after {
+        background: rgb(100 116 139 / 0.68);
+    }
+
+    .checks-tree-list > li:last-child > .checks-tree-children::before {
+        bottom: 0.875rem;
+    }
+
+    .checks-tree-list > li:last-child > .checks-tree-children::after {
+        display: none;
+    }
+
+    .settings-grid {
+        @apply grid auto-rows-min gap-6 md:grid-cols-2;
+    }
+
+    .settings-fields {
+        @apply max-w-md space-y-4;
+    }
+
+    .node-head {
+        @apply overflow-hidden rounded-t-xl px-2 py-1.5;
+    }
+
+    .node-head .heading {
+        @apply whitespace-normal break-words text-center text-sm font-medium leading-snug;
+    }
+
+    .node-body {
+        @apply relative flex items-center justify-center overflow-visible px-3 py-2;
+    }
+
+    .vue-flow__node {
+        overflow: visible !important;
+    }
+
+    .app-dialog {
+        @apply max-h-[calc(100vh-2rem)] w-[min(100%-2rem,32rem)] rounded-xl border border-slate-200/80 bg-white p-0 shadow-panel
+            dark:border-slate-700 dark:bg-slate-900;
+        position: fixed;
+        inset: 0;
+        height: fit-content;
+        margin: auto;
+        border-width: 1px;
+    }
+
+    .app-dialog::backdrop {
+        background-color: rgb(15 23 42 / 0.5);
+    }
+}
+
 @layer utilities {
     .anchor {
         visibility: collapse;

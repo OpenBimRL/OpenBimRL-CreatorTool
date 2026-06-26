@@ -1,34 +1,43 @@
 <template>
     <div
         v-if="open && !minimized"
-        class="absolute left-2 right-2 bottom-2 h-40 border rounded bg-default-light/95 dark:bg-default-darkest/95 shadow-lg z-20 flex flex-col"
+        class="absolute bottom-3 left-3 right-3 z-20 flex h-44 flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-white/95 shadow-panel backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95"
     >
         <div
-            class="h-7 min-h-7 px-2 border-b flex items-center justify-between bg-default-medium dark:bg-default-dark"
+            class="flex h-9 min-h-9 items-center justify-between border-b border-slate-200/80 px-3 dark:border-slate-700"
         >
-            <span class="text-xs font-semibold">Check Console</span>
+            <span
+                class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                >Check Console</span
+            >
             <div class="flex items-center gap-1">
                 <button
-                    class="text-xs px-2 py-0.5 rounded border hover:bg-default-light dark:hover:bg-default-darkest"
+                    type="button"
+                    class="btn-ghost !px-2 !py-1 !text-xs"
                     @click="$emit('minimize')"
                 >
-                    _
+                    Minimize
                 </button>
                 <button
-                    class="text-xs px-2 py-0.5 rounded border hover:bg-default-light dark:hover:bg-default-darkest"
+                    type="button"
+                    class="btn-ghost !px-2 !py-1 !text-xs"
                     @click="$emit('clear')"
                 >
                     Clear
                 </button>
             </div>
         </div>
-        <pre class="text-xs p-2 overflow-auto flex-1 whitespace-pre-wrap">{{ text }}</pre>
+        <pre
+            class="flex-1 overflow-auto whitespace-pre-wrap p-3 font-mono text-xs leading-relaxed text-slate-700 dark:text-slate-300"
+            >{{ text }}</pre
+        >
     </div>
     <button
         v-else-if="open && minimized"
-        class="absolute right-2 bottom-2 z-20 border rounded bg-default-medium dark:bg-default-dark px-3 py-1 text-xs shadow-lg hover:bg-default-light dark:hover:bg-default-darkest"
-        @click="$emit('restore')"
+        type="button"
+        class="btn-secondary absolute bottom-3 right-3 z-20 !text-xs shadow-panel"
         title="Restore console"
+        @click="$emit('restore')"
     >
         Check Console
     </button>

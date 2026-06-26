@@ -1,13 +1,16 @@
 import { defineAsyncComponent } from 'vue';
 
 export const calcTopOffsetStyle = (index: number, len: number) => ({
-    top: len > 1 ? ((index / len) * 100).toString() + '%' : '50%',
+    top: `${((index + 1) / (len + 1)) * 100}%`,
 });
 
 export const minHeight = (
     inputs: Array<unknown> = [],
     outputs: Array<unknown> = [], // here it doesn't matter which types are used cause it only needs the length
-) => Math.max(inputs.length, outputs.length);
+) => {
+    const portCount = Math.max(inputs.length, outputs.length, 1);
+    return Math.max(3.5, portCount * 2.25);
+};
 
 const maxNameLength = (names: Array<{ name?: string }> = []) =>
     names.reduce((max, entry) => Math.max(max, entry.name?.length ?? 0), 0);

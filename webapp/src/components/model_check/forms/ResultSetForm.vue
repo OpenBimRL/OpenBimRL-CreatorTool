@@ -1,58 +1,58 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <div class="result_set-form">
-        <p><span class="text-xl"> Edit RuleSet </span></p>
-        <InputField v-model="resultSet.name">
-            <span>Name</span>
-        </InputField>
+    <div class="space-y-5">
+        <FormSection
+            card
+            title="Identity"
+            description="How this result set appears in the tree and reports."
+        >
+            <InputField v-model="resultSet.name">
+                <span>Name</span>
+            </InputField>
+            <InputField v-model="resultSet.label">
+                <span>Label</span>
+            </InputField>
+        </FormSection>
 
-        <div class="flex gap-2">
-            <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
-                <label
-                    class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
+        <FormSection
+            card
+            title="Graph binding"
+            description="Link this result set to a rule identifier node and a filter rule from the sub checks."
+        >
+            <div class="grid gap-4 lg:grid-cols-2">
+                <SelectField v-model="resultSet.elements">
                     <span>Elements</span>
-                </label>
-                <select
-                    v-model="resultSet.elements"
-                    class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option
-                        v-for="value in graphNodes.filter(
-                            element => element.type === 'ruleIdentifier',
-                        )"
-                        :value="value.data?.label"
-                        :key="value.id"
-                    >
-                        {{ value.data?.label }}
-                    </option>
-                </select>
+                    <template #options>
+                        <option value="" disabled>Select graph element…</option>
+                        <option
+                            v-for="value in graphNodes.filter(
+                                element => element.type === 'ruleIdentifier',
+                            )"
+                            :value="value.data?.label"
+                            :key="value.id"
+                        >
+                            {{ value.data?.label }}
+                        </option>
+                    </template>
+                </SelectField>
+
+                <SelectField v-model="resultSet.filter">
+                    <span>Filter rule</span>
+                    <template #options>
+                        <option value="" disabled>Select filter rule…</option>
+                        <option v-for="(value, index) in filter" :value="value.label" :key="index">
+                            {{ value.label }}
+                        </option>
+                    </template>
+                </SelectField>
             </div>
-            <div class="flex w-full rounded overflow-hidden border dark:border-default-medium">
-                <label
-                    class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
-                    for="rule-form-operator-select"
-                >
-                    <span>Filter</span>
-                </label>
-                <select
-                    v-model="resultSet.filter"
-                    class="w-full pl-1 bg-default-light dark:bg-default-dark focus-visible:outline-none"
-                    id="rule-form-operator-select"
-                >
-                    <option v-for="(value, index) in filter" :value="value.label" :key="index">
-                        {{ value.label }}
-                    </option>
-                </select>
-            </div>
-        </div>
+        </FormSection>
     </div>
 </template>
 
 <script setup lang="ts">
 import InputField from '@/components/InputField.vue';
+import SelectField from '@/components/SelectField.vue';
 import type {
     CustomNode,
     ResultSet,
@@ -64,6 +64,7 @@ import type {
 import { RuleOrRuleSetType } from '@/components/graph/enums';
 import { Edge } from '@vue-flow/core';
 import { computed } from 'vue';
+import FormSection from './FormSection.vue';
 
 const props = defineProps<{
     resultSet: ResultSet;
@@ -96,9 +97,3 @@ const filterRecursive = (rulesOrRuleSets: RulesOrRuleSets): Array<Rule> => {
     return returnArray;
 };
 </script>
-
-<style scoped>
-div.result_set-form > * {
-    @apply my-1;
-}
-</style>

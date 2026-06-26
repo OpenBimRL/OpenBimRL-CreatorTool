@@ -1,8 +1,8 @@
 <template>
     <div class="relative min-w-[12rem]" :style="widthStyle">
         <div
-            class="relative z-20 rounded shadow-[0_0_0_1px] aria-selected:shadow-[0_0_0_2px] shadow-gray-500 bg-default-light dark:shadow-default-medium dark:bg-default-darkest"
-            :class="{ 'shadow-[0_0_0_2px] !shadow-red-500': invalid }"
+            class="relative z-20 rounded-xl border border-slate-200/80 bg-white shadow-soft aria-selected:border-accent aria-selected:ring-2 aria-selected:ring-accent/30 dark:border-slate-700 dark:bg-slate-900"
+            :class="{ '!border-red-500 !ring-2 !ring-red-500/30': invalid }"
             :aria-selected="selected"
             :title="invalidReason || ''"
         >

@@ -1,12 +1,12 @@
 <template>
     <div
-        class="flex w-full rounded overflow-hidden border dark:border-default-medium"
+        class="flex w-full overflow-hidden rounded-lg border border-slate-300/80 bg-white shadow-soft transition-shadow focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/20 dark:border-slate-600 dark:bg-slate-900 dark:focus-within:border-accent/40"
         :class="getLabelClasses"
     >
         <label
             :for="key"
             v-bind="invalidMessageProp"
-            class="p-2 text-sm cursor-text select-none bg-default-light border-r border-inherit dark:bg-default-dark"
+            class="cursor-text select-none border-r border-inherit bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
         >
             <slot />
         </label>
@@ -19,7 +19,7 @@
             @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
             @focusin="focused = true"
             @focusout="focused = false"
-            class="w-full pl-1 dark:bg-default-dark focus-visible:outline-none"
+            class="w-full bg-transparent px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:outline-none dark:text-slate-100 dark:placeholder:text-slate-500"
         />
         <slot name="icon" />
     </div>
@@ -34,9 +34,7 @@ defineEmits(['update:modelValue']);
 const focused = ref(false);
 
 const getLabelClasses = computed(() => {
-    if (props.valid === false) return ['!border-red-700'];
-    if (focused.value)
-        return ['border-opacity-20', 'border-default-dark', 'dark:border-opacity-50'];
+    if (props.valid === false) return ['!border-red-500 focus-within:!ring-red-500/20'];
     return [];
 });
 
@@ -47,5 +45,3 @@ const invalidMessageProp = computed(() => {
 
 const key = self.crypto.randomUUID();
 </script>
-
-<style scoped></style>

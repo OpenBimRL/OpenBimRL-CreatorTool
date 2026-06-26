@@ -22,7 +22,7 @@
                 @node-double-click="onNodeDoubleClick"
                 @dragover.prevent="onDragOver"
                 @drop="onDrop"
-                class="bg-white dark:bg-default-dark h-full"
+                class="h-full bg-slate-50 dark:bg-slate-950"
             >
                 <Background
                     :variant="backgroundLines ? BackgroundVariant.Lines : BackgroundVariant.Dots"

@@ -2,12 +2,7 @@
     <button class="nav-button" @click.prevent="dialog?.open()">
         <span>New</span>
     </button>
-    <Dialog
-        ref="dialog"
-        accept_button_class="bg-red-600"
-        reject_button_class="bg-gray-500"
-        @close="newGraph"
-    >
+    <Dialog ref="dialog" accept_button_class="btn-danger" @close="newGraph">
         <template v-slot:title>Creating new Project</template>
         <template v-slot:content>
             <p>Are you sure to create a new project?</p>

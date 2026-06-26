@@ -1,69 +1,75 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <aside
-        class="fixed right-0 top-0 z-50 h-full w-1/5 overflow-auto bg-default-medium bg-opacity-90 dark:text-default-medium dark:bg-opacity-95 dark:bg-default-dark px-3 py-2"
-    >
-        <div class="flex justify-between">
-            <button class="bg-transparent" @click="$emit('close')">
-                <XMarkIcon class="inline h-8 w-8" />
+    <aside class="panel-drawer w-1/5 min-w-[18rem] overflow-auto p-0">
+        <div class="panel-header">
+            <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">Information</h2>
+            <button type="button" class="btn-icon !h-9 !w-9" @click="$emit('close')">
+                <XMarkIcon class="h-5 w-5" />
             </button>
-            <h3 class="text-3xl"><strong>Information</strong></h3>
         </div>
-        <div class="pl-4">
-            <h4 class="text-2xl">Über OpenBimRL Creator</h4>
-            <p class="text-sm" style="text-align: justify">
-                Angelehnt an der graphen-basierten Programmierung beschreibt das OpenBimRL Format
-                eine Regelsprache zur formellen und fachlichen Prüfung von Bauwerksmodellen. Das
-                Format definiert eine dynamisch erweiterbare Schnittstelle auf derer Basis Bausteine
-                für einen graphen-basierten Prüfvorgang konstruiert und verknüpft werden können. Bei
-                der Entwicklung wurde Wert auf Offenheit und Transparenz der Prüfungdokumente
-                gelegt.
-            </p>
+        <div class="space-y-4 px-5 py-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+            <section>
+                <h3 class="mb-2 text-base font-semibold text-default-dark dark:text-slate-100">
+                    Über OpenBimRL Creator
+                </h3>
+                <p class="text-justify">
+                    Angelehnt an der graphen-basierten Programmierung beschreibt das OpenBimRL
+                    Format eine Regelsprache zur formellen und fachlichen Prüfung von
+                    Bauwerksmodellen. Das Format definiert eine dynamisch erweiterbare Schnittstelle
+                    auf derer Basis Bausteine für einen graphen-basierten Prüfvorgang konstruiert
+                    und verknüpft werden können. Bei der Entwicklung wurde Wert auf Offenheit und
+                    Transparenz der Prüfungdokumente gelegt.
+                </p>
+            </section>
 
-            <h4>Entwickelt von</h4>
-            <a
-                href="https://www.inf.bi.ruhr-uni-bochum.de/"
-                class="flex rounded-md border border-gray-200 bg-primary p-4"
-            >
-                <img
-                    src="https://www.inf.bi.ruhr-uni-bochum.de/iib/mam/images/logos/logo_menue_de.png"
-                    class="h-full"
-                />
-            </a>
+            <section>
+                <h3 class="mb-2 text-base font-semibold text-default-dark dark:text-slate-100">
+                    Entwickelt von
+                </h3>
+                <a
+                    href="https://www.inf.bi.ruhr-uni-bochum.de/"
+                    class="card flex !p-3 transition-colors hover:border-accent/40"
+                >
+                    <img
+                        src="https://www.inf.bi.ruhr-uni-bochum.de/iib/mam/images/logos/logo_menue_de.png"
+                        class="h-full"
+                    />
+                </a>
+            </section>
 
-            <br />
+            <section>
+                <table class="w-full text-sm">
+                    <tr>
+                        <td><b>Institution:</b></td>
+                        <td>
+                            Lehrstuhl für Informatik im Bauwesen <br />
+                            an der Ruhr-Universität Bochum
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Entwickler:</b></td>
+                        <td>Florian Becker</td>
+                    </tr>
+                    <tr>
+                        <td><b>E-Mail:</b></td>
+                        <td>florian.becker-f86@ruhr-uni-bochum.de</td>
+                    </tr>
+                    <tr>
+                        <td><b>Author:</b></td>
+                        <td>Marcel Stepien</td>
+                    </tr>
+                    <tr>
+                        <td><b>E-Mail:</b></td>
+                        <td>marcel.stepien@ruhr-uni-bochum.de</td>
+                    </tr>
+                    <tr>
+                        <td><b>Datum:</b></td>
+                        <td>{{ date.getDate() }}.{{ date.getMonth() }}.{{ date.getFullYear() }}</td>
+                    </tr>
+                </table>
+            </section>
 
-            <table class="text-sm">
-                <tr>
-                    <td><b>Institution:</b></td>
-                    <td>
-                        Lehrstuhl für Informatik im Bauwesen <br />
-                        an der Ruhr-Universität Bochum
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Entwickler:</b></td>
-                    <td>Florian Becker</td>
-                </tr>
-                <tr>
-                    <td><b>E-Mail:</b></td>
-                    <td>florian.becker-f86@ruhr-uni-bochum.de</td>
-                </tr>
-                <tr>
-                    <td><b>Author:</b></td>
-                    <td>Marcel Stepien</td>
-                </tr>
-                <tr>
-                    <td><b>E-Mail:</b></td>
-                    <td>marcel.stepien@ruhr-uni-bochum.de</td>
-                </tr>
-                <tr>
-                    <td><b>Datum:</b></td>
-                    <td>{{ date.getDate() }}.{{ date.getMonth() }}.{{ date.getFullYear() }}</td>
-                </tr>
-            </table>
-
-            <div class="mt-4 flex w-full gap-4">
+            <div class="flex gap-3 pt-2">
                 <a
                     href="https://www.linkedin.com/company/lehrstuhl-f%C3%BCr-informatik-im-bauwesen"
                 >

@@ -6,12 +6,12 @@
         :invalid-reason="data.invalidReason"
         :node-result="data.nodeResult"
     >
-        <div class="node-head bg-yellow-100 dark:bg-yellow-600 bg-opacity-60 px-2">
-            <p class="heading text-center break-words whitespace-normal">
+        <div class="node-head bg-yellow-100 bg-opacity-60 dark:bg-yellow-600">
+            <p class="heading">
                 <span>{{ data.name }}</span>
             </p>
         </div>
-        <div class="node-body relative mt-4 min-h-[1.5rem]" :style="`height: ${minHeight}rem`">
+        <div class="node-body" :style="`min-height: ${minHeight}rem`">
             <p class="text-center" :class="{ 'text-blue-600': hovering }">
                 <span>{{ data.label }}</span>
             </p>

@@ -5,7 +5,7 @@ export enum Routes {
     GRAPH = 'graph',
     CHECKS = 'checks',
     VIEWER = 'viewer',
-    API = 'api',
+    SETTINGS = 'settings',
 }
 
 const routes: Array<RouteRecordRaw> = [
@@ -25,10 +25,13 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/components/viewer/IfcViewer.vue'),
     },
     {
+        path: '/settings',
+        name: Routes.SETTINGS,
+        component: () => import('@/components/settings/SettingsPage.vue'),
+    },
+    {
         path: '/api',
-        name: Routes.API,
-        component: () => import('@/components/side_panels/ApiConnection.vue'),
-        props: { embedded: true },
+        redirect: '/settings',
     },
 ];
 

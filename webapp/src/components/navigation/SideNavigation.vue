@@ -1,87 +1,65 @@
 <template>
-    <nav
-        class="bg-default-medium dark:bg-default-darkest dark:bg-opacity-90 transition-all"
-        :class="{ 'max-w-[4rem]': !open, 'max-w-full': open }"
+    <aside
+        class="flex h-full flex-col border-r border-slate-200/80 bg-white transition-all duration-200 dark:border-slate-800 dark:bg-slate-900"
+        :class="open ? 'w-52' : 'w-[4.25rem]'"
     >
-        <ul class="flex flex-col h-full">
-            <li class="mt-16">
-                <button
-                    @click="open = !open"
-                    class="p-2 flex w-full h-full hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
-                >
-                    <Bars3Icon />
-                </button>
-            </li>
-            <li>
+        <div
+            class="flex h-14 items-center border-b border-slate-200/80 dark:border-slate-800"
+            :class="open ? 'px-3' : 'justify-center px-2'"
+        >
+            <button
+                type="button"
+                class="btn-icon !h-9 !w-9 shrink-0"
+                :title="open ? 'Collapse sidebar' : 'Expand sidebar'"
+                @click="open = !open"
+            >
+                <Bars3Icon class="h-5 w-5" />
+            </button>
+            <span
+                v-show="open"
+                class="ml-3 truncate text-sm font-semibold tracking-tight text-default-dark dark:text-slate-100"
+            >
+                OpenBIMRL
+            </span>
+        </div>
+
+        <ul class="flex flex-1 flex-col gap-1 p-2">
+            <li v-for="item in navItems" :key="item.to">
                 <RouterLink
-                    to="/"
-                    id="router-link-graph"
-                    title="Graph"
-                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
+                    :to="item.to"
+                    :title="item.label"
+                    class="nav-link"
+                    :class="{
+                        'nav-link-active': route.path === item.to,
+                        'nav-link-collapsed': !open,
+                    }"
                 >
-                    <CubeTransparentIcon />
-                    <label v-show="open" for="router-link-graph"><span>Graph</span></label>
-                </RouterLink>
-            </li>
-            <li>
-                <RouterLink
-                    to="/checks"
-                    id="router-link-checks"
-                    title="Sub Checks"
-                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
-                >
-                    <ShieldCheckIcon />
-                    <label v-show="open" for="router-link-checks"><span>Sub Checks</span></label>
-                </RouterLink>
-            </li>
-            <li>
-                <RouterLink
-                    to="/viewer"
-                    id="router-link-viewer"
-                    title="View Model"
-                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
-                >
-                    <HomeModernIcon />
-                    <label v-show="open" for="router-link-viewer"><span>Model Viewer</span></label>
-                </RouterLink>
-            </li>
-            <li>
-                <RouterLink
-                    to="/api"
-                    id="router-link-api"
-                    title="API"
-                    class="hover:bg-neutral-400 dark:bg-default-darkest dark:bg-opacity-0 dark:hover:bg-opacity-100"
-                >
-                    <Cog6ToothIcon />
-                    <label v-show="open" for="router-link-api"><span>API</span></label>
+                    <component :is="item.icon" class="h-5 w-5 shrink-0" />
+                    <span v-show="open" class="truncate">{{ item.label }}</span>
                 </RouterLink>
             </li>
         </ul>
-    </nav>
+    </aside>
 </template>
 
 <script setup lang="ts">
-import { Cog6ToothIcon, HomeModernIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
-import { Bars3Icon, CubeTransparentIcon } from '@heroicons/vue/24/solid';
+import {
+    Cog6ToothIcon,
+    CubeTransparentIcon,
+    HomeModernIcon,
+    ShieldCheckIcon,
+} from '@heroicons/vue/24/outline';
+import { Bars3Icon } from '@heroicons/vue/24/solid';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const open = ref(false);
+const route = useRoute();
+
+const navItems = [
+    { to: '/', label: 'Graph', icon: CubeTransparentIcon },
+    { to: '/checks', label: 'Sub Checks', icon: ShieldCheckIcon },
+    { to: '/viewer', label: 'Model Viewer', icon: HomeModernIcon },
+    { to: '/settings', label: 'Settings', icon: Cog6ToothIcon },
+];
 </script>
-
-<style scoped>
-li > a {
-    @apply flex h-full w-full p-2;
-}
-
-li > a > label {
-    @apply mx-4 my-auto inline-block select-none text-xl;
-}
-
-li > a > svg {
-    @apply inline-block w-12;
-}
-
-li > button > svg {
-    @apply inline-block w-12;
-}
-</style>
