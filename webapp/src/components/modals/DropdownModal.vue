@@ -1,7 +1,7 @@
 <template>
     <div class="anchor">
         <dialog
-            class="absolute top-9 z-10 block min-w-[10rem] -translate-x-full overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-panel dark:border-slate-700 dark:bg-slate-900"
+            class="absolute top-9 z-50 block min-w-[10rem] -translate-x-full overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-panel dark:border-slate-700 dark:bg-slate-900"
             :class="{ hidden: !active }"
         >
             <div class="flex flex-col p-1">

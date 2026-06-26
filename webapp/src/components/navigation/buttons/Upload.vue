@@ -5,7 +5,7 @@
             class="hidden"
             type="file"
             ref="uploadXMLInput"
-            accept="application/xml"
+            accept=".openbimrl,.xml,application/xml,text/xml"
             @change="onXMLUpload"
         />
         <input

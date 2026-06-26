@@ -1,6 +1,6 @@
 <template>
     <nav
-        class="flex h-12 items-center border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur-sm dark:border-slate-800 dark:bg-default-dark/90"
+        class="relative z-30 flex h-12 items-center border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur-sm dark:border-slate-800 dark:bg-default-dark/90"
     >
         <ul class="flex w-full items-center gap-1">
             <template v-if="route.name == Routes.GRAPH">
