@@ -17,10 +17,13 @@ let worlds: OBC.Worlds;
 
 let world: OBC.SimpleWorld<OBC.SimpleScene, OBC.SimpleCamera, OBC.SimpleRenderer>;
 
-// reference declaration
 const selected = ref<string | null>(null);
 const loading = ref(false);
 let ready = false;
+
+let displayedModelId: string | null = null;
+let displayedModel: FragmentsGroup | null = null;
+let applySerial = 0;
 
 const models = reactive(new Map<string, string>());
 const loadedModels: Map<string, FragmentsGroup | null> = new Map<string, FragmentsGroup | null>();
@@ -31,6 +34,11 @@ const init = async (container: HTMLElement) => {
     } catch (_) {
         /* empty */
     }
+
+    displayedModelId = null;
+    displayedModel = null;
+    applySerial++;
+    ready = false;
 
     components = new OBC.Components();
 
@@ -59,16 +67,9 @@ const init = async (container: HTMLElement) => {
     const highlighter = components.get(OBCF.Highlighter);
     highlighter.setup({ world });
 
-    loading.value = true;
-
-    const selected = await getSelected();
-    if (selected) {
-        loadModel(selected);
-    }
-
-    loading.value = false;
     ready = true;
     refreshVisuals();
+    await applyDisplayedModel();
 };
 
 export async function configureIfcLoader(fragmentIfcLoader: OBC.IfcLoader) {
@@ -89,9 +90,7 @@ export async function configureIfcLoader(fragmentIfcLoader: OBC.IfcLoader) {
     fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
 }
 
-// loads a model
 function loadModel(model: FragmentsGroup) {
-    loading.value = true;
     world.scene.three.add(model);
     const culler = components.get(OBC.Cullers).create(world);
     for (const mesh of model.children) {
@@ -101,32 +100,28 @@ function loadModel(model: FragmentsGroup) {
     world.camera.controls.addEventListener('sleep', () => {
         culler.needsUpdate = true;
     });
-
-    // finished loading model
-    loading.value = false;
 }
 
-// uloads a model
-async function unloadModel(model: FragmentsGroup) {
-    loading.value = true;
-    world.scene.three.remove(model);
-    loading.value = false;
+function unloadDisplayedModel() {
+    if (!displayedModel) return;
+    world.scene.three.remove(displayedModel);
+    displayedModel = null;
+    displayedModelId = null;
 }
 
-// this is cursed. Please make it better JS/TS god
-async function getSelected(): Promise<FragmentsGroup | null> {
+async function ensureModelLoaded(modelId: string): Promise<FragmentsGroup | null> {
     if (!components) return null;
+
+    if (!loadedModels.has(modelId)) {
+        loadedModels.set(modelId, null);
+    }
+
+    const cached = loadedModels.get(modelId);
+    if (cached) return cached;
+
     const loader = components.get(OBC.IfcLoader);
-    if (!selected.value) return null;
-    if (!loadedModels.has(selected.value)) throw new Error('Key not found');
-
-    const model = loadedModels.get(selected.value);
-
-    if (model) return model;
-
-    // if model was not loaded yet:
     loading.value = true;
-    const apiModelAnswer = await getModel(selected.value);
+    const apiModelAnswer = await getModel(modelId);
 
     const loadedModel = window.Worker
         ? await new Promise<FragmentsGroup>((resolve, reject) => {
@@ -145,9 +140,37 @@ async function getSelected(): Promise<FragmentsGroup | null> {
           })
         : await loader.load(apiModelAnswer);
 
-    loadedModels.set(selected.value, loadedModel);
+    loadedModels.set(modelId, loadedModel);
     loading.value = false;
     return loadedModel;
+}
+
+async function applyDisplayedModel() {
+    if (!components || !world || !ready) return;
+
+    const serial = ++applySerial;
+    const targetId = selected.value;
+
+    if (displayedModelId && displayedModelId !== targetId) {
+        unloadDisplayedModel();
+    }
+
+    if (!targetId) return;
+    if (displayedModelId === targetId) return;
+
+    const model = await ensureModelLoaded(targetId);
+    if (serial !== applySerial || selected.value !== targetId) return;
+
+    if (!model) return;
+
+    loadModel(model);
+    displayedModel = model;
+    displayedModelId = targetId;
+}
+
+async function getSelected(): Promise<FragmentsGroup | null> {
+    if (!selected.value) return null;
+    return ensureModelLoaded(selected.value);
 }
 
 function updateModels() {
@@ -157,17 +180,8 @@ function updateModels() {
     });
 }
 
-watch(selected, async (newVal, oldVal) => {
-    if (!components || !world) return;
-    if (oldVal) {
-        const oldModel = loadedModels.get(oldVal);
-        if (oldModel) await unloadModel(oldModel);
-    }
-
-    if (!newVal) return;
-    const selectedModel = await getSelected();
-    if (!selectedModel) return;
-    loadModel(selectedModel);
+watch(selected, () => {
+    void applyDisplayedModel();
 });
 
 watch(models, () =>
@@ -178,7 +192,7 @@ const getScene = () => (ready ? world.scene : null);
 const getHighlighter = () => (components ? components.get(OBCF.Highlighter) : null);
 const getComponents = () => components;
 const getWorld = () => (world ? world : null);
-0;
+
 export {
     getComponents,
     getHighlighter,
@@ -186,10 +200,8 @@ export {
     getSelected,
     getWorld,
     init,
-    loadModel,
     loading,
     models,
     selected,
-    unloadModel,
     updateModels,
 };

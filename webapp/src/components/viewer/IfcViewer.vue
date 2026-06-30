@@ -46,7 +46,7 @@
                                     ? 'bg-accent/15 font-medium text-default-dark dark:bg-accent/20 dark:text-accent'
                                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
                             "
-                            @click="selected = id"
+                            @click="selectModel(id)"
                         >
                             {{ name }}
                         </button>
@@ -97,6 +97,10 @@ const runCheck = async () => {
 
 const stopCheck = () => {
     stopGraphCheck();
+};
+
+const selectModel = (id: string) => {
+    selected.value = id;
 };
 
 watch(loaded, () => {
