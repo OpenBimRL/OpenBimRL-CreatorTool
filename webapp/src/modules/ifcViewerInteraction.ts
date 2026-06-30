@@ -1,163 +1,139 @@
-import type { FragmentIdMap, FragmentsGroup } from '@thatopen/fragments';
-import { Color, Material } from 'three';
+import type { ModelIdMap } from '@thatopen/components';
+import type { FragmentsModel } from '@thatopen/fragments';
 import { readonly, ref, watch } from 'vue';
-import { getHighlighter, getSelected, selected } from './ifcViewer';
+import { getFragments, getHighlighter, getSelected, selected } from './ifcViewer';
 
-const fragmentMap = new Map<string, FragmentIdMap>();
 const displayedGuids = ref<Array<string>>([]);
+let lastAffectedModelId: string | null = null;
+const lastAffectedLocalIds = new Set<number>();
 
-/** Per-instance dimming: fragment meshes use instanceColor, not mesh.material.opacity. */
-const DIM_DISPLAY_COLOR = /* @__PURE__ */ new Color().setRGB(0.22, 0.22, 0.22);
+function canonicalGlobalId(value: string): string {
+    return value.trim().replace(/[{}]/g, '').replace(/-/g, '').toLowerCase();
+}
+
+async function guidsForLookup(model: FragmentsModel, guids: string[]): Promise<string[]> {
+    const candidates = new Set<string>();
+    for (const guid of guids) {
+        const trimmed = guid.trim();
+        if (!trimmed) continue;
+        candidates.add(trimmed);
+        candidates.add(trimmed.toUpperCase());
+        candidates.add(trimmed.toLowerCase());
+        candidates.add(canonicalGlobalId(trimmed));
+    }
+
+    const modelGuids = await model.getGuids();
+    const byCanonical = new Map<string, string>();
+    for (const guid of modelGuids) {
+        byCanonical.set(canonicalGlobalId(guid), guid);
+    }
+
+    const resolved: string[] = [];
+    for (const candidate of candidates) {
+        const hit = byCanonical.get(canonicalGlobalId(candidate));
+        if (hit) resolved.push(hit);
+    }
+
+    return [...new Set(resolved)];
+}
+
+async function buildModelIdMap(model: FragmentsModel, guids: string[]): Promise<ModelIdMap> {
+    const lookupGuids = await guidsForLookup(model, guids);
+    const localIds = (await model.getLocalIdsByGuids(lookupGuids)).filter(
+        (id): id is number => id !== null,
+    );
+
+    return localIds.length ? { [model.modelId]: new Set(localIds) } : {};
+}
 
 export function highlight(guid: string) {
-    getSelected().then(model => {
-        if (!model) return;
-        convertToExpressID(model, guid).then(expressID => {
-            fragmentMap.set(guid, model.getFragmentMap([expressID]));
+    void (async () => {
+        const model = await getSelected();
+        const highlighter = getHighlighter();
+        if (!model || !highlighter) return;
 
-            console.log('highlighting item with e-id: ' + expressID);
+        const modelIdMap = await buildModelIdMap(model, [guid]);
+        if (!Object.keys(modelIdMap).length) return;
 
-            const highlighter = getHighlighter();
-            if (!highlighter) return;
-
-            fragmentMap.forEach(map => highlighter.highlightByID('select', map, false, false));
-        });
-    });
+        await highlighter.highlightByID('select', modelIdMap, false, false);
+    })();
 }
 
-export function unHighlight(guid: string) {
-    // fragmentMap.delete(guid);
-    // fragmentMap.forEach(map => getHighlighter().highlightByID('select', map));
+export function unHighlight(_guid: string) {
+    /* no-op for now */
 }
 
-function setModelMaterialsOpacity(model: FragmentsGroup, opacity: number) {
-    for (const fragment of model.items) {
-        const mesh = fragment.mesh;
-        const raw = mesh.material as Material | Array<Material> | undefined;
-        const materials = Array.isArray(raw) ? raw : raw ? [raw] : [];
-        for (const material of materials) {
-            material.transparent = opacity < 1;
-            material.opacity = opacity;
-            material.needsUpdate = true;
-        }
+async function clearStoredDisplayEffects() {
+    if (!lastAffectedLocalIds.size) {
+        lastAffectedModelId = null;
+        return;
     }
-}
 
-function resetFragmentDisplayColors(model: FragmentsGroup) {
-    for (const fragment of model.items) {
-        if (!fragment.mesh.instanceColor) continue;
-        try {
-            fragment.resetColor();
-        } catch {
-            /* ignore incomplete color backup state */
-        }
+    const fragments = getFragments();
+    const model =
+        (lastAffectedModelId ? fragments?.list.get(lastAffectedModelId) : null) ??
+        (await getSelected());
+
+    const ids = [...lastAffectedLocalIds];
+    lastAffectedLocalIds.clear();
+    const modelId = lastAffectedModelId;
+    lastAffectedModelId = null;
+
+    if (!model || model.modelId !== modelId) return;
+
+    try {
+        await model.resetOpacity(ids);
+        await model.resetColor(ids);
+    } catch (error) {
+        console.error(error);
     }
-    setModelMaterialsOpacity(model, 1);
-}
-
-function canonicalGlobalId(s: string): string {
-    return s.trim().replace(/[{}]/g, '').replace(/-/g, '').toLowerCase();
-}
-
-/**
- * One pass over IDs that are actually present in model geometry data:
- * GlobalId → express id (compatible with getFragmentMap()).
- */
-async function buildGlobalIdIndex(model: FragmentsGroup): Promise<Map<string, number>> {
-    const index = new Map<string, number>();
-    for (const expressId of model.data.keys()) {
-        const item = await model.getProperties(expressId);
-        if (!item) continue;
-        const rawGuid = item.GlobalId?.value;
-        if (rawGuid === undefined || rawGuid === null) continue;
-        const itemGuid = String(rawGuid).trim();
-        const key = canonicalGlobalId(itemGuid);
-        // Use the key from getAllPropertiesIDs() as canonical express ID for getFragmentMap().
-        if (key) index.set(key, expressId);
-    }
-    return index;
-}
-
-function resolveExpressId(index: Map<string, number>, globalId: string): number | undefined {
-    const keys = [
-        ...new Set([
-            canonicalGlobalId(globalId),
-            canonicalGlobalId(globalId.trim()),
-            canonicalGlobalId(globalId.trim().toUpperCase()),
-            canonicalGlobalId(globalId.trim().toLowerCase()),
-        ]),
-    ].filter(Boolean);
-    for (const k of keys) {
-        const hit = index.get(k);
-        if (hit !== undefined) return hit;
-    }
-    return undefined;
 }
 
 async function applyDisplayedGuids() {
+    await clearStoredDisplayEffects();
+
+    if (!selected.value) return;
+
     const model = await getSelected();
     if (!model) return;
 
-    resetFragmentDisplayColors(model);
-
     if (!displayedGuids.value.length) return;
 
-    const index = await buildGlobalIdIndex(model);
-    const selectedExpressIds = new Set<number>();
-    const selectedIdsByFragment = new Map<string, Set<number>>();
-    for (const guid of displayedGuids.value) {
-        const eid = resolveExpressId(index, guid);
-        if (eid === undefined) continue;
-        const map = model.getFragmentMap([eid]);
-        if (!Object.keys(map).length) continue;
-        selectedExpressIds.add(eid);
-        for (const [fragmentId, ids] of Object.entries(map)) {
-            if (!selectedIdsByFragment.has(fragmentId))
-                selectedIdsByFragment.set(fragmentId, new Set<number>());
-            const fragmentSelected = selectedIdsByFragment.get(fragmentId)!;
-            for (const id of ids) fragmentSelected.add(id);
-        }
-    }
+    const fragments = getFragments();
+    const lookupGuids = await guidsForLookup(model, displayedGuids.value);
+    const modelIdMap = fragments
+        ? await fragments.guidsToModelIdMap(lookupGuids)
+        : await buildModelIdMap(model, displayedGuids.value);
 
-    if (!selectedExpressIds.size) return;
+    const selectedIds = modelIdMap[model.modelId];
+    if (!selectedIds?.size) return;
 
-    for (const fragment of model.items) {
-        const selectedInThisFragment = selectedIdsByFragment.get(fragment.id);
-        const fragmentHasSelection = !!selectedInThisFragment?.size;
-        setFragmentMaterialOpacity(fragment, fragmentHasSelection ? 1 : 0.2);
+    const allIds = await model.getLocalIds();
+    const toDim = allIds.filter(id => !selectedIds.has(id));
 
-        // Best-effort per-instance dimming for mixed fragments (selected + non-selected).
-        if (!fragmentHasSelection || !fragment.mesh.instanceColor) continue;
+    try {
+        if (toDim.length) await model.setOpacity(toDim, 0.2);
+        await model.setOpacity([...selectedIds], 1);
 
-        const toDim: number[] = [];
-        for (const id of fragment.ids) {
-            if (!selectedInThisFragment.has(id)) toDim.push(id);
-        }
-        if (!toDim.length) continue;
-
-        try {
-            fragment.setColor(DIM_DISPLAY_COLOR, toDim);
-        } catch {
-            /* fragment without working instance colors */
-        }
-    }
-}
-
-function setFragmentMaterialOpacity(fragment: FragmentsGroup['items'][number], opacity: number) {
-    const mesh = fragment.mesh;
-    const raw = mesh.material as Material | Array<Material> | undefined;
-    const materials = Array.isArray(raw) ? raw : raw ? [raw] : [];
-    for (const material of materials) {
-        material.transparent = opacity < 1;
-        material.opacity = opacity;
-        material.needsUpdate = true;
+        lastAffectedModelId = model.modelId;
+        lastAffectedLocalIds.clear();
+        toDim.forEach(id => lastAffectedLocalIds.add(id));
+        selectedIds.forEach(id => lastAffectedLocalIds.add(id));
+    } catch (error) {
+        console.error(error);
+        lastAffectedModelId = null;
+        lastAffectedLocalIds.clear();
     }
 }
 
 export async function setDisplayedGuids(guids: Array<string>) {
     const uniqueGuids = [...new Set(guids.filter(Boolean))];
     displayedGuids.value = uniqueGuids;
-    await applyDisplayedGuids();
+    try {
+        await applyDisplayedGuids();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export function getDisplayedGuids() {
@@ -171,11 +147,3 @@ watch(selected, () => {
         console.error(error);
     });
 });
-
-async function convertToExpressID(model: FragmentsGroup, globalId: string): Promise<number> {
-    if (!model) throw new TypeError('is not a non-null object');
-    const index = await buildGlobalIdIndex(model);
-    const eid = resolveExpressId(index, globalId);
-    if (eid === undefined) throw new TypeError('expressID is null');
-    return eid;
-}

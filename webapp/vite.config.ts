@@ -13,5 +13,10 @@ export default defineConfig({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
+        // ThatOpen + app code must share one three.js instance (peer dependency).
+        dedupe: ['three'],
+    },
+    optimizeDeps: {
+        include: ['three'],
     },
 });

@@ -1,3 +1,5 @@
+import './modules/webgpuPolyfill';
+import { initBimUi } from './modules/bimUi';
 import { createApp, ref } from 'vue';
 import 'vue-json-viewer/style.css';
 import App from './App.vue';
@@ -11,6 +13,8 @@ import {
 } from './keys';
 import { darkMode, router } from './modules';
 import './style.css';
+
+initBimUi();
 
 const graph = initialGraph();
 const parser = new Parser();

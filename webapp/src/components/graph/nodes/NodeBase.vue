@@ -145,8 +145,13 @@ const isNodeGuidSelectionActive = computed(() => {
 });
 
 const displayIfcResult = () => {
-    const combined = [...getDisplayedGuids(), ...nodeGuids.value];
-    setDisplayedGuids(combined);
+    if (isNodeGuidSelectionActive.value) {
+        const nodeGuidSet = new Set(nodeGuids.value);
+        void setDisplayedGuids(getDisplayedGuids().filter(guid => !nodeGuidSet.has(guid)));
+        return;
+    }
+
+    void setDisplayedGuids([...new Set([...getDisplayedGuids(), ...nodeGuids.value])]);
 };
 </script>
 

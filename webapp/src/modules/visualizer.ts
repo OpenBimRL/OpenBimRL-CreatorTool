@@ -27,6 +27,11 @@ export interface VisualData {
 const items = [] as Array<THREE.Mesh>;
 let pendingVisuals: VisualData | null = null;
 export const hasCheckVisuals = ref(false);
+export const checkVisualsVisible = ref(false);
+
+function hasVisualData(data: VisualData | null) {
+    return data !== null && Object.values(data).some(entries => entries.length > 0);
+}
 
 function clearVisualMeshes(world: NonNullable<ReturnType<typeof getWorld>>) {
     if (!items.length) return;
@@ -100,20 +105,37 @@ function applyVisuals(data: VisualData | null) {
 /** Store check visuals and apply them when the IFC viewer scene is available. */
 export function updateVisuals(data: VisualData | null) {
     pendingVisuals = data;
-    hasCheckVisuals.value =
-        data !== null && Object.values(data).some(entries => entries.length > 0);
-    applyVisuals(data);
+    hasCheckVisuals.value = hasVisualData(data);
+    checkVisualsVisible.value = hasCheckVisuals.value;
+    applyVisuals(checkVisualsVisible.value ? data : null);
 }
 
 /** Re-apply the last check visuals after the viewer initializes. */
 export function refreshVisuals() {
+    if (!checkVisualsVisible.value) return;
     applyVisuals(pendingVisuals);
 }
 
-/** Remove all overlays produced by the latest check. */
+/** Toggle visibility of the latest check visuals without discarding them. */
+export function toggleCheckVisuals() {
+    if (!hasCheckVisuals.value) return;
+
+    checkVisualsVisible.value = !checkVisualsVisible.value;
+    const world = getWorld();
+    if (!world) return;
+
+    if (checkVisualsVisible.value) {
+        applyVisuals(pendingVisuals);
+    } else {
+        clearVisualMeshes(world);
+    }
+}
+
+/** Remove all overlays and discard the latest check visuals. */
 export function clearVisuals() {
     pendingVisuals = null;
     hasCheckVisuals.value = false;
+    checkVisualsVisible.value = false;
     const world = getWorld();
     if (world) clearVisualMeshes(world);
 }

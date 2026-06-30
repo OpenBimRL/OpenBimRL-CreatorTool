@@ -38,12 +38,13 @@
 
         <button
             type="button"
-            class="btn-icon !h-7 !w-7"
+            :class="visualsVisible ? 'btn-icon-active !h-7 !w-7' : 'btn-icon !h-7 !w-7'"
             :disabled="!hasVisuals"
-            title="Clear check visuals"
-            @click="$emit('clear-visuals')"
+            :title="visualsVisible ? 'Hide check visuals' : 'Show check visuals'"
+            @click="$emit('toggle-visuals')"
         >
-            <EyeSlashIcon class="h-4 w-4" />
+            <EyeIcon v-if="visualsVisible" class="h-4 w-4" />
+            <EyeSlashIcon v-else class="h-4 w-4" />
         </button>
 
         <span class="ml-auto truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
@@ -53,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { CommandLineIcon, EyeSlashIcon, PlayIcon, StopIcon } from '@heroicons/vue/24/outline';
+import { CommandLineIcon, EyeIcon, EyeSlashIcon, PlayIcon, StopIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
     checkStatusText: string;
@@ -61,12 +62,13 @@ defineProps<{
     canRunCheck: boolean;
     consoleOpen: boolean;
     hasVisuals: boolean;
+    visualsVisible: boolean;
 }>();
 
 defineEmits<{
     (event: 'run-check'): void;
     (event: 'stop-check'): void;
     (event: 'toggle-console'): void;
-    (event: 'clear-visuals'): void;
+    (event: 'toggle-visuals'): void;
 }>();
 </script>

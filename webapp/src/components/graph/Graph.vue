@@ -242,12 +242,20 @@ watch(selected, modelId => {
 onMounted(() => {
     updateModels();
     window.addEventListener('openbimrl:compile-graph:done', onCompileFinished);
+    window.addEventListener('openbimrl:graph-add-node', onGraphAddNode);
 });
 
 onUnmounted(() => {
     window.removeEventListener('openbimrl:compile-graph:done', onCompileFinished);
+    window.removeEventListener('openbimrl:graph-add-node', onGraphAddNode);
     mouseResizeStop();
 });
+
+const onGraphAddNode = (event: Event) => {
+    const node = (event as CustomEvent<CustomNode>).detail;
+    if (!node) return;
+    addNodes([node]);
+};
 
 const onCompileFinished = (event: Event) => {
     const detail = (event as CustomEvent<{ invalidCount: number; libraryName: string }>).detail;
