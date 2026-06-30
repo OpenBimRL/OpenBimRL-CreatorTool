@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <Teleport to="body">
-        <dialog ref="dialog" class="app-dialog" @cancel="onCancel">
+        <dialog ref="dialog" class="app-dialog" @cancel="onCancel" @close="onDialogClose">
             <div class="border-b border-slate-200/80 px-6 py-4 dark:border-slate-700">
                 <h2 class="text-lg font-semibold text-default-dark dark:text-slate-100">
                     <slot name="title" />
@@ -15,7 +15,7 @@
                     <button
                         type="button"
                         :class="reject_button_class || 'btn-secondary'"
-                        @click="close(DialogReturnValue.cancel)"
+                        @click="closeDialog(DialogReturnValue.cancel)"
                     >
                         <slot name="reject_button_text" />
                     </button>
@@ -43,22 +43,30 @@ interface Props {
 
 defineProps<Props>();
 
+const emit = defineEmits<{
+    close: [];
+}>();
+
 const dialog = ref<HTMLDialogElement | null>(null);
 
 const open = () => {
     dialog.value?.showModal();
 };
 
-const close = (value: DialogReturnValue = DialogReturnValue.cancel) => {
+const closeDialog = (value: DialogReturnValue = DialogReturnValue.cancel) => {
     dialog.value?.close(value);
 };
 
 const onCancel = (event: Event) => {
     event.preventDefault();
-    close(DialogReturnValue.cancel);
+    closeDialog(DialogReturnValue.cancel);
+};
+
+const onDialogClose = () => {
+    emit('close');
 };
 
 const returnValue = () => dialog.value?.returnValue as DialogReturnValue | undefined;
 
-defineExpose({ open, close, returnValue });
+defineExpose({ open, close: closeDialog, returnValue });
 </script>

@@ -1,5 +1,4 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
-import { Graph } from '../components';
 
 export enum Routes {
     GRAPH = 'graph',
@@ -12,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: Routes.GRAPH,
-        component: Graph,
+        component: () => import('@/components/graph/Graph.vue'),
     },
     {
         path: '/checks',

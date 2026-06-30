@@ -57,7 +57,7 @@
                 :open="consoleOpen"
                 :minimized="consoleMinimized"
                 :text="consoleText"
-                @clear="consoleText = ''"
+                @clear="clearConsole()"
                 @minimize="consoleMinimized = true"
                 @restore="consoleMinimized = false"
             />
@@ -76,9 +76,18 @@
 <script lang="ts" setup>
 import Parser from '@/ParserOpenBIMRL';
 import { darkModeKey, graphInjectionKey, parserInjectionKey } from '@/keys';
-import { checkGraph as apiCheckGraph } from '@/modules/apiConnection';
+import {
+    appendConsole,
+    checkLoading,
+    checkStatusText,
+    clearConsole,
+    consoleMinimized,
+    consoleOpen,
+    consoleText,
+    toggleConsole,
+} from '@/modules/checkSession';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
-import { updateVisuals } from '@/modules/visualizer';
+import { runGraphCheck, stopGraphCheck } from '@/modules/runGraphCheck';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
 import { Background, BackgroundVariant } from '@vue-flow/background';
 import { ControlButton, Controls } from '@vue-flow/controls';
@@ -110,15 +119,9 @@ const nodeDataIndex = ref<string>('name');
 const dialogDraftValue = ref('');
 const backgroundLines = ref<boolean>(true);
 const selectedModelId = ref<string | null>(selected.value);
-const checkLoading = ref(false);
-const checkStatusText = ref('Idle');
-const consoleOpen = ref(false);
-const consoleMinimized = ref(false);
-const consoleText = ref('Ready.\n');
 const detailsPanelOpen = ref(false);
 const detailsPanelWidth = ref(window.innerWidth / 3.5);
 const selectedDetailNodeId = ref<string | null>(null);
-let currentCheckController: AbortController | null = null;
 
 const resizeListener = (e: MouseEvent) => {
     const proposedWidth = window.innerWidth - e.x;
@@ -188,11 +191,6 @@ const onNodeClick = (event: NodeMouseEvent) => {
     selectedDetailNodeId.value = event.node.id;
 };
 
-const toggleConsole = () => {
-    consoleOpen.value = !consoleOpen.value;
-    if (consoleOpen.value) consoleMinimized.value = false;
-};
-
 const modelOptions = computed(() => [...models.entries()]);
 const selectedDetailNode = computed(
     () => nodes.value.find(node => node.id === selectedDetailNodeId.value) ?? null,
@@ -205,76 +203,32 @@ const clearPerNodeResults = () => {
     });
 };
 
-const applyPerNodeResults = (content: unknown) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nodeResults = (content as any)?.nodes as Record<string, unknown> | undefined;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const aggregatedResults = (content as any)?.results as Record<string, unknown> | undefined;
-    if (!nodeResults) return;
+const syncNodeResultsFromGraph = () => {
     nodes.value.forEach(node => {
-        const key = `${node.data.name}${node.id}`;
-        let result = nodeResults[key];
-        if (result === undefined && node.type === 'ruleIdentifier') {
-            const identifierLabel = node.data.label;
-            if (identifierLabel) result = aggregatedResults?.[identifierLabel];
-        }
-        node.data.nodeResult = result;
+        const graphNode = graph.value.elements.find(
+            element => isNode(element) && element.id === node.id,
+        );
+        if (!graphNode || !isNode(graphNode)) return;
+        node.data.nodeResult = graphNode.data.nodeResult;
     });
 };
 
 const runCheck = async () => {
     if (!selectedModelId.value || checkLoading.value) return;
     selected.value = selectedModelId.value;
-    const graphString = parser.build(
-        graph.value.elements,
-        graph.value.subChecks,
-        graph.value.resultSets,
-        'graph.openbimrl',
-    );
-    checkLoading.value = true;
-    checkStatusText.value = 'Running check...';
     clearPerNodeResults();
-    currentCheckController = new AbortController();
-    try {
-        const response = await apiCheckGraph(
-            selectedModelId.value,
-            graphString,
-            currentCheckController.signal,
-        );
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        updateVisuals((response.content as any | undefined)?.graphicOutputs || null);
-        applyPerNodeResults(response.content);
-        checkStatusText.value = 'Check complete';
-        consoleText.value += `[${new Date().toLocaleTimeString()}] Check complete\n${JSON.stringify(
-            response.content,
-            null,
-            2,
-        )}\n\n`;
-    } catch (error) {
-        if ((error as Error).name === 'AbortError') {
-            checkStatusText.value = 'Check stopped';
-            consoleText.value += `[${new Date().toLocaleTimeString()}] Check stopped by user\n\n`;
-        } else {
-            console.error(error);
-            checkStatusText.value = 'Check failed';
-            consoleText.value += `[${new Date().toLocaleTimeString()}] Check failed\n${String(
-                error,
-            )}\n\n`;
-        }
-    } finally {
-        checkLoading.value = false;
-        currentCheckController = null;
-    }
+    await runGraphCheck(graph.value, parser, selectedModelId.value);
+    syncNodeResultsFromGraph();
+};
+
+const stopCheck = () => {
+    stopGraphCheck();
 };
 
 const compileGraph = () => {
     checkStatusText.value = 'Compiling graph wiring...';
-    consoleText.value += `[${new Date().toLocaleTimeString()}] Compile requested\n`;
+    appendConsole(`[${new Date().toLocaleTimeString()}] Compile requested\n`);
     window.dispatchEvent(new CustomEvent('openbimrl:compile-graph'));
-};
-
-const stopCheck = () => {
-    currentCheckController?.abort();
 };
 
 watch(selectedModelId, modelId => {
@@ -303,7 +257,7 @@ const onCompileFinished = (event: Event) => {
         invalidCount === 0
             ? `Compile OK (${libraryName})`
             : `Compile found ${invalidCount} issue(s) (${libraryName})`;
-    consoleText.value += `[${new Date().toLocaleTimeString()}] ${checkStatusText.value}\n\n`;
+    appendConsole(`[${new Date().toLocaleTimeString()}] ${checkStatusText.value}\n\n`);
 };
 </script>
 

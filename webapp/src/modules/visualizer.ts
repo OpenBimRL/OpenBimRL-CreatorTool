@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import * as THREE from 'three';
 import { getWorld } from './ifcViewer';
 
@@ -24,16 +25,20 @@ export interface VisualData {
 }
 
 const items = [] as Array<THREE.Mesh>;
+let pendingVisuals: VisualData | null = null;
+export const hasCheckVisuals = ref(false);
 
-export function updateVisuals(data: VisualData | null) {
+function clearVisualMeshes(world: NonNullable<ReturnType<typeof getWorld>>) {
+    if (!items.length) return;
+    world.scene.three.remove(...items);
+    items.splice(0, items.length);
+}
+
+function applyVisuals(data: VisualData | null) {
     const world = getWorld();
     if (!world) return;
 
-    if (items.length) {
-        world.scene.three.remove(...items);
-        items.splice(0, items.length);
-    }
-
+    clearVisualMeshes(world);
     if (!data) return;
 
     Object.values(data).forEach(element => {
@@ -41,6 +46,8 @@ export function updateVisuals(data: VisualData | null) {
             let geometry: THREE.BufferGeometry | undefined;
             let color: string | undefined;
             let pos: Point3d | undefined;
+            let wireframe = false;
+
             Object.keys(visual).forEach(key => {
                 if (key === 'BoundingSphere') {
                     const definition = visual.BoundingSphere!;
@@ -52,6 +59,7 @@ export function updateVisuals(data: VisualData | null) {
                     const h = Math.abs(definition.upper.y - definition.lower.y);
                     const d = Math.abs(definition.upper.z - definition.lower.z);
                     geometry = new THREE.BoxGeometry(w, h, d);
+                    wireframe = true;
                     pos = {
                         x: definition.lower.x + w * 0.5,
                         y: definition.lower.y + h * 0.5,
@@ -67,15 +75,45 @@ export function updateVisuals(data: VisualData | null) {
                     }
                 }
             });
+
             if (geometry === undefined) return;
             color ??= '#FFFFFF';
             pos ??= { x: 0, y: 0, z: 0 };
-            const material = new THREE.MeshLambertMaterial({ color });
+
+            const material = new THREE.MeshBasicMaterial({
+                color,
+                wireframe,
+                transparent: wireframe,
+                opacity: wireframe ? 0.95 : 1,
+                depthTest: false,
+            });
             const mesh = new THREE.Mesh(geometry, material);
+            mesh.renderOrder = 999;
             mesh.position.set(pos.x, pos.y, -pos.z);
             items.push(mesh);
         });
     });
 
     world.scene.three.add(...items);
+}
+
+/** Store check visuals and apply them when the IFC viewer scene is available. */
+export function updateVisuals(data: VisualData | null) {
+    pendingVisuals = data;
+    hasCheckVisuals.value =
+        data !== null && Object.values(data).some(entries => entries.length > 0);
+    applyVisuals(data);
+}
+
+/** Re-apply the last check visuals after the viewer initializes. */
+export function refreshVisuals() {
+    applyVisuals(pendingVisuals);
+}
+
+/** Remove all overlays produced by the latest check. */
+export function clearVisuals() {
+    pendingVisuals = null;
+    hasCheckVisuals.value = false;
+    const world = getWorld();
+    if (world) clearVisualMeshes(world);
 }

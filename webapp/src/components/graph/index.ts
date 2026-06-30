@@ -29,7 +29,6 @@ export const calcNodeMinWidth = (options: {
     return Math.max(12, portWidth, headerWidth, labelWidth);
 };
 
-const Graph = defineAsyncComponent(() => import('./Graph.vue'));
 const GraphNodeMenu = defineAsyncComponent(() => import('./modals/GraphNodeMenu.vue'));
 
-export { Graph, GraphNodeMenu };
+export { GraphNodeMenu };

@@ -8,6 +8,7 @@ import { Mesh } from 'three';
 import * as WEBIFC from 'web-ifc';
 
 import LoadWorker from '../webworker/ifcLoader?worker&inline';
+import { refreshVisuals } from './visualizer';
 
 // init components
 let components: OBC.Components;
@@ -67,6 +68,7 @@ const init = async (container: HTMLElement) => {
 
     loading.value = false;
     ready = true;
+    refreshVisuals();
 };
 
 export async function configureIfcLoader(fragmentIfcLoader: OBC.IfcLoader) {
