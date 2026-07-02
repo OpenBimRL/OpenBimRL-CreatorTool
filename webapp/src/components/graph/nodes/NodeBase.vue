@@ -31,10 +31,12 @@
         <details
             v-if="hasNodeResult"
             class="absolute top-full left-1 right-1 z-10 rounded-b border border-t-0 border-neutral-400 dark:border-neutral-600 bg-neutral-200/95 dark:bg-neutral-800/95 px-2 py-1 text-xs shadow-md"
+            @toggle="onResultDetailsToggle"
         >
             <summary class="cursor-pointer select-none font-medium">Result</summary>
-            <div class="mt-1 flex items-center justify-end">
+            <div v-if="resultDetailsOpen" class="mt-1 flex items-center justify-end">
                 <button
+                    v-if="!resultTooLargeForDisplay"
                     class="px-1.5 py-0.5 rounded border border-neutral-400 dark:border-neutral-600 text-[10px] hover:bg-neutral-300/70 dark:hover:bg-neutral-700/70"
                     @click.stop="expanded = !expanded"
                 >
@@ -42,6 +44,7 @@
                 </button>
             </div>
             <pre
+                v-if="resultDetailsOpen"
                 class="mt-1 overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words pr-1"
                 :class="expanded ? 'max-h-80' : 'max-h-36'"
                 >{{ formattedNodeResult }}</pre
@@ -51,6 +54,12 @@
 </template>
 
 <script setup lang="ts">
+import {
+    formatResultForDisplay,
+    isResultTooLargeForDisplay,
+    isTruncatedNodeResult,
+    resultValueForInspection,
+} from '@/modules/checkResultLimits';
 import {
     displayedGuidsReadonly,
     getDisplayedGuids,
@@ -69,8 +78,18 @@ const props = defineProps<{
 
 const widthStyle = computed(() => (props.minWidth ? `min-width: ${props.minWidth}rem` : ''));
 const hasNodeResult = computed(() => props.nodeResult !== undefined && props.nodeResult !== null);
-const formattedNodeResult = computed(() => JSON.stringify(props.nodeResult, null, 2));
+const resultDetailsOpen = ref(false);
 const expanded = ref(false);
+const resultTooLargeForDisplay = computed(() => isResultTooLargeForDisplay(props.nodeResult));
+const inspectionValue = computed(() => resultValueForInspection(props.nodeResult));
+const formattedNodeResult = computed(() => {
+    if (!resultDetailsOpen.value) return '';
+    return formatResultForDisplay(props.nodeResult);
+});
+
+const onResultDetailsToggle = (event: Event) => {
+    resultDetailsOpen.value = (event.target as HTMLDetailsElement).open;
+};
 
 const guidStringFromObject = (obj: Record<string, unknown>): string | null => {
     if (typeof obj.guid === 'string') return obj.guid;
@@ -90,6 +109,10 @@ const hasGuidLikeProperty = (value: unknown): boolean => {
 };
 
 const hasDisplayableIfcResult = computed(() => {
+    if (isTruncatedNodeResult(props.nodeResult) || resultTooLargeForDisplay.value) {
+        return false;
+    }
+
     const seen = new Set<unknown>();
     const maxDepth = 8;
     const maxNodes = 5000;
@@ -106,7 +129,7 @@ const hasDisplayableIfcResult = computed(() => {
         return Object.values(value as Record<string, unknown>).some(item => walk(item, depth + 1));
     };
 
-    return walk(props.nodeResult, 0);
+    return walk(inspectionValue.value, 0);
 });
 
 const extractGuids = (value: unknown): Array<string> => {
@@ -137,7 +160,7 @@ const extractGuids = (value: unknown): Array<string> => {
     return [...found];
 };
 
-const nodeGuids = computed(() => extractGuids(props.nodeResult));
+const nodeGuids = computed(() => extractGuids(inspectionValue.value));
 const isNodeGuidSelectionActive = computed(() => {
     if (!nodeGuids.value.length) return false;
     const selectedGuids = new Set(displayedGuidsReadonly.value);

@@ -3,6 +3,11 @@ import type { GraphJSON } from '@/components/graph/Types';
 import { isNode } from '@vue-flow/core';
 import { checkGraph as apiCheckGraph } from './apiConnection';
 import { appendConsole, checkLoading, checkStatusText } from './checkSession';
+import {
+    capGraphicOutputs,
+    summarizeCheckContent,
+    truncateNodeResult,
+} from './checkResultLimits';
 import { updateVisuals } from './visualizer';
 
 let currentCheckController: AbortController | null = null;
@@ -28,7 +33,7 @@ function applyPerNodeResults(graph: GraphJSON, content: unknown) {
             ...element,
             data: {
                 ...element.data,
-                nodeResult: result,
+                nodeResult: truncateNodeResult(result),
             },
         };
     });
@@ -69,15 +74,22 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
     try {
         const response = await apiCheckGraph(modelId, graphString, currentCheckController.signal);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        updateVisuals((response.content as any | undefined)?.graphicOutputs || null);
+        const graphicOutputs = (response.content as any | undefined)?.graphicOutputs;
+        const { data: cappedVisuals, originalCount, cappedCount } = capGraphicOutputs(graphicOutputs);
+        updateVisuals(cappedVisuals);
+
+        if (originalCount > cappedCount) {
+            appendConsole(
+                `[${new Date().toLocaleTimeString()}] Visual output capped: showing ${cappedCount.toLocaleString()} of ${originalCount.toLocaleString()} entries.\n\n`,
+            );
+            checkStatusText.value = `Check complete (visuals capped to ${cappedCount.toLocaleString()})`;
+        } else {
+            checkStatusText.value = 'Check complete';
+        }
+
         applyPerNodeResults(graph, response.content);
-        checkStatusText.value = 'Check complete';
         appendConsole(
-            `[${new Date().toLocaleTimeString()}] Check complete\n${JSON.stringify(
-                response.content,
-                null,
-                2,
-            )}\n\n`,
+            `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(response.content)}\n\n`,
         );
     } catch (error) {
         if ((error as Error).name === 'AbortError') {
