@@ -3,12 +3,8 @@ import type { GraphJSON } from '@/components/graph/Types';
 import { isNode } from '@vue-flow/core';
 import { checkGraph as apiCheckGraph } from './apiConnection';
 import { appendConsole, checkLoading, checkStatusText } from './checkSession';
-import {
-    capGraphicOutputs,
-    summarizeCheckContent,
-    truncateNodeResult,
-} from './checkResultLimits';
-import { updateVisuals } from './visualizer';
+import { summarizeCheckContent, truncateNodeResult } from './checkResultLimits';
+import { updateVisualsGlb } from './visualizer';
 
 let currentCheckController: AbortController | null = null;
 
@@ -21,6 +17,15 @@ function applyPerNodeResults(graph: GraphJSON, content: unknown) {
 
     graph.elements = graph.elements.map(element => {
         if (!isNode(element)) return element;
+        if (element.type === 'visualizeType') {
+            return {
+                ...element,
+                data: {
+                    ...element.data,
+                    nodeResult: undefined,
+                },
+            };
+        }
 
         const key = `${element.data.name}${element.id}`;
         let result = nodeResults[key];
@@ -73,23 +78,17 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
 
     try {
         const response = await apiCheckGraph(modelId, graphString, currentCheckController.signal);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const graphicOutputs = (response.content as any | undefined)?.graphicOutputs;
-        const { data: cappedVisuals, originalCount, cappedCount } = capGraphicOutputs(graphicOutputs);
-        updateVisuals(cappedVisuals);
+        updateVisualsGlb(response.glb);
 
-        if (originalCount > cappedCount) {
-            appendConsole(
-                `[${new Date().toLocaleTimeString()}] Visual output capped: showing ${cappedCount.toLocaleString()} of ${originalCount.toLocaleString()} entries.\n\n`,
-            );
-            checkStatusText.value = `Check complete (visuals capped to ${cappedCount.toLocaleString()})`;
-        } else {
+        if (response.glb && response.glb.byteLength > 0) {
             checkStatusText.value = 'Check complete';
+        } else {
+            checkStatusText.value = 'Check complete (no visuals)';
         }
 
         applyPerNodeResults(graph, response.content);
         appendConsole(
-            `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(response.content)}\n\n`,
+            `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(response.content, response.glb)}\n\n`,
         );
     } catch (error) {
         if ((error as Error).name === 'AbortError') {

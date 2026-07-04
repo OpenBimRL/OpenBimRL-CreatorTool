@@ -340,6 +340,10 @@ export default class Parser {
                 let nT = 'functionType';
                 let nCustomLbl = 'Node Label Here'; //Default Text if no Alias has been given
 
+                if (nNameLbl.startsWith('visualize.')) {
+                    nT = 'visualizeType';
+                }
+
                 //TODO: should be identified by a specific type identifier, not inputs and outputs
                 if (inputHandles.length == 0 && outputHandles.length == 1) {
                     nT = 'inputType';

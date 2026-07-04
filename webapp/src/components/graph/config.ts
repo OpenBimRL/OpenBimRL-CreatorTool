@@ -3,7 +3,7 @@ import { setupGraphPersistence } from '@/modules/graphStorage';
 import { Edge, GraphNode, NodeTypesObject } from '@vue-flow/core';
 import { Ref, markRaw, ref } from 'vue';
 import type { CustomNode, GraphInject, GraphJSON, GraphResetCallback } from './Types';
-import { FunctionNode, InputType, RuleIdentifier } from './nodes';
+import { FunctionNode, InputType, RuleIdentifier, VisualizeNode } from './nodes';
 
 export const multiSelectKeys = ['Shift', 'Control'];
 
@@ -11,6 +11,7 @@ export const nodeTypes = {
     functionType: markRaw(FunctionNode),
     inputType: markRaw(InputType),
     ruleIdentifier: markRaw(RuleIdentifier),
+    visualizeType: markRaw(VisualizeNode),
 } as NodeTypesObject;
 
 export function initialGraph(): GraphInject {
@@ -43,6 +44,8 @@ export function getMinimapNodeColor(node: GraphNode): string {
             return 'khaki';
         case 'ruleIdentifier':
             return 'lightCoral';
+        case 'visualizeType':
+            return 'mediumPurple';
         default:
             return '#aaa';
     }

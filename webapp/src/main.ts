@@ -11,8 +11,10 @@ import {
     graphInjectionKey,
     parserInjectionKey,
 } from './keys';
-import { darkMode, router } from './modules';
+import { darkMode, initHandleSize, router } from './modules';
 import './style.css';
+
+initHandleSize();
 
 initBimUi();
 

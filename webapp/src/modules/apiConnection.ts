@@ -56,6 +56,16 @@ interface CheckResult {
     checks: string;
 }
 
+interface CheckSubmission {
+    resultId: string;
+}
+
+export interface CheckGraphResponse {
+    status: string;
+    content: CheckResult | Error | null;
+    glb: Uint8Array | null;
+}
+
 interface ApiFunctionHandle {
     index: string;
     name: string;
@@ -96,18 +106,33 @@ export async function checkGraph(
     modelUUID: string,
     graph: string,
     signal?: AbortSignal,
-): Promise<ApiAnswer<CheckResult | Error | null>> {
+): Promise<CheckGraphResponse> {
     const fd = new FormData();
-
     fd.append('file', graph);
 
     const graphUUID = (await postApi<string>('/graph', fd, signal)).content;
 
-    const getParams = `graphIDs=${graphUUID}`;
+    const checkResponse = await postJson<CheckSubmission>(
+        `/check/${modelUUID}`,
+        { graphIds: [graphUUID] },
+        signal,
+    );
 
-    const requestEndpoint = `/check/${modelUUID}?${getParams}`;
+    const resultId = checkResponse.content.resultId;
+    const json = await getApi<CheckResult | Error | null>(`/results/${resultId}/json`, signal);
 
-    return await getApi<CheckResult | Error | null>(requestEndpoint, signal);
+    let glb: Uint8Array | null = null;
+    try {
+        glb = await getApiBinary(`/results/${resultId}/visuals`, signal);
+    } catch {
+        glb = null;
+    }
+
+    return {
+        status: json.status,
+        content: json.content,
+        glb,
+    };
 }
 
 export async function isConnected(): Promise<boolean> {
@@ -151,6 +176,26 @@ export async function getFunctions(): Promise<Array<ApiFunctionGroup>> {
 export async function getStatus(): Promise<ApiStatus> {
     const response = await getApi<ApiStatus>('/status');
     return response.content;
+}
+
+async function postJson<T>(
+    path: string,
+    body: unknown,
+    signal?: AbortSignal,
+): Promise<ApiAnswer<T>> {
+    const response = await fetch(new URL(path, apiEndpoint.value), {
+        method: 'POST',
+        headers: {
+            ...authHeaders(),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        signal,
+    });
+    if (!response.ok) throw new Error(response.statusText);
+
+    const data = await (response.json() as Promise<ApiAnswer<T>>);
+    return data;
 }
 
 async function getApi<T>(path: string, signal?: AbortSignal): Promise<ApiAnswer<T>> {

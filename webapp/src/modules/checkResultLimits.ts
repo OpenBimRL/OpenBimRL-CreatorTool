@@ -198,7 +198,7 @@ export function capGraphicOutputs(outputs: unknown): {
     };
 }
 
-export function summarizeCheckContent(content: unknown): string {
+export function summarizeCheckContent(content: unknown, glb?: Uint8Array | null): string {
     if (!content || typeof content !== 'object') {
         return 'Check returned no content.';
     }
@@ -210,25 +210,18 @@ export function summarizeCheckContent(content: unknown): string {
             ? Object.keys(nodeResults as Record<string, unknown>).length
             : 0;
 
-    const graphicOutputs = record.graphicOutputs;
-    let visualCount = 0;
-    if (graphicOutputs && typeof graphicOutputs === 'object') {
-        visualCount = Object.values(graphicOutputs as Record<string, unknown>).reduce(
-            (sum, entries) => sum + (Array.isArray(entries) ? entries.length : 0),
-            0,
-        );
-    }
+    const hasVisuals = glb !== undefined && glb !== null && glb.byteLength > 0;
+    const visualSizeKb = hasVisuals ? Math.ceil(glb!.byteLength / 1024) : 0;
 
     const resultKeys =
         record.results && typeof record.results === 'object'
             ? Object.keys(record.results as Record<string, unknown>)
             : [];
 
-    const lines = [`Node results: ${nodeCount}`, `Visual entries: ${visualCount.toLocaleString()}`];
-
-    if (visualCount > 10_000) {
-        lines.unshift('Large visual output detected.');
-    }
+    const lines = [
+        `Node results: ${nodeCount}`,
+        hasVisuals ? `Visual mesh: ${visualSizeKb.toLocaleString()} KB GLB` : 'Visual mesh: none',
+    ];
 
     if (resultKeys.length) {
         lines.push(`Aggregated result keys: ${resultKeys.slice(0, 12).join(', ')}`);

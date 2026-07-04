@@ -29,7 +29,7 @@
             <slot />
         </div>
         <details
-            v-if="hasNodeResult"
+            v-if="hasNodeResult && !hideNodeResult"
             class="absolute top-full left-1 right-1 z-10 rounded-b border border-t-0 border-neutral-400 dark:border-neutral-600 bg-neutral-200/95 dark:bg-neutral-800/95 px-2 py-1 text-xs shadow-md"
             @toggle="onResultDetailsToggle"
         >
@@ -74,6 +74,7 @@ const props = defineProps<{
     invalid?: boolean;
     invalidReason?: string;
     nodeResult?: unknown;
+    hideNodeResult?: boolean;
 }>();
 
 const widthStyle = computed(() => (props.minWidth ? `min-width: ${props.minWidth}rem` : ''));

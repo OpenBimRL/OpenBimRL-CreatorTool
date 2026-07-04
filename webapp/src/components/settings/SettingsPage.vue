@@ -25,6 +25,13 @@
                 >
                     <AppearanceSettings />
                 </SettingsSection>
+
+                <SettingsSection
+                    title="Graph editor"
+                    description="Adjust how the node graph behaves in the Creator Tool."
+                >
+                    <HandleSizeSettings />
+                </SettingsSection>
             </div>
         </div>
     </div>
@@ -33,5 +40,6 @@
 <script setup lang="ts">
 import ApiConnectionSettings from './ApiConnectionSettings.vue';
 import AppearanceSettings from './AppearanceSettings.vue';
+import HandleSizeSettings from './HandleSizeSettings.vue';
 import SettingsSection from './SettingsSection.vue';
 </script>
