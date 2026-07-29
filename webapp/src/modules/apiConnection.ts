@@ -168,6 +168,10 @@ export async function getModels(): Promise<Map<string, string>> {
     }
 }
 
+export async function deleteModel(id: string): Promise<ApiAnswer<boolean | null>> {
+    return await deleteApi<boolean | null>('/model/' + id);
+}
+
 export async function getFunctions(): Promise<Array<ApiFunctionGroup>> {
     const response = await getApi<Array<ApiFunctionGroup>>('/functions');
     return response.content;
@@ -229,6 +233,18 @@ async function postApi<T>(
         method: 'POST',
         headers: authHeaders(),
         body: params,
+        signal,
+    });
+    if (!response.ok) throw new Error(response.statusText);
+
+    const data = await (response.json() as Promise<ApiAnswer<T>>);
+    return data;
+}
+
+async function deleteApi<T>(path: string, signal?: AbortSignal): Promise<ApiAnswer<T>> {
+    const response = await fetch(new URL(path, apiEndpoint.value), {
+        method: 'DELETE',
+        headers: authHeaders(),
         signal,
     });
     if (!response.ok) throw new Error(response.statusText);

@@ -333,6 +333,28 @@ function updateModels() {
     });
 }
 
+/** Drop a model from local viewer state and fragment cache after server-side delete. */
+async function removeModelLocally(modelId: string) {
+    if (selected.value === modelId) {
+        selected.value = null;
+    }
+
+    if (displayedModelId === modelId) {
+        unloadDisplayedModel();
+    }
+
+    const cached = resolveCachedModel(modelId);
+    if (cached) {
+        hideModel(cached);
+    }
+    loadedModels.delete(modelId);
+    loadingPromises.delete(modelId);
+    fragments?.list.delete(modelId);
+    models.delete(modelId);
+
+    await deleteStoredFragment(modelId);
+}
+
 watch(selected, () => {
     void applyDisplayedModel();
 });
@@ -362,6 +384,7 @@ export {
     init,
     loading,
     models,
+    removeModelLocally,
     selected,
     updateModels,
 };
