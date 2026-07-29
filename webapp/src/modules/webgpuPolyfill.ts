@@ -5,7 +5,11 @@
  * bundle throws when WebGPU constants are evaluated at import time.
  */
 const scope = globalThis as typeof globalThis & {
-    GPUShaderStage?: { readonly VERTEX: number; readonly FRAGMENT: number; readonly COMPUTE: number };
+    GPUShaderStage?: {
+        readonly VERTEX: number;
+        readonly FRAGMENT: number;
+        readonly COMPUTE: number;
+    };
 };
 
 if (!scope.GPUShaderStage) {

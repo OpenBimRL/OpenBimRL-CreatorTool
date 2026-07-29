@@ -9,7 +9,9 @@
                     Adjust how large graph input/output ports appear and how easy they are to grab.
                 </p>
             </div>
-            <span class="shrink-0 text-sm font-medium tabular-nums text-slate-600 dark:text-slate-300">
+            <span
+                class="shrink-0 text-sm font-medium tabular-nums text-slate-600 dark:text-slate-300"
+            >
                 {{ handleSizeScale }}%
             </span>
         </div>

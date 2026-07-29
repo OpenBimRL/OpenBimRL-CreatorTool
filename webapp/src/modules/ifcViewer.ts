@@ -1,7 +1,7 @@
 import * as OBC from '@thatopen/components';
 import * as OBCF from '@thatopen/components-front';
-import * as FRAGS from '@thatopen/fragments';
 import type { FragmentsModel } from '@thatopen/fragments';
+import * as FRAGS from '@thatopen/fragments';
 import fragmentsWorkerUrl from '@thatopen/fragments/worker?url';
 import { reactive, ref, watch } from 'vue';
 import { getModel, getModels } from './apiConnection';
@@ -10,8 +10,8 @@ import * as WEBIFC from 'web-ifc';
 
 import { Color } from 'three';
 import { deleteStoredFragment, getStoredFragment, storeFragment } from './fragmentCache';
-import { refreshVisuals } from './visualizer';
 import { setupViewerSelection } from './viewerElementSelection';
+import { refreshVisuals } from './visualizer';
 
 /** web-ifc SetWasmPath expects a directory containing a file named web-ifc.wasm */
 const WEBIFC_WASM_PATH = '/web-ifc/';
@@ -257,7 +257,10 @@ async function ensureModelLoaded(modelId: string): Promise<FragmentsModel | null
                 try {
                     return await loadModelFromFragmentBuffer(modelId, storedBuffer);
                 } catch (error) {
-                    console.warn(`Cached fragments for ${modelId} could not be loaded, refetching IFC`, error);
+                    console.warn(
+                        `Cached fragments for ${modelId} could not be loaded, refetching IFC`,
+                        error,
+                    );
                     await deleteStoredFragment(modelId);
                 }
             }

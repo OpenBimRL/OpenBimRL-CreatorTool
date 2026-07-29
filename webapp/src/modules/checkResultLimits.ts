@@ -147,7 +147,9 @@ export function formatResultForDisplay(value: unknown): string {
     }
 
     if (isResultTooLargeForDisplay(value)) {
-        return `Result too large to display (${formatBytes(estimateJsonBytes(value))}). Open the check console summary or export from the API.`;
+        return `Result too large to display (${formatBytes(
+            estimateJsonBytes(value),
+        )}). Open the check console summary or export from the API.`;
     }
 
     try {

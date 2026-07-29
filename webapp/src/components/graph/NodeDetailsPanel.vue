@@ -10,7 +10,9 @@
         />
         <div class="h-full p-3 flex flex-col gap-3 text-slate-900 dark:text-slate-100">
             <div class="flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-default-dark dark:text-slate-100">Node Details</h3>
+                <h3 class="text-sm font-semibold text-default-dark dark:text-slate-100">
+                    Node Details
+                </h3>
                 <button
                     type="button"
                     class="btn-ghost !px-2 !py-1 !text-xs"
@@ -35,9 +37,13 @@
                     >
                         Result
                     </div>
-                    <div class="h-full overflow-auto p-2 node-details-json text-slate-800 dark:text-slate-100">
+                    <div
+                        class="h-full overflow-auto p-2 node-details-json text-slate-800 dark:text-slate-100"
+                    >
                         <pre
-                            v-if="resultValue !== null && resultValue !== undefined && resultTooLarge"
+                            v-if="
+                                resultValue !== null && resultValue !== undefined && resultTooLarge
+                            "
                             class="whitespace-pre-wrap text-xs text-slate-700 dark:text-slate-200"
                             >{{ formattedResult }}</pre
                         >

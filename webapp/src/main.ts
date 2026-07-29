@@ -1,5 +1,3 @@
-import './modules/webgpuPolyfill';
-import { initBimUi } from './modules/bimUi';
 import { createApp, ref } from 'vue';
 import 'vue-json-viewer/style.css';
 import App from './App.vue';
@@ -12,6 +10,8 @@ import {
     parserInjectionKey,
 } from './keys';
 import { darkMode, initHandleSize, router } from './modules';
+import { initBimUi } from './modules/bimUi';
+import './modules/webgpuPolyfill';
 import './style.css';
 
 initHandleSize();

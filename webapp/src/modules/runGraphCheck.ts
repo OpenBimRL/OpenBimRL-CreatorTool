@@ -2,8 +2,8 @@ import Parser from '@/ParserOpenBIMRL';
 import type { GraphJSON } from '@/components/graph/Types';
 import { isNode } from '@vue-flow/core';
 import { checkGraph as apiCheckGraph } from './apiConnection';
-import { appendConsole, checkLoading, checkStatusText } from './checkSession';
 import { summarizeCheckContent, truncateNodeResult } from './checkResultLimits';
+import { appendConsole, checkLoading, checkStatusText } from './checkSession';
 import { updateVisualsGlb } from './visualizer';
 
 let currentCheckController: AbortController | null = null;
@@ -88,7 +88,10 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
 
         applyPerNodeResults(graph, response.content);
         appendConsole(
-            `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(response.content, response.glb)}\n\n`,
+            `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(
+                response.content,
+                response.glb,
+            )}\n\n`,
         );
     } catch (error) {
         if ((error as Error).name === 'AbortError') {
@@ -97,7 +100,9 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
         } else {
             console.error(error);
             checkStatusText.value = 'Check failed';
-            appendConsole(`[${new Date().toLocaleTimeString()}] Check failed\n${String(error)}\n\n`);
+            appendConsole(
+                `[${new Date().toLocaleTimeString()}] Check failed\n${String(error)}\n\n`,
+            );
         }
     } finally {
         checkLoading.value = false;

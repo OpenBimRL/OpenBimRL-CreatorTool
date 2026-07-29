@@ -1,6 +1,6 @@
-import { ref } from 'vue';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { ref } from 'vue';
 import { getWorld } from './ifcViewer';
 
 let visualGroup: THREE.Group | null = null;
@@ -12,7 +12,11 @@ function clearVisualMeshes(world: NonNullable<ReturnType<typeof getWorld>>) {
     if (visualGroup) {
         world.scene.three.remove(visualGroup);
         visualGroup.traverse(child => {
-            if (child instanceof THREE.Mesh || child instanceof THREE.LineSegments || child instanceof THREE.Line) {
+            if (
+                child instanceof THREE.Mesh ||
+                child instanceof THREE.LineSegments ||
+                child instanceof THREE.Line
+            ) {
                 child.geometry.dispose();
                 const materials = Array.isArray(child.material) ? child.material : [child.material];
                 materials.forEach(material => material.dispose());

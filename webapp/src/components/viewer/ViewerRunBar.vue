@@ -54,7 +54,13 @@
 </template>
 
 <script setup lang="ts">
-import { CommandLineIcon, EyeIcon, EyeSlashIcon, PlayIcon, StopIcon } from '@heroicons/vue/24/outline';
+import {
+    CommandLineIcon,
+    EyeIcon,
+    EyeSlashIcon,
+    PlayIcon,
+    StopIcon,
+} from '@heroicons/vue/24/outline';
 
 defineProps<{
     checkStatusText: string;

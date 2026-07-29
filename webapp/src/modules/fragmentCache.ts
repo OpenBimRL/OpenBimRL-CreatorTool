@@ -40,7 +40,8 @@ function openDb(): Promise<IDBDatabase> {
             };
 
             request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error ?? new Error('Failed to open fragment cache'));
+            request.onerror = () =>
+                reject(request.error ?? new Error('Failed to open fragment cache'));
         });
     }
 
@@ -59,8 +60,10 @@ function runTransaction<T>(
                 const request = run(store);
 
                 request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error ?? new Error('Fragment cache transaction failed'));
-                tx.onerror = () => reject(tx.error ?? new Error('Fragment cache transaction failed'));
+                request.onerror = () =>
+                    reject(request.error ?? new Error('Fragment cache transaction failed'));
+                tx.onerror = () =>
+                    reject(tx.error ?? new Error('Fragment cache transaction failed'));
             }),
     );
 }
@@ -102,7 +105,9 @@ export async function storeFragment(modelId: string, buffer: ArrayBufferLike): P
     };
 
     try {
-        await runTransaction<IDBValidKey>('readwrite', store => store.put(record, fragmentCacheKey(modelId)));
+        await runTransaction<IDBValidKey>('readwrite', store =>
+            store.put(record, fragmentCacheKey(modelId)),
+        );
     } catch (error) {
         console.warn('Failed to store cached fragments', error);
     }
@@ -112,7 +117,9 @@ export async function deleteStoredFragment(modelId: string): Promise<void> {
     if (!isIndexedDbAvailable()) return;
 
     try {
-        await runTransaction<undefined>('readwrite', store => store.delete(fragmentCacheKey(modelId)));
+        await runTransaction<undefined>('readwrite', store =>
+            store.delete(fragmentCacheKey(modelId)),
+        );
     } catch (error) {
         console.warn('Failed to delete cached fragments', error);
     }
