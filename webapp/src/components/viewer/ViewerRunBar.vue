@@ -29,6 +29,16 @@
 
         <button
             type="button"
+            class="btn-icon !h-7 !w-7"
+            :disabled="!canFitView"
+            title="Fit model in view"
+            @click="$emit('fit-view')"
+        >
+            <ArrowsPointingOutIcon class="h-4 w-4" />
+        </button>
+
+        <button
+            type="button"
             :class="consoleOpen ? 'btn-icon-active !h-7 !w-7' : 'btn-icon !h-7 !w-7'"
             :title="consoleOpen ? 'Hide console' : 'Show console'"
             @click="$emit('toggle-console')"
@@ -55,6 +65,7 @@
 
 <script setup lang="ts">
 import {
+    ArrowsPointingOutIcon,
     CommandLineIcon,
     EyeIcon,
     EyeSlashIcon,
@@ -66,6 +77,7 @@ defineProps<{
     checkStatusText: string;
     checkLoading: boolean;
     canRunCheck: boolean;
+    canFitView: boolean;
     consoleOpen: boolean;
     hasVisuals: boolean;
     visualsVisible: boolean;
@@ -74,6 +86,7 @@ defineProps<{
 defineEmits<{
     (event: 'run-check'): void;
     (event: 'stop-check'): void;
+    (event: 'fit-view'): void;
     (event: 'toggle-console'): void;
     (event: 'toggle-visuals'): void;
 }>();

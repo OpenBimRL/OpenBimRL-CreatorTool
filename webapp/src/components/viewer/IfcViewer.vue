@@ -4,11 +4,13 @@
             :check-status-text="checkStatusText"
             :check-loading="checkLoading"
             :can-run-check="!!selected"
+            :can-fit-view="!!selected"
             :console-open="consoleOpen"
             :has-visuals="hasCheckVisuals"
             :visuals-visible="checkVisualsVisible"
             @run-check="runCheck"
             @stop-check="stopCheck"
+            @fit-view="fitView"
             @toggle-console="toggleConsole"
             @toggle-visuals="toggleCheckVisuals"
         />
@@ -109,6 +111,7 @@ import darkMode from '@/modules/darkmode';
 import { deleteModel } from '@/modules/apiConnection';
 import {
     detachViewer,
+    fitViewToDisplayedModel,
     getScene,
     init,
     loading,
@@ -143,6 +146,10 @@ const runCheck = async () => {
 
 const stopCheck = () => {
     stopGraphCheck();
+};
+
+const fitView = () => {
+    void fitViewToDisplayedModel();
 };
 
 const selectModel = (id: string) => {

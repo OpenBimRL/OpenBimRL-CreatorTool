@@ -1,16 +1,16 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { ref } from 'vue';
-import { getWorld } from './ifcViewer';
+import { getAlignmentGroup, getWorld } from './ifcViewer';
 
 let visualGroup: THREE.Group | null = null;
 let pendingGlb: Uint8Array | null = null;
 export const hasCheckVisuals = ref(false);
 export const checkVisualsVisible = ref(false);
 
-function clearVisualMeshes(world: NonNullable<ReturnType<typeof getWorld>>) {
+function clearVisualMeshes(_world?: NonNullable<ReturnType<typeof getWorld>>) {
     if (visualGroup) {
-        world.scene.three.remove(visualGroup);
+        visualGroup.removeFromParent();
         visualGroup.traverse(child => {
             if (
                 child instanceof THREE.Mesh ||
@@ -73,7 +73,14 @@ function applyGlb(glb: Uint8Array) {
         gltf => {
             visualGroup = gltf.scene;
             applyGlbMaterialOverrides(visualGroup);
-            world.scene.three.add(visualGroup);
+            // Same absolute IFC/Three frame as the model — parent under the alignment
+            // group so -bboxCenter centering keeps overlays locked to the mesh.
+            const alignment = getAlignmentGroup();
+            if (alignment) {
+                alignment.add(visualGroup);
+            } else {
+                world.scene.three.add(visualGroup);
+            }
         },
         error => {
             console.error('Failed to load check visuals GLB', error);

@@ -8,7 +8,7 @@ import { getModel, getModels } from './apiConnection';
 
 import * as WEBIFC from 'web-ifc';
 
-import { Color } from 'three';
+import { Color, Group, Vector3 } from 'three';
 import { deleteStoredFragment, getStoredFragment, storeFragment } from './fragmentCache';
 import { setupViewerSelection } from './viewerElementSelection';
 import { refreshVisuals } from './visualizer';
@@ -36,9 +36,53 @@ let displayedModelId: string | null = null;
 let displayedModel: FragmentsModel | null = null;
 let applySerial = 0;
 
+/**
+ * Shared parent for IFC fragments and check visuals.
+ * Translated by -bboxCenter so far-from-origin models sit near the grid
+ * without breaking overlay alignment (both stay in the same IFC world frame).
+ */
+let alignmentGroup: Group | null = null;
+
 const models = reactive(new Map<string, string>());
 const loadedModels = new Map<string, FragmentsModel | null>();
 const loadingPromises = new Map<string, Promise<FragmentsModel | null>>();
+
+function ensureAlignmentGroup(): Group {
+    if (!alignmentGroup) {
+        alignmentGroup = new Group();
+        alignmentGroup.name = 'ifcAlignment';
+        world.scene.three.add(alignmentGroup);
+    } else if (alignmentGroup.parent !== world.scene.three) {
+        world.scene.three.add(alignmentGroup);
+    }
+    return alignmentGroup;
+}
+
+/** Parent for check visuals — same transform as the displayed IFC model. */
+export function getAlignmentGroup(): Group | null {
+    if (!ready || !world) return null;
+    return ensureAlignmentGroup();
+}
+
+function recenterAlignmentToModel(model: FragmentsModel) {
+    const group = ensureAlignmentGroup();
+    group.position.set(0, 0, 0);
+    group.updateMatrixWorld(true);
+
+    const box = model.box;
+    if (box.isEmpty()) return;
+
+    const center = new Vector3();
+    box.getCenter(center);
+    group.position.copy(center).multiplyScalar(-1);
+    group.updateMatrixWorld(true);
+}
+
+function resetAlignmentGroup() {
+    if (!alignmentGroup) return;
+    alignmentGroup.position.set(0, 0, 0);
+    alignmentGroup.updateMatrixWorld(true);
+}
 
 function resolveCachedModel(modelId: string): FragmentsModel | null {
     const cached = loadedModels.get(modelId);
@@ -85,6 +129,13 @@ async function loadModelFromFragmentBuffer(
 export function applyIfcImporterExclusions(importer: FRAGS.IfcImporter) {
     importer.wasm.path = WEBIFC_WASM_PATH;
     importer.wasm.absolute = true;
+    // Keep absolute IFC coords so /visuals GLBs stay aligned. Disable Fragments'
+    // default 100 km skip so projected-CRS models still import.
+    importer.webIfcSettings = {
+        ...importer.webIfcSettings,
+        COORDINATE_TO_ORIGIN: false,
+    };
+    importer.distanceThreshold = null;
 
     for (const type of EXCLUDED_IFC_TYPES) {
         importer.classes.elements.delete(type);
@@ -104,18 +155,55 @@ export async function configureIfcLoader(ifcLoader: OBC.IfcLoader) {
     });
 }
 
-function showModel(model: FragmentsModel) {
+function showModel(model: FragmentsModel, options: { fitView?: boolean } = {}) {
+    const { fitView = true } = options;
     model.frozen = false;
     model.useCamera(world.camera.three);
-    if (!world.scene.three.children.includes(model.object)) {
-        world.scene.three.add(model.object);
+
+    const group = ensureAlignmentGroup();
+    if (model.object.parent !== group) {
+        world.scene.three.remove(model.object);
+        group.add(model.object);
     }
-    void fragments.core.update(true);
+
+    recenterAlignmentToModel(model);
+    void fragments.core.update(true).then(() => {
+        // Box can refine after the first fragments update — recenter once more.
+        recenterAlignmentToModel(model);
+        refreshVisuals();
+        if (fitView) {
+            void fitViewToDisplayedModel();
+        }
+    });
 }
 
 function hideModel(model: FragmentsModel) {
-    world.scene.three.remove(model.object);
+    model.object.removeFromParent();
     model.frozen = true;
+}
+
+/** Frame the camera on the currently displayed model (and any siblings in the alignment group). */
+export async function fitViewToDisplayedModel() {
+    if (!ready || !world?.camera) return;
+
+    try {
+        await fragments.core.update(true);
+    } catch {
+        /* empty */
+    }
+
+    const target =
+        alignmentGroup && alignmentGroup.children.length > 0
+            ? alignmentGroup
+            : displayedModel?.object;
+
+    if (!target) return;
+
+    try {
+        await world.camera.controls.fitToBox(target, true);
+    } catch (error) {
+        console.warn('fitToBox failed', error);
+    }
 }
 
 function reattachRenderer(container: HTMLElement) {
@@ -141,7 +229,7 @@ async function attachViewer(container: HTMLElement) {
     syncLoadedModelsFromFragments();
 
     if (displayedModel) {
-        showModel(displayedModel);
+        showModel(displayedModel, { fitView: false });
     }
 
     refreshVisuals();
@@ -234,6 +322,7 @@ function unloadDisplayedModel() {
     hideModel(displayedModel);
     displayedModel = null;
     displayedModelId = null;
+    resetAlignmentGroup();
 }
 
 async function ensureModelLoaded(modelId: string): Promise<FragmentsModel | null> {

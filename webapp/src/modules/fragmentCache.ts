@@ -3,7 +3,7 @@ import { apiEndpoint } from './apiConnection';
 const DB_NAME = 'openbimrl.fragments';
 const DB_VERSION = 1;
 const STORE_NAME = 'models';
-const CACHE_SCHEMA_VERSION = 1;
+const CACHE_SCHEMA_VERSION = 3;
 
 type StoredFragmentRecord = {
     schemaVersion: number;
