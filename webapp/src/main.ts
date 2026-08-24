@@ -1,3 +1,6 @@
+// Must be first: three.webgpu (via @thatopen) reads GPUShaderStage at import time.
+import './modules/webgpuPolyfill';
+
 import { createApp, ref } from 'vue';
 import 'vue-json-viewer/style.css';
 import App from './App.vue';
@@ -11,7 +14,6 @@ import {
 } from './keys';
 import { darkMode, initHandleSize, router } from './modules';
 import { initBimUi } from './modules/bimUi';
-import './modules/webgpuPolyfill';
 import './style.css';
 
 initHandleSize();

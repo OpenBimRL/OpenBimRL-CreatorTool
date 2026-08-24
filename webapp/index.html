@@ -2,6 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <!-- Must run before ES modules: three.webgpu reads self.GPUShaderStage at import time. -->
+        <script>
+            if (typeof globalThis.GPUShaderStage === 'undefined') {
+                globalThis.GPUShaderStage = { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
+            }
+        </script>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
