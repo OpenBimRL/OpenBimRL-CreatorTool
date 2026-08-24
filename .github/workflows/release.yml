@@ -17,21 +17,26 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.9
+
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: '24'
-          cache: npm
-          cache-dependency-path: webapp/package-lock.json
+          cache: pnpm
+          cache-dependency-path: webapp/pnpm-lock.yaml
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Get package version
         id: get_package_version
-        run: echo "VERSION=v$(npm pkg get version)" >> "$GITHUB_OUTPUT"
+        run: echo "VERSION=v$(pnpm pkg get version | tr -d '\"')" >> "$GITHUB_OUTPUT"
       
       - name: build app
-        run: npm run build
+        run: pnpm run build
 
       - name: zip build
         run: zip -r build.zip dist

@@ -1,0 +1,81 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library", "js_run_devserver")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//OpenBimRL-CreatorTool/webapp:vite/package_json.bzl", vite_bin = "bin")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+])
+
+npm_link_all_packages(name = "node_modules")
+
+WEBAPP_SRCS = glob([
+    "src/**",
+    "public/**",
+    "index.html",
+    "package.json",
+    "vite.config.ts",
+    "tsconfig.json",
+    "tsconfig.node.json",
+    "tailwind.config.ts",
+    "postcss.config.js",
+])
+
+js_library(
+    name = "vite_config",
+    srcs = ["vite.config.ts"],
+    deps = [
+        ":node_modules/@vitejs/plugin-vue",
+        ":node_modules/vite",
+    ],
+)
+
+js_library(
+    name = "webapp_lib",
+    srcs = WEBAPP_SRCS,
+    deps = [
+        ":node_modules",
+        ":vite_config",
+    ],
+)
+
+vite_bin.vite_binary(
+    name = "vite",
+    chdir = package_name(),
+    data = [
+        ":webapp_lib",
+        ":node_modules",
+    ],
+)
+
+# Mirrors scripts/dev-start.sh: vite --host 0.0.0.0 --port 8000
+js_run_devserver(
+    name = "dev",
+    args = [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+    ],
+    chdir = package_name(),
+    data = [
+        ":webapp_lib",
+        ":node_modules",
+    ],
+    grant_sandbox_write_permissions = True,
+    tool = ":vite",
+)
+
+vite_bin.vite(
+    name = "build",
+    srcs = [
+        ":webapp_lib",
+        ":node_modules",
+    ],
+    args = ["build"],
+    chdir = package_name(),
+    out_dirs = ["dist"],
+)

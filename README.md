@@ -20,16 +20,16 @@ A web-based application to create and edit OpenBimRL files.
 To run this project, following applications must be installed:
 
 - node.js
-- npm
+- pnpm
 - Visual Studio Code (Recommended) + Volar plugin for Vue
 
 
-The following dependencies have to be installed using npm:
+The following dependencies have to be installed using pnpm:
 
 
 ```shell
 cd webapp
-npm install
+pnpm install
 ```
 
 For more details on dependencies view the package.json file.
@@ -42,7 +42,7 @@ In order to bundle Vue components into a single app.js file, the code has to be 
 
 ```shell
 cd webapp
-npm run build
+pnpm run build
 ```
 
 **NOTE:** The watch-mode supports hot-reload, in order to edit and view files live in a browser. 
