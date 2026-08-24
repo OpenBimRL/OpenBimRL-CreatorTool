@@ -39,33 +39,37 @@
 
             <section>
                 <table class="w-full text-sm">
-                    <tr>
-                        <td><b>Institution:</b></td>
-                        <td>
-                            Lehrstuhl für Informatik im Bauwesen <br />
-                            an der Ruhr-Universität Bochum
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><b>Entwickler:</b></td>
-                        <td>Florian Becker</td>
-                    </tr>
-                    <tr>
-                        <td><b>E-Mail:</b></td>
-                        <td>florian.becker-f86@ruhr-uni-bochum.de</td>
-                    </tr>
-                    <tr>
-                        <td><b>Author:</b></td>
-                        <td>Marcel Stepien</td>
-                    </tr>
-                    <tr>
-                        <td><b>E-Mail:</b></td>
-                        <td>marcel.stepien@ruhr-uni-bochum.de</td>
-                    </tr>
-                    <tr>
-                        <td><b>Datum:</b></td>
-                        <td>{{ date.getDate() }}.{{ date.getMonth() }}.{{ date.getFullYear() }}</td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td><b>Institution:</b></td>
+                            <td>
+                                Lehrstuhl für Informatik im Bauwesen <br />
+                                an der Ruhr-Universität Bochum
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Entwickler:</b></td>
+                            <td>Florian Becker</td>
+                        </tr>
+                        <tr>
+                            <td><b>E-Mail:</b></td>
+                            <td>florian.becker-f86@ruhr-uni-bochum.de</td>
+                        </tr>
+                        <tr>
+                            <td><b>Author:</b></td>
+                            <td>Marcel Stepien</td>
+                        </tr>
+                        <tr>
+                            <td><b>E-Mail:</b></td>
+                            <td>marcel.stepien@ruhr-uni-bochum.de</td>
+                        </tr>
+                        <tr>
+                            <td><b>Datum:</b></td>
+                            <td>
+                                {{ date.getDate() }}.{{ date.getMonth() }}.{{ date.getFullYear() }}
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </section>
 
