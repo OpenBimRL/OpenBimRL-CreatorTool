@@ -71,6 +71,7 @@ js_run_devserver(
     tool = ":vite",
 )
 
+# Hermetic production build → bazel build //:webapp_build (or //OpenBimRL-CreatorTool/webapp:build)
 vite_bin.vite(
     name = "build",
     srcs = [
@@ -80,4 +81,15 @@ vite_bin.vite(
     args = ["build"],
     chdir = package_name(),
     out_dirs = ["dist"],
+)
+
+# Runnable vite build → bazel run //:webapp_build_run
+vite_bin.vite_binary(
+    name = "build_run",
+    args = ["build"],
+    chdir = package_name(),
+    data = [
+        ":webapp_lib",
+        ":node_modules",
+    ],
 )
