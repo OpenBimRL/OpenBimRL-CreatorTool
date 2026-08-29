@@ -94,10 +94,18 @@ export interface ApiFunctionGroup {
     items: Array<ApiFunctionItem>;
 }
 
-export interface ApiStatus {
+export interface NativeLibInfo {
     version: string;
+    buildDate: string;
+    buildCompiler: string;
     gpuOffloadEnabled: boolean;
     gpuOffloadArch: string | null;
+}
+
+export interface ApiStatus {
+    version: string;
+    engineVersion: string;
+    nativeLib: NativeLibInfo;
 }
 
 type Error = unknown;

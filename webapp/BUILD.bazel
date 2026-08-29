@@ -42,9 +42,11 @@ js_library(
     ],
 )
 
+# No chdir on this binary: js_run_devserver already cds into the package sandbox.
+# A second chdir = package_name() would resolve to a nested path and fail with
+# "cd: OpenBimRL-CreatorTool/webapp: No such file or directory".
 vite_bin.vite_binary(
     name = "vite",
-    chdir = package_name(),
     data = [
         ":webapp_lib",
         ":node_modules",

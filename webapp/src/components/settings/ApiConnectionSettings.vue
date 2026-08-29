@@ -31,18 +31,50 @@
     >
         <dl class="space-y-2 text-sm">
             <div class="flex justify-between gap-4">
-                <dt class="text-slate-500 dark:text-slate-400">Version</dt>
+                <dt class="text-slate-500 dark:text-slate-400">Creator Tool</dt>
+                <dd class="font-medium">{{ creatorToolVersion }}</dd>
+            </div>
+            <div class="flex justify-between gap-4">
+                <dt class="text-slate-500 dark:text-slate-400">API version</dt>
                 <dd class="font-medium">{{ apiStatus.version }}</dd>
+            </div>
+            <div class="flex justify-between gap-4">
+                <dt class="text-slate-500 dark:text-slate-400">Engine</dt>
+                <dd class="font-medium">{{ apiStatus.engineVersion }}</dd>
+            </div>
+        </dl>
+
+        <p
+            class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+        >
+            Native library
+        </p>
+        <dl class="mt-2 space-y-2 text-sm">
+            <div class="flex justify-between gap-4">
+                <dt class="text-slate-500 dark:text-slate-400">Version</dt>
+                <dd class="font-medium">{{ apiStatus.nativeLib.version }}</dd>
+            </div>
+            <div class="flex justify-between gap-4">
+                <dt class="shrink-0 text-slate-500 dark:text-slate-400">Built</dt>
+                <dd class="text-right font-medium">{{ formatBuildDate(apiStatus.nativeLib.buildDate) }}</dd>
+            </div>
+            <div class="flex justify-between gap-4">
+                <dt class="shrink-0 text-slate-500 dark:text-slate-400">Compiler</dt>
+                <dd class="max-w-[65%] break-words text-right font-mono text-xs font-medium">
+                    {{ apiStatus.nativeLib.buildCompiler }}
+                </dd>
             </div>
             <div class="flex justify-between gap-4">
                 <dt class="text-slate-500 dark:text-slate-400">GPU offload</dt>
                 <dd class="font-medium">
-                    {{ apiStatus.gpuOffloadEnabled ? 'enabled' : 'disabled' }}
+                    {{ apiStatus.nativeLib.gpuOffloadEnabled ? 'enabled' : 'disabled' }}
                 </dd>
             </div>
-            <div v-if="apiStatus.gpuOffloadArch" class="flex justify-between gap-4">
+            <div v-if="apiStatus.nativeLib.gpuOffloadArch" class="flex justify-between gap-4">
                 <dt class="text-slate-500 dark:text-slate-400">GPU arch</dt>
-                <dd class="font-mono text-xs font-medium">{{ apiStatus.gpuOffloadArch }}</dd>
+                <dd class="font-mono text-xs font-medium">
+                    {{ apiStatus.nativeLib.gpuOffloadArch }}
+                </dd>
             </div>
         </dl>
     </div>
@@ -51,6 +83,7 @@
 <script setup lang="ts">
 import { InputField } from '@/components';
 import { apiConnectionInjectionKey } from '@/keys';
+import { creatorToolVersion } from '@/modules/appInfo';
 import {
     apiAccessToken,
     apiEndpoint,
@@ -84,6 +117,12 @@ const statusBadgeClass = computed(() => {
 });
 
 const connected = computed(() => connectionStatus.value ?? false);
+
+function formatBuildDate(iso: string): string {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return iso;
+    return date.toLocaleString();
+}
 
 const testConnection = () => {
     if (connectionLoading.value || !urlValid.value) return;

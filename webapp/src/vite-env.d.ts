@@ -1,3 +1,3 @@
 /// <reference types="vite/client" />
 
-declare module 'vue-json-viewer';
+declare const __CREATOR_TOOL_VERSION__: string;
