@@ -1,6 +1,9 @@
 import { isValidKotlinIdentifier } from '@/modules/codeScaffold';
-import { conf as kotlinConf, language as kotlinLanguage } from 'monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js';
 import type { editor, languages } from 'monaco-editor';
+import {
+    conf as kotlinConf,
+    language as kotlinLanguage,
+} from 'monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js';
 
 /**
  * Kotlin Monarch grammar extended with OpenBimRL Code-node ports.
@@ -123,7 +126,9 @@ function withPortIdentifiers(
     root: languages.IMonarchLanguageRule[],
 ): languages.IMonarchLanguageRule[] {
     const rules = root.slice();
-    const upperIdx = rules.findIndex(rule => regexMatches(rule, 'Point3d') && !regexMatches(rule, 'point'));
+    const upperIdx = rules.findIndex(
+        rule => regexMatches(rule, 'Point3d') && !regexMatches(rule, 'point'),
+    );
     if (upperIdx >= 0) rules.splice(upperIdx, 1);
 
     const identIdx = rules.findIndex(
@@ -159,7 +164,11 @@ function highlightStringTemplates(
 ): languages.IMonarchLanguageRule[] {
     const contentSource = /[^\\"]+/.source;
     const mapped = rules.map(rule => {
-        if (!Array.isArray(rule) || !(rule[0] instanceof RegExp) || rule[0].source !== contentSource) {
+        if (
+            !Array.isArray(rule) ||
+            !(rule[0] instanceof RegExp) ||
+            rule[0].source !== contentSource
+        ) {
             return rule;
         }
         // Stop before `$` so `$name` / `${name}` can be matched as their own tokens.
