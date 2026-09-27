@@ -52,6 +52,7 @@
                     <template v-slot:accept_button_text>Change Input</template>
                     <template v-slot:reject_button_text>Revert</template>
                 </Dialog>
+                <CodeEditorModal ref="codeEditor" @close="onCodeEditorClose" />
             </VueFlow>
             <GraphConsoleOverlay
                 :open="consoleOpen"
@@ -107,6 +108,7 @@ import CustomMap from './CustomMap.vue';
 import GraphConsoleOverlay from './GraphConsoleOverlay.vue';
 import GraphRunBar from './GraphRunBar.vue';
 import NodeDetailsPanel from './NodeDetailsPanel.vue';
+import CodeEditorModal from './modals/CodeEditorModal.vue';
 import type { CustomNode, GraphInject } from './Types';
 import { multiSelectKeys, nodeTypes } from './config';
 import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './graphEvents';
@@ -114,6 +116,7 @@ import { ConnectEvent, DoubleClickEvent, DragOverEvent, DropEvent } from './grap
 import TWConf from '@/../tailwind.config';
 
 const dialog = ref<typeof Dialog | null>(null);
+const codeEditor = ref<InstanceType<typeof CodeEditorModal> | null>(null);
 const selectedNode = ref<number>(0);
 const nodeDataIndex = ref<string>('name');
 const dialogDraftValue = ref('');
@@ -176,6 +179,7 @@ const onNodeDoubleClick = DoubleClickEvent(
     nodeDataIndex,
     dialogDraftValue,
     dialog,
+    codeEditor,
 );
 const onInputDialogClose = () => {
     if (dialog.value?.returnValue() !== DialogReturnValue.accept) return;
@@ -184,6 +188,13 @@ const onInputDialogClose = () => {
     if (!node) return;
 
     node.data[nodeDataIndex.value] = dialogDraftValue.value;
+};
+const onCodeEditorClose = () => {
+    if (codeEditor.value?.returnValue() !== DialogReturnValue.accept) return;
+    const node = nodes.value[selectedNode.value];
+    if (!node) return;
+    const draft = codeEditor.value.getDraft();
+    Object.assign(node.data, draft);
 };
 const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);

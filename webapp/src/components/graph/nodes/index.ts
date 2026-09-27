@@ -1,3 +1,4 @@
+export { default as CodeNode } from './CodeNode.vue';
 export { default as CustomHandle } from './CustomHandle.vue';
 export { default as FunctionNode } from './FunctionNode.vue';
 export { default as InputType } from './InputType.vue';

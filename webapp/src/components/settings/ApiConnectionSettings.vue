@@ -56,7 +56,9 @@
             </div>
             <div class="flex justify-between gap-4">
                 <dt class="shrink-0 text-slate-500 dark:text-slate-400">Built</dt>
-                <dd class="text-right font-medium">{{ formatBuildDate(apiStatus.nativeLib.buildDate) }}</dd>
+                <dd class="text-right font-medium">
+                    {{ formatBuildDate(apiStatus.nativeLib.buildDate) }}
+                </dd>
             </div>
             <div class="flex justify-between gap-4">
                 <dt class="shrink-0 text-slate-500 dark:text-slate-400">Compiler</dt>

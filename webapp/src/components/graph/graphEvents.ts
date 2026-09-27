@@ -55,6 +55,7 @@ export function DoubleClickEvent(
     nodeDataIndex: Ref<string>,
     dialogDraftValue: Ref<string>,
     dialog: Ref<typeof Dialog | null>,
+    codeEditor?: Ref<{ open: (data: any) => void } | null>,
 ): (event: NodeMouseEvent) => void {
     return event => {
         const index = nodes.value.findIndex((element: GraphNode) => element.id == event.node.id);
@@ -68,6 +69,9 @@ export function DoubleClickEvent(
                 nodeDataIndex.value = 'label';
                 dialogDraftValue.value = String(nodes.value[index].data.label ?? '');
                 dialog.value?.open();
+                break;
+            case 'codeType':
+                codeEditor?.value?.open(nodes.value[index].data);
                 break;
         }
     };

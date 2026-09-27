@@ -40,6 +40,17 @@ export type InputNodeData = NodeData<never, InputNodeConnectorType>;
 
 export type RuleIdentifierNodeData = NodeData<BaseConnectorType, BaseConnectorType>;
 
+export interface CodePortConnectorType extends FunctionNodeConnectorType {
+    typeHint?: string;
+    collectionType?: string;
+    value?: string;
+}
+
+export interface CodeNodeData extends NodeData<CodePortConnectorType, CodePortConnectorType> {
+    scriptSource?: string;
+    scriptLanguage?: string;
+}
+
 export type CustomNode = Node<NodeData<unknown, unknown>>;
 
 // Rules and RuleSets
