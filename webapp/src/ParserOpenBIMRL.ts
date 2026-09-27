@@ -434,6 +434,10 @@ export default class Parser {
                 let eAttr = e._attributes;
 
                 let sourceNode = nodeMap[eAttr.source];
+                if (sourceNode === undefined) {
+                    continue;
+                }
+
                 if (typeof sourceNode['Outputs'] !== 'undefined') {
                     let outputHandle = sourceNode['Outputs']['Output'];
                     if (!Array.isArray(outputHandle)) {
@@ -447,6 +451,10 @@ export default class Parser {
                 }
 
                 let targetNode = nodeMap[eAttr.target];
+                if (targetNode === undefined) {
+                    continue;
+                }
+
                 if (typeof targetNode['Inputs'] !== 'undefined') {
                     let inputHandle = targetNode['Inputs']['Input'];
                     if (!Array.isArray(inputHandle)) {
