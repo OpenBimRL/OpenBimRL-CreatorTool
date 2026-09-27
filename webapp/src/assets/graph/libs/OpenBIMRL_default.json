@@ -2363,6 +2363,40 @@
         ]
     },
     {
+        "id": "fb80accc-42e9-4286-9dd3-f4c64980285e",
+        "name": "Code / Script",
+        "color": "MediumSeaGreen",
+        "items": [
+            {
+                "id": "079285da-e36b-419f-9dc5-dcad156f968f",
+                "type": "codeType",
+                "data": {
+                    "name": "script.customScript",
+                    "icon": "exclamation-circle-fill",
+                    "description": "Runs embedded Kotlin script with mapper-defined inputs/outputs.",
+                    "label": "ScriptName",
+                    "selected": false,
+                    "scriptLanguage": "kotlin",
+                    "scriptSource": null,
+                    "inputs": [
+                        {
+                            "index": "0",
+                            "name": "in0",
+                            "typeHint": "Any"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "index": "0",
+                            "name": "result",
+                            "typeHint": "Any"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    {
         "id": "7d41f46d-faf9-4580-b96e-4dfe6bce4ad9",
         "name": "visual",
         "color": "Cyan",

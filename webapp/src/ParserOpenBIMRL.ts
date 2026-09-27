@@ -101,6 +101,12 @@ export default class Parser {
                             //set value instead, if it exists
                             input.setAttribute('value', inputObj.value);
                         }
+                        if (inputObj.typeHint) {
+                            input.setAttribute('typeHint', inputObj.typeHint);
+                        }
+                        if (inputObj.collectionType) {
+                            input.setAttribute('collectionType', inputObj.collectionType);
+                        }
 
                         inputs.appendChild(input);
                     }
@@ -127,6 +133,12 @@ export default class Parser {
                         if (outputObj.value) {
                             output.setAttribute('value', outputObj.value);
                         }
+                        if (outputObj.typeHint) {
+                            output.setAttribute('typeHint', outputObj.typeHint);
+                        }
+                        if (outputObj.collectionType) {
+                            output.setAttribute('collectionType', outputObj.collectionType);
+                        }
 
                         if (el.type === 'inputType') {
                             //set label instead, if it is an inputType
@@ -138,6 +150,22 @@ export default class Parser {
 
                     if (el.data.outputs.length !== 0) {
                         n.appendChild(outputs);
+                    }
+                }
+
+                if (el.type === 'codeType' && el.data.scriptSource) {
+                    const script = xmlDoc.createElementNS(
+                        'http://inf.bi.rub.de/OpenBimRL',
+                        'Script',
+                    );
+                    script.setAttribute('language', el.data.scriptLanguage || 'kotlin');
+                    script.appendChild(xmlDoc.createCDATASection(el.data.scriptSource));
+                    // Insert Script before Inputs/Outputs if present
+                    const firstChild = n.firstChild;
+                    if (firstChild) {
+                        n.insertBefore(script, firstChild);
+                    } else {
+                        n.appendChild(script);
                     }
                 }
 
@@ -312,6 +340,8 @@ export default class Parser {
                             index: i,
                             name: ihs[i]._attributes.name,
                             value: ihs[i]._attributes.value,
+                            typeHint: ihs[i]._attributes.typeHint,
+                            collectionType: ihs[i]._attributes.collectionType,
                         });
                     }
                 }
@@ -329,6 +359,8 @@ export default class Parser {
                             index: o,
                             name: ohs[o]._attributes.name,
                             value: ohs[o]._attributes.value,
+                            typeHint: ohs[o]._attributes.typeHint,
+                            collectionType: ohs[o]._attributes.collectionType,
                         });
                     }
                 }
@@ -339,13 +371,33 @@ export default class Parser {
 
                 let nT = 'functionType';
                 let nCustomLbl = 'Node Label Here'; //Default Text if no Alias has been given
+                let scriptSource: string | undefined;
+                let scriptLanguage: string | undefined;
 
                 if (nNameLbl.startsWith('visualize.')) {
                     nT = 'visualizeType';
                 }
 
+                if (nNameLbl === 'script.customScript' || nNameLbl?.startsWith('script.')) {
+                    nT = 'codeType';
+                }
+
+                if (typeof n['Script'] !== 'undefined') {
+                    nT = 'codeType';
+                    const scriptNode = n['Script'];
+                    scriptLanguage = scriptNode._attributes?.language || 'kotlin';
+                    scriptSource =
+                        typeof scriptNode._cdata !== 'undefined'
+                            ? scriptNode._cdata
+                            : typeof scriptNode._text !== 'undefined'
+                              ? scriptNode._text
+                              : typeof scriptNode === 'string'
+                                ? scriptNode
+                                : undefined;
+                }
+
                 //TODO: should be identified by a specific type identifier, not inputs and outputs
-                if (inputHandles.length == 0 && outputHandles.length == 1) {
+                if (nT !== 'codeType' && inputHandles.length == 0 && outputHandles.length == 1) {
                     nT = 'inputType';
                     nCustomLbl = n['Outputs']['Output']._attributes['value'];
                 } else {
@@ -366,6 +418,9 @@ export default class Parser {
                         inputs: inputHandles,
                         outputs: outputHandles,
                         selected: false,
+                        ...(scriptSource !== undefined
+                            ? { scriptSource, scriptLanguage: scriptLanguage || 'kotlin' }
+                            : {}),
                     },
                     position: { x: 0, y: 0 },
                 });
