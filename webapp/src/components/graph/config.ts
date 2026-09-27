@@ -3,7 +3,7 @@ import { setupGraphPersistence } from '@/modules/graphStorage';
 import { Edge, GraphNode, NodeTypesObject } from '@vue-flow/core';
 import { Ref, markRaw, ref } from 'vue';
 import type { CustomNode, GraphInject, GraphJSON, GraphResetCallback } from './Types';
-import { FunctionNode, InputType, RuleIdentifier, VisualizeNode, CodeNode } from './nodes';
+import { CodeNode, FunctionNode, InputType, RuleIdentifier, VisualizeNode } from './nodes';
 
 export const multiSelectKeys = ['Shift', 'Control'];
 

@@ -390,10 +390,10 @@ export default class Parser {
                         typeof scriptNode._cdata !== 'undefined'
                             ? scriptNode._cdata
                             : typeof scriptNode._text !== 'undefined'
-                              ? scriptNode._text
-                              : typeof scriptNode === 'string'
-                                ? scriptNode
-                                : undefined;
+                            ? scriptNode._text
+                            : typeof scriptNode === 'string'
+                            ? scriptNode
+                            : undefined;
                 }
 
                 //TODO: should be identified by a specific type identifier, not inputs and outputs

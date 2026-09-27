@@ -1,11 +1,6 @@
 <template>
     <Teleport to="body">
-        <dialog
-            ref="dialogEl"
-            class="code-editor-dialog"
-            @cancel="onCancel"
-            @close="onDialogClose"
-        >
+        <dialog ref="dialogEl" class="code-editor-dialog" @cancel="onCancel" @close="onDialogClose">
             <div class="flex h-full min-h-0 flex-col">
                 <div
                     class="flex items-center justify-between border-b border-slate-200/80 px-4 py-3 dark:border-slate-700"
@@ -16,8 +11,13 @@
                     <div
                         class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400"
                     >
-                        <span class="font-semibold" :style="{ color: portColor('input') }">input</span>
-                        <span class="font-semibold underline" :style="{ color: portColor('output') }">
+                        <span class="font-semibold" :style="{ color: portColor('input') }"
+                            >input</span
+                        >
+                        <span
+                            class="font-semibold underline"
+                            :style="{ color: portColor('output') }"
+                        >
                             output
                         </span>
                         <span>Kotlin (.kts) · LSP later</span>
@@ -40,7 +40,11 @@
                         <section>
                             <div class="mb-2 flex items-center justify-between">
                                 <h3 class="text-sm font-semibold">Inputs</h3>
-                                <button type="button" class="btn-secondary !text-xs" @click="addInput">
+                                <button
+                                    type="button"
+                                    class="btn-secondary !text-xs"
+                                    @click="addInput"
+                                >
                                     + input
                                 </button>
                             </div>
@@ -121,10 +125,18 @@
                 <div
                     class="flex justify-end gap-3 border-t border-slate-200/80 px-4 py-3 dark:border-slate-700"
                 >
-                    <button type="button" class="btn-secondary" @click="close(DialogReturnValue.cancel)">
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        @click="close(DialogReturnValue.cancel)"
+                    >
                         Cancel
                     </button>
-                    <button type="button" class="btn-primary" @click="close(DialogReturnValue.accept)">
+                    <button
+                        type="button"
+                        class="btn-primary"
+                        @click="close(DialogReturnValue.accept)"
+                    >
                         Apply
                     </button>
                 </div>
@@ -297,8 +309,7 @@ async function open(data: CodeNodeData) {
                   collectionType: p.collectionType,
               }))
             : [{ index: '0', name: 'result', typeHint: 'Any' }];
-    draft.scriptSource =
-        data.scriptSource || generateCodeScaffold(draft.inputs, draft.outputs);
+    draft.scriptSource = data.scriptSource || generateCodeScaffold(draft.inputs, draft.outputs);
 
     lastReturn = DialogReturnValue.cancel;
     dialogEl.value?.showModal();
