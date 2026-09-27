@@ -148,6 +148,8 @@ import {
     loadMonaco,
 } from '@/modules/kotlinPortHighlight';
 import type { editor as MonacoEditor } from 'monaco-editor';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import { inject, nextTick, reactive, ref, shallowRef, watch, type Ref } from 'vue';
 import { DialogReturnValue } from '../../modals';
 import type { CodeNodeData } from '../Types';
@@ -261,15 +263,9 @@ async function ensureEditor() {
     self.MonacoEnvironment = {
         getWorker(_: string, label: string) {
             if (label === 'json') {
-                return new Worker(
-                    new URL('monaco-editor/esm/vs/language/json/json.worker?worker', import.meta.url),
-                    { type: 'module' },
-                );
+                return new JsonWorker();
             }
-            return new Worker(
-                new URL('monaco-editor/esm/vs/editor/editor.worker?worker', import.meta.url),
-                { type: 'module' },
-            );
+            return new EditorWorker();
         },
     };
     editor.value = monaco.editor.create(editorHost.value, {
