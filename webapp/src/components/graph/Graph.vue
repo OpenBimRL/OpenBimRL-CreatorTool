@@ -20,6 +20,9 @@
                 @connect="onConnect"
                 @node-click="onNodeClick"
                 @node-double-click="onNodeDoubleClick"
+                @node-context-menu="onNodeContextMenu"
+                @pane-context-menu="onPaneContextMenu"
+                @selection-context-menu="onSelectionContextMenu"
                 @dragover.prevent="onDragOver"
                 @drop="onDrop"
                 class="h-full bg-slate-50 dark:bg-slate-950"
@@ -70,6 +73,15 @@
                 @close="detailsPanelOpen = false"
                 @resize-start="mouseResizeStart"
             />
+            <GraphContextMenu
+                :open="contextMenu.open"
+                :x="contextMenu.x"
+                :y="contextMenu.y"
+                :can-copy="contextMenu.canCopy"
+                :can-paste="hasClipboard"
+                @copy="onContextCopy"
+                @paste="onContextPaste"
+            />
         </div>
     </div>
 </template>
@@ -87,6 +99,15 @@ import {
     consoleText,
     toggleConsole,
 } from '@/modules/checkSession';
+import {
+    getGraphClipboard,
+    hasGraphClipboard,
+    isCopyPasteModifier,
+    isEditableShortcutTarget,
+    pasteGraphClipboard,
+    snapshotGraphSelection,
+    storeGraphClipboard,
+} from '@/modules/graphClipboard';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
 import { runGraphCheck, stopGraphCheck } from '@/modules/runGraphCheck';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
@@ -106,6 +127,7 @@ import { Ref, computed, inject, nextTick, onMounted, onUnmounted, ref, watch } f
 import { Dialog, DialogReturnValue } from '../modals';
 import CustomMap from './CustomMap.vue';
 import GraphConsoleOverlay from './GraphConsoleOverlay.vue';
+import GraphContextMenu from './GraphContextMenu.vue';
 import GraphRunBar from './GraphRunBar.vue';
 import NodeDetailsPanel from './NodeDetailsPanel.vue';
 import CodeEditorModal from './modals/CodeEditorModal.vue';
@@ -146,16 +168,37 @@ const { graph, updateGraph, registerResetCallback } = inject(graphInjectionKey) 
 const darkMode = inject(darkModeKey) as Ref<boolean>;
 const parser = inject(parserInjectionKey) as Parser;
 
-const { nodes, edges, addEdges, addNodes, project, vueFlowRef, removeEdges, removeNodes } =
-    useVueFlow({
-        maxZoom: 2,
-        minZoom: 0.1,
-        fitViewOnInit: true,
-        edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
-        nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
-        nodeTypes: nodeTypes,
-        multiSelectionKeyCode: multiSelectKeys,
-    });
+const {
+    nodes,
+    edges,
+    addEdges,
+    addNodes,
+    addSelectedNodes,
+    getSelectedNodes,
+    project,
+    removeSelectedElements,
+    vueFlowRef,
+    removeEdges,
+    removeNodes,
+} = useVueFlow({
+    maxZoom: 2,
+    minZoom: 0.1,
+    fitViewOnInit: true,
+    edges: graph.value.elements.filter(e => isEdge(e)) as Array<Edge>,
+    nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
+    nodeTypes: nodeTypes,
+    multiSelectionKeyCode: multiSelectKeys,
+});
+
+const contextMenu = ref({
+    open: false,
+    x: 0,
+    y: 0,
+    canCopy: false,
+    flowPosition: null as { x: number; y: number } | null,
+    copyNodes: [] as GraphNode[],
+});
+const hasClipboard = ref(false);
 
 registerResetCallback(() => {
     const newNodes = graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>,
@@ -200,6 +243,126 @@ const onDragOver = DragOverEvent();
 const onDrop = DropEvent(vueFlowRef, project, addNodes);
 const onNodeClick = (event: NodeMouseEvent) => {
     selectedDetailNodeId.value = event.node.id;
+};
+
+const closeContextMenu = () => {
+    contextMenu.value.open = false;
+    contextMenu.value.copyNodes = [];
+    contextMenu.value.flowPosition = null;
+};
+
+const flowPositionFromClient = (clientX: number, clientY: number) => {
+    if (!vueFlowRef.value) return null;
+    const { left, top } = vueFlowRef.value.getBoundingClientRect();
+    return project({ x: clientX - left, y: clientY - top });
+};
+
+const nodesForCopy = (preferred: GraphNode[] = []) => {
+    const selectedNodes = getSelectedNodes.value;
+    if (preferred.length) {
+        const preferredIds = new Set(preferred.map(node => node.id));
+        if (selectedNodes.some(node => preferredIds.has(node.id))) return selectedNodes;
+        return preferred;
+    }
+    return selectedNodes;
+};
+
+const copyNodes = (preferred: GraphNode[] = []) => {
+    const payload = snapshotGraphSelection(nodesForCopy(preferred), edges.value);
+    storeGraphClipboard(payload);
+    hasClipboard.value = hasGraphClipboard();
+    return Boolean(payload);
+};
+
+const pasteNodes = (origin?: { x: number; y: number }) => {
+    const payload = getGraphClipboard();
+    const cloned = pasteGraphClipboard(payload, origin ? { origin } : {});
+    if (!cloned) return false;
+
+    removeSelectedElements();
+    addNodes(cloned.nodes);
+    addEdges(cloned.edges);
+    nextTick(() => {
+        const pasted = cloned.nodes
+            .map(node => nodes.value.find(existing => existing.id === node.id))
+            .filter((node): node is GraphNode => Boolean(node));
+        if (pasted.length) addSelectedNodes(pasted);
+    });
+    return true;
+};
+
+const openContextMenu = (event: MouseEvent, node?: GraphNode) => {
+    event.preventDefault();
+    const nodesToCopy = nodesForCopy(node ? [node] : []);
+    const menuWidth = 176;
+    const menuHeight = 72;
+    contextMenu.value = {
+        open: true,
+        x: Math.min(event.clientX, window.innerWidth - menuWidth),
+        y: Math.min(event.clientY, window.innerHeight - menuHeight),
+        canCopy: nodesToCopy.length > 0,
+        flowPosition: flowPositionFromClient(event.clientX, event.clientY),
+        copyNodes: nodesToCopy,
+    };
+};
+
+const onNodeContextMenu = (event: NodeMouseEvent) => {
+    const mouseEvent = event.event;
+    if (!(mouseEvent instanceof MouseEvent)) return;
+    openContextMenu(mouseEvent, event.node);
+};
+
+const onPaneContextMenu = (event: MouseEvent) => {
+    openContextMenu(event);
+};
+
+const onSelectionContextMenu = ({
+    event,
+    nodes: selected,
+}: {
+    event: MouseEvent;
+    nodes: GraphNode[];
+}) => {
+    if (!(event instanceof MouseEvent)) return;
+    openContextMenu(event, selected[0]);
+};
+
+const onContextCopy = () => {
+    copyNodes(contextMenu.value.copyNodes);
+    closeContextMenu();
+};
+
+const onContextPaste = () => {
+    pasteNodes(contextMenu.value.flowPosition ?? undefined);
+    closeContextMenu();
+};
+
+const onCopyPasteKeydown = (event: KeyboardEvent) => {
+    if (!isCopyPasteModifier(event) || event.altKey) return;
+    if (isEditableShortcutTarget(event.target)) return;
+
+    const key = event.key.toLowerCase();
+    if (key === 'c') {
+        if (!copyNodes()) return;
+        event.preventDefault();
+        closeContextMenu();
+        return;
+    }
+
+    if (key === 'v') {
+        if (!hasGraphClipboard()) return;
+        event.preventDefault();
+        pasteNodes();
+        closeContextMenu();
+    }
+};
+
+const onPointerDownCloseMenu = (event: PointerEvent) => {
+    if (!contextMenu.value.open) return;
+    if (event.target instanceof Element && event.target.closest('[data-graph-context-menu]')) {
+        return;
+    }
+    closeContextMenu();
 };
 
 const modelOptions = computed(() => [...models.entries()]);
@@ -254,11 +417,15 @@ onMounted(() => {
     updateModels();
     window.addEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.addEventListener('openbimrl:graph-add-node', onGraphAddNode);
+    window.addEventListener('keydown', onCopyPasteKeydown);
+    window.addEventListener('pointerdown', onPointerDownCloseMenu, true);
 });
 
 onUnmounted(() => {
     window.removeEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.removeEventListener('openbimrl:graph-add-node', onGraphAddNode);
+    window.removeEventListener('keydown', onCopyPasteKeydown);
+    window.removeEventListener('pointerdown', onPointerDownCloseMenu, true);
     mouseResizeStop();
 });
 
