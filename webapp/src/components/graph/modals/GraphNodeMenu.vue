@@ -239,8 +239,12 @@ const validateGraphAgainstLibrary = (libraryName: string): number => {
         }
 
         const libraryData = libraryNode.data as NodeData<NodeHandleLike, NodeHandleLike>;
-        // RuleIdentifier handles are user-editable labels, so names can legitimately differ.
-        const skipHandleValidation = element.type === 'ruleIdentifier';
+        // RuleIdentifier labels and script inputs/outputs are user-defined.
+        const skipHandleValidation =
+            element.type === 'ruleIdentifier' ||
+            element.type === 'codeType' ||
+            nodeData.name === 'script.customScript' ||
+            Boolean(nodeData.name?.startsWith('script.'));
         const inputsEqual =
             skipHandleValidation ||
             handleSignature(nodeData.inputs as Array<NodeHandleLike>) ===
