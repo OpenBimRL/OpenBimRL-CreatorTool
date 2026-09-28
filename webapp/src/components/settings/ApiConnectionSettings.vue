@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { InputField } from '@/components';
 import { apiConnectionInjectionKey } from '@/keys';
-import { creatorToolVersion } from '@/modules/appInfo';
+import { creatorToolVersion, formatBuildDate } from '@/modules/appInfo';
 import {
     apiAccessToken,
     apiEndpoint,
@@ -119,12 +119,6 @@ const statusBadgeClass = computed(() => {
 });
 
 const connected = computed(() => connectionStatus.value ?? false);
-
-function formatBuildDate(iso: string): string {
-    const date = new Date(iso);
-    if (Number.isNaN(date.getTime())) return iso;
-    return date.toLocaleString();
-}
 
 const testConnection = () => {
     if (connectionLoading.value || !urlValid.value) return;
