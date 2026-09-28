@@ -15,10 +15,11 @@
             @toggle-visuals="toggleCheckVisuals"
         />
         <div ref="el" class="grid min-h-0 flex-1 grid-cols-7 bg-slate-100 dark:bg-default-darkest">
-            <div ref="viewerContainer" class="relative col-span-6 dark:text-default-darkest">
+            <div class="relative col-span-6 min-h-0 dark:text-default-darkest">
+                <div ref="viewerContainer" class="absolute inset-0 overflow-hidden" />
                 <div
-                    v-show="loading"
-                    class="absolute flex h-full w-full items-center justify-center bg-black/20 backdrop-blur-[1px]"
+                    v-if="loading"
+                    class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/20 backdrop-blur-[1px]"
                 >
                     <VueSpinnerCore :color="darkMode ? '#000' : '#fff'" :size="80" />
                 </div>

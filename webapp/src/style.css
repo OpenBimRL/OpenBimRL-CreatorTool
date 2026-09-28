@@ -96,6 +96,12 @@
         background-color: rgb(255 255 255 / 0.95);
     }
 
+    /* Safari still hit-tests transformed drawers; none on descendants too. */
+    .panel-drawer.pointer-events-none,
+    .panel-drawer.pointer-events-none * {
+        pointer-events: none !important;
+    }
+
     :is(.dark) .panel-drawer {
         background-color: rgb(20 33 61 / 0.95);
     }

@@ -10,7 +10,11 @@ import * as WEBIFC from 'web-ifc';
 
 import { Color, Group, Vector3 } from 'three';
 import { deleteStoredFragment, getStoredFragment, storeFragment } from './fragmentCache';
-import { setupViewerSelection } from './viewerElementSelection';
+import {
+    bindViewerClickSelect,
+    setupViewerSelection,
+    unbindViewerClickSelect,
+} from './viewerElementSelection';
 import { refreshVisuals } from './visualizer';
 
 /** web-ifc SetWasmPath expects a directory containing a file named web-ifc.wasm */
@@ -222,6 +226,7 @@ function reattachRenderer(container: HTMLElement) {
 
     renderer.setupEvents(true);
     renderer.resize();
+    bindViewerClickSelect(canvas, components.get(OBCF.Highlighter));
 }
 
 async function attachViewer(container: HTMLElement) {
@@ -278,19 +283,21 @@ async function createViewer(container: HTMLElement) {
     await configureIfcLoader(ifcLoader);
 
     const highlighter = components.get(OBCF.Highlighter);
-    highlighter.styles.set('select', {
-        color: new Color('#bcf124'),
-        opacity: 1,
-        transparent: false,
-        renderedFaces: FRAGS.RenderedFaces.TWO,
-    });
     highlighter.setup({
         world,
         selectName: 'select',
         selectEnabled: true,
-        autoHighlightOnClick: true,
+        // Safari drops mouseup after camera-controls preventDefault on pointermove.
+        autoHighlightOnClick: false,
+        selectMaterialDefinition: {
+            color: new Color('#bcf124'),
+            opacity: 1,
+            transparent: false,
+            renderedFaces: FRAGS.RenderedFaces.TWO,
+        },
     });
     setupViewerSelection(highlighter, components);
+    bindViewerClickSelect(world.renderer.three.domElement, highlighter);
 
     syncLoadedModelsFromFragments();
     ready = true;
@@ -308,6 +315,7 @@ const init = async (container: HTMLElement) => {
 };
 
 function detachViewer() {
+    unbindViewerClickSelect();
     if (!ready || !world?.renderer) return;
 
     try {

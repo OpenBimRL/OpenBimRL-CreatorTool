@@ -29,6 +29,82 @@ async function syncGuidFromSelection(components: OBC.Components, modelIdMap: Vie
 }
 
 let selectionSetupDone = false;
+let clickSelectCleanup: (() => void) | null = null;
+
+const CLICK_MOVE_THRESHOLD = 5;
+
+function isPrimaryPointer(event: PointerEvent) {
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') return true;
+    return event.button === 0;
+}
+
+/**
+ * Drive Highlighter from pointerup instead of mouseup.
+ * Safari/macOS often suppresses compatibility mouse events after camera-controls
+ * calls preventDefault() on pointermove, so autoHighlightOnClick never fires.
+ */
+export function bindViewerClickSelect(canvas: HTMLElement, highlighter: OBCF.Highlighter) {
+    clickSelectCleanup?.();
+
+    let pointerDown = false;
+    let startX = 0;
+    let startY = 0;
+
+    const onPointerDown = (event: PointerEvent) => {
+        if (!isPrimaryPointer(event)) return;
+        pointerDown = true;
+        startX = event.clientX;
+        startY = event.clientY;
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+        if (!pointerDown) return;
+        pointerDown = false;
+        if (!isPrimaryPointer(event)) return;
+
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        if (Math.hypot(dx, dy) > CLICK_MOVE_THRESHOLD) return;
+
+        // Keep ThatOpen's GPU picker mouse position in sync (it only listens to pointermove).
+        canvas.dispatchEvent(
+            new PointerEvent('pointermove', {
+                bubbles: true,
+                clientX: event.clientX,
+                clientY: event.clientY,
+                pointerId: event.pointerId,
+                pointerType: event.pointerType,
+            }),
+        );
+
+        const removePrevious =
+            highlighter.multiple === 'none' ? true : !event[highlighter.multiple];
+        void highlighter.highlight(
+            highlighter.config.selectName,
+            removePrevious,
+            highlighter.zoomToSelection,
+        );
+    };
+
+    const onPointerCancel = () => {
+        pointerDown = false;
+    };
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerCancel);
+
+    clickSelectCleanup = () => {
+        canvas.removeEventListener('pointerdown', onPointerDown);
+        window.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointercancel', onPointerCancel);
+        clickSelectCleanup = null;
+    };
+}
+
+export function unbindViewerClickSelect() {
+    clickSelectCleanup?.();
+}
 
 export function setupViewerSelection(highlighter: OBCF.Highlighter, components: OBC.Components) {
     if (selectionSetupDone) return;

@@ -6,12 +6,14 @@
         @click="closeAllPanels()"
     />
     <Help
-        :class="{ 'translate-x-full': !modals[Panels.Help] }"
+        :inert="!modals[Panels.Help]"
+        :class="{ 'translate-x-full pointer-events-none': !modals[Panels.Help] }"
         class="transition-transform duration-300 ease-out"
         @close="toggleSidePanel(Panels.Help, false)"
     />
     <GraphNodeMenu
-        :class="{ 'translate-x-full': !modals[Panels.NodeLib] }"
+        :inert="!modals[Panels.NodeLib]"
+        :class="{ 'translate-x-full pointer-events-none': !modals[Panels.NodeLib] }"
         class="transition-transform duration-300 ease-out"
     />
     <Dialog ref="restoreDialog" @close="onRestoreDialogClose">
