@@ -42,7 +42,7 @@
                             :key="index"
                             class="border-r border-slate-200/80 p-2 last:border-r-0 dark:border-slate-700"
                             :class="
-                                libname === currentSelection
+                                libname === currentLibraryName
                                     ? 'bg-white dark:bg-slate-800'
                                     : 'bg-slate-50 dark:bg-slate-900'
                             "
@@ -50,7 +50,7 @@
                             <button
                                 type="button"
                                 class="bg-transparent text-sm font-medium text-slate-600 hover:text-default-dark dark:text-slate-400 dark:hover:text-slate-200"
-                                @click="currentSelection = libname"
+                                @click="currentLibraryName = libname"
                             >
                                 <span>{{ libname }}</span>
                             </button>
@@ -64,7 +64,7 @@
                         v-for="(libname, index) in loadedLibraries"
                         :key="index"
                         class=""
-                        v-show="libname === currentSelection"
+                        v-show="libname === currentLibraryName"
                     >
                         <GraphItemGroup
                             v-for="group in availableLibraries[libname]"
@@ -93,7 +93,7 @@
                         <select
                             id="lib-select"
                             class="w-full bg-transparent px-3 py-2 text-sm dark:text-slate-200"
-                            v-model="currentSelection"
+                            v-model="currentLibraryName"
                         >
                             <option
                                 v-for="lib in Object.keys(availableLibraries)"
@@ -147,12 +147,13 @@ import { InputField } from '@/components';
 import Switch from '@/components/ui/Switch.vue';
 import { graphInjectionKey } from '@/keys';
 import { getFunctions } from '@/modules/apiConnection';
+import { availableLibraries, currentLibraryName, loadedLibraries } from '@/modules/nodeLibrary';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/20/solid';
 import { isNode } from '@vue-flow/core';
 import { inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import type { GraphInject, NodeData } from '../Types';
 import GraphItemGroup from './GraphItemGroup.vue';
-import type { ImportedRuleSet, RuleSetElement } from './Types';
+import type { RuleSetElement } from './Types';
 
 const width = ref(window.innerWidth / 4);
 
@@ -172,30 +173,13 @@ const mouseResizeStop = () => {
 
 const showLibsAsList = ref(false);
 
-const importedLibraries: Record<string, ImportedRuleSet> = import.meta.glob(
-    '@/assets/graph/libs/*.json',
-    {
-        eager: true,
-    },
-);
-
-const availableLibraries: { [key: string]: Array<RuleSetElement> } = {};
-
-for (const file in importedLibraries) {
-    const baseName = file.split('/').pop()?.split('.')[0];
-    if (!baseName) continue;
-    availableLibraries[baseName] = importedLibraries[file].default;
-}
-
 const search = ref<string>('');
-const loadedLibraries = Object.keys(availableLibraries);
-const currentSelection = ref(loadedLibraries[0]);
 const fetchingApiLibrary = ref(false);
 const fetchStatusText = ref('');
 const { graph, resetGraph } = inject(graphInjectionKey) as GraphInject;
 
 const createLibrary = () => {
-    loadedLibraries.push(currentSelection.value);
+    loadedLibraries.value.push(currentLibraryName.value);
 };
 
 const handleUpload = () => {
@@ -303,8 +287,8 @@ const fetchApiFunctionLibrary = async () => {
         const apiGroups = await getFunctions();
         const libraryName = 'API Supported Functions';
         availableLibraries[libraryName] = apiGroups as unknown as Array<RuleSetElement>;
-        if (!loadedLibraries.includes(libraryName)) loadedLibraries.push(libraryName);
-        currentSelection.value = libraryName;
+        if (!loadedLibraries.value.includes(libraryName)) loadedLibraries.value.push(libraryName);
+        currentLibraryName.value = libraryName;
         fetchStatusText.value = `Loaded ${apiGroups.length} groups from API.`;
     } catch (error) {
         console.error(error);
@@ -314,13 +298,13 @@ const fetchApiFunctionLibrary = async () => {
     }
 };
 
-watch(currentSelection, libraryName => {
+watch(currentLibraryName, libraryName => {
     if (!libraryName) return;
     validateGraphAgainstLibrary(libraryName);
 });
 
 const onCompileGraph = () => {
-    const libraryName = currentSelection.value;
+    const libraryName = currentLibraryName.value;
     const invalidCount = validateGraphAgainstLibrary(libraryName);
     window.dispatchEvent(
         new CustomEvent('openbimrl:compile-graph:done', {
