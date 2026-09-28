@@ -32,6 +32,13 @@
                 >
                     <HandleSizeSettings />
                 </SettingsSection>
+
+                <SettingsSection
+                    title="Build"
+                    description="Version and metadata for this Creator Tool instance."
+                >
+                    <BuildInfoSettings />
+                </SettingsSection>
             </div>
         </div>
     </div>
@@ -40,6 +47,7 @@
 <script setup lang="ts">
 import ApiConnectionSettings from './ApiConnectionSettings.vue';
 import AppearanceSettings from './AppearanceSettings.vue';
+import BuildInfoSettings from './BuildInfoSettings.vue';
 import HandleSizeSettings from './HandleSizeSettings.vue';
 import SettingsSection from './SettingsSection.vue';
 </script>
