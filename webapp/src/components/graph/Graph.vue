@@ -15,9 +15,12 @@
             @toggle-details="detailsPanelOpen = !detailsPanelOpen"
             @update:selected-model-id="selectedModelId = $event"
         />
-        <div class="relative flex-1 min-h-0">
+        <div class="relative flex-1 min-h-0" @pointermove="onGraphPointerMove">
             <VueFlow
+                :pan-activation-key-code="false"
                 @connect="onConnect"
+                @connect-start="onConnectStart"
+                @connect-end="onConnectEnd"
                 @node-click="onNodeClick"
                 @node-double-click="onNodeDoubleClick"
                 @node-context-menu="onNodeContextMenu"
@@ -82,6 +85,15 @@
                 @copy="onContextCopy"
                 @paste="onContextPaste"
             />
+            <GraphNodeSearch
+                :open="nodeSearch.open"
+                :x="nodeSearch.x"
+                :y="nodeSearch.y"
+                :entries="nodeSearchEntries"
+                :placeholder="nodeSearchPlaceholder"
+                @select="onNodeSearchSelect"
+                @close="closeNodeSearch"
+            />
         </div>
     </div>
 </template>
@@ -108,6 +120,14 @@ import {
     snapshotGraphSelection,
     storeGraphClipboard,
 } from '@/modules/graphClipboard';
+import {
+    currentLibraryName,
+    instantiateLibraryNode,
+    listLibraryNodes,
+    nodeHasHandle,
+    pickHandleId,
+    type LibraryNodeEntry,
+} from '@/modules/nodeLibrary';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
 import { runGraphCheck, stopGraphCheck } from '@/modules/runGraphCheck';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
@@ -118,6 +138,8 @@ import {
     GraphEdge,
     GraphNode,
     NodeMouseEvent,
+    OnConnectStartParams,
+    Connection,
     VueFlow,
     isEdge,
     isNode,
@@ -128,6 +150,7 @@ import { Dialog, DialogReturnValue } from '../modals';
 import CustomMap from './CustomMap.vue';
 import GraphConsoleOverlay from './GraphConsoleOverlay.vue';
 import GraphContextMenu from './GraphContextMenu.vue';
+import GraphNodeSearch from './GraphNodeSearch.vue';
 import GraphRunBar from './GraphRunBar.vue';
 import NodeDetailsPanel from './NodeDetailsPanel.vue';
 import CodeEditorModal from './modals/CodeEditorModal.vue';
@@ -188,6 +211,7 @@ const {
     nodes: graph.value.elements.filter(e => isNode(e)) as Array<CustomNode>,
     nodeTypes: nodeTypes,
     multiSelectionKeyCode: multiSelectKeys,
+    panActivationKeyCode: false,
 });
 
 const contextMenu = ref({
@@ -199,6 +223,84 @@ const contextMenu = ref({
     copyNodes: [] as GraphNode[],
 });
 const hasClipboard = ref(false);
+
+const NODE_SEARCH_WIDTH = 320;
+const NODE_SEARCH_HEIGHT = 384;
+const CONNECT_DROP_THRESHOLD = 8;
+
+const lastPointer = ref({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+const nodeSearch = ref({
+    open: false,
+    x: 0,
+    y: 0,
+    flowPosition: null as { x: number; y: number } | null,
+    pendingConnect: null as OnConnectStartParams | null,
+});
+const pendingConnectStart = ref<
+    (OnConnectStartParams & { clientX: number; clientY: number }) | null
+>(null);
+const justConnected = ref(false);
+
+const onGraphPointerMove = (event: PointerEvent) => {
+    lastPointer.value = { x: event.clientX, y: event.clientY };
+};
+
+const clampSearchPosition = (clientX: number, clientY: number) => ({
+    x: Math.min(Math.max(8, clientX), Math.max(8, window.innerWidth - NODE_SEARCH_WIDTH - 8)),
+    y: Math.min(Math.max(8, clientY), Math.max(8, window.innerHeight - NODE_SEARCH_HEIGHT - 8)),
+});
+
+const focusGraphPane = () => {
+    const pane =
+        vueFlowRef.value ?? document.querySelector<HTMLElement>('.vue-flow, .vue-flow__pane');
+    pane?.focus?.({ preventScroll: true });
+};
+
+const closeNodeSearch = () => {
+    const wasOpen = nodeSearch.value.open;
+    nodeSearch.value.open = false;
+    nodeSearch.value.flowPosition = null;
+    nodeSearch.value.pendingConnect = null;
+    if (!wasOpen) return;
+    nextTick(() => {
+        const active = document.activeElement;
+        if (active instanceof HTMLElement && active.closest('[data-graph-node-search]')) {
+            active.blur();
+        }
+        focusGraphPane();
+    });
+};
+
+const openNodeSearch = (
+    clientX: number,
+    clientY: number,
+    pendingConnect: OnConnectStartParams | null = null,
+) => {
+    closeContextMenu();
+    const flowPosition = flowPositionFromClient(clientX, clientY);
+    const pos = clampSearchPosition(clientX, clientY);
+    nodeSearch.value = {
+        open: true,
+        x: pos.x,
+        y: pos.y,
+        flowPosition,
+        pendingConnect,
+    };
+};
+
+const nodeSearchEntries = computed(() => {
+    const entries = listLibraryNodes();
+    const pending = nodeSearch.value.pendingConnect;
+    if (!pending?.handleType) return entries;
+    const needed = pending.handleType === 'source' ? 'target' : 'source';
+    return entries.filter(entry => nodeHasHandle(entry.node, needed));
+});
+
+const nodeSearchPlaceholder = computed(() =>
+    nodeSearch.value.pendingConnect
+        ? 'Search nodes to connect…'
+        : `Search ${currentLibraryName.value || 'library'}…`,
+);
 
 registerResetCallback(() => {
     const newNodes = graph.value.elements.filter(e => isNode(e)) as Array<GraphNode>,
@@ -215,7 +317,18 @@ registerResetCallback(() => {
 
 watch([edges, nodes], ([newEdges, newNodes]) => updateGraph(newNodes, newEdges), { deep: true });
 
-const onConnect = ConnectEvent(addEdges, removeEdges, edges);
+const applyConnection = ConnectEvent(addEdges, removeEdges, edges);
+const onConnect = (connection: Connection) => {
+    if (
+        connection.source &&
+        connection.sourceHandle &&
+        connection.target &&
+        connection.targetHandle
+    ) {
+        justConnected.value = true;
+    }
+    applyConnection(connection);
+};
 const onNodeDoubleClick = DoubleClickEvent(
     nodes,
     selectedNode,
@@ -245,6 +358,117 @@ const onNodeClick = (event: NodeMouseEvent) => {
     selectedDetailNodeId.value = event.node.id;
 };
 
+const pointerFromConnectEvent = (event?: MouseEvent | TouchEvent) => {
+    if (!event) return null;
+    if ('clientX' in event) return { x: event.clientX, y: event.clientY };
+    const touch = event.changedTouches?.[0] ?? event.touches?.[0];
+    if (!touch) return null;
+    return { x: touch.clientX, y: touch.clientY };
+};
+
+const onConnectStart = ({
+    event,
+    nodeId,
+    handleId,
+    handleType,
+}: {
+    event?: MouseEvent | TouchEvent;
+} & OnConnectStartParams) => {
+    const point = pointerFromConnectEvent(event) ?? lastPointer.value;
+    pendingConnectStart.value = {
+        nodeId,
+        handleId,
+        handleType,
+        clientX: point.x,
+        clientY: point.y,
+    };
+    justConnected.value = false;
+};
+
+const onConnectEnd = (event?: MouseEvent | TouchEvent) => {
+    const start = pendingConnectStart.value;
+    pendingConnectStart.value = null;
+
+    if (justConnected.value) {
+        justConnected.value = false;
+        return;
+    }
+    justConnected.value = false;
+    if (!start?.nodeId || !start.handleType) return;
+
+    const point = pointerFromConnectEvent(event);
+    if (!point) return;
+    if (Math.hypot(point.x - start.clientX, point.y - start.clientY) < CONNECT_DROP_THRESHOLD) {
+        return;
+    }
+
+    const target = event && 'target' in event ? event.target : null;
+    if (target instanceof Element && target.closest('.vue-flow__handle')) return;
+
+    openNodeSearch(point.x, point.y, {
+        nodeId: start.nodeId,
+        handleId: start.handleId,
+        handleType: start.handleType,
+    });
+};
+
+const originatingHandleName = (pending: OnConnectStartParams) => {
+    if (!pending.nodeId) return undefined;
+    const origin = nodes.value.find(node => node.id === pending.nodeId);
+    if (!origin) return undefined;
+    const side = pending.handleType === 'target' ? 'target' : 'source';
+    const handles =
+        side === 'target'
+            ? ((origin.data?.inputs ?? []) as Array<{ index?: string; name?: string }>)
+            : ((origin.data?.outputs ?? []) as Array<{ index?: string; name?: string }>);
+    return handles.find(handle => String(handle.index) === String(pending.handleId ?? ''))?.name;
+};
+
+const connectPendingToNode = (pending: OnConnectStartParams, nodeId: string) => {
+    const node = nodes.value.find(existing => existing.id === nodeId);
+    if (!node || !pending.nodeId || !pending.handleType) return;
+
+    const preferredName = originatingHandleName(pending);
+    if (pending.handleType === 'source') {
+        const targetHandle = pickHandleId(node, 'target', preferredName);
+        if (targetHandle == null) return;
+        applyConnection({
+            source: pending.nodeId,
+            sourceHandle: pending.handleId ?? '0',
+            target: nodeId,
+            targetHandle,
+        });
+        return;
+    }
+
+    const sourceHandle = pickHandleId(node, 'source', preferredName);
+    if (sourceHandle == null) return;
+    applyConnection({
+        source: nodeId,
+        sourceHandle,
+        target: pending.nodeId,
+        targetHandle: pending.handleId ?? '0',
+    });
+};
+
+const onNodeSearchSelect = (entry: LibraryNodeEntry) => {
+    const flowPosition =
+        nodeSearch.value.flowPosition ??
+        flowPositionFromClient(lastPointer.value.x, lastPointer.value.y) ??
+        flowPositionFromClient(nodeSearch.value.x, nodeSearch.value.y);
+    const pending = nodeSearch.value.pendingConnect;
+    closeNodeSearch();
+    if (!flowPosition) return;
+
+    const node = instantiateLibraryNode(entry.node, flowPosition);
+    addNodes([node]);
+    nextTick(() => {
+        if (pending) connectPendingToNode(pending, node.id);
+        const created = nodes.value.find(existing => existing.id === node.id);
+        if (created) addSelectedNodes([created]);
+    });
+};
+
 const closeContextMenu = () => {
     contextMenu.value.open = false;
     contextMenu.value.copyNodes = [];
@@ -252,8 +476,9 @@ const closeContextMenu = () => {
 };
 
 const flowPositionFromClient = (clientX: number, clientY: number) => {
-    if (!vueFlowRef.value) return null;
-    const { left, top } = vueFlowRef.value.getBoundingClientRect();
+    const el = vueFlowRef.value ?? document.querySelector<HTMLElement>('.vue-flow');
+    if (!el) return null;
+    const { left, top } = el.getBoundingClientRect();
     return project({ x: clientX - left, y: clientY - top });
 };
 
@@ -293,6 +518,7 @@ const pasteNodes = (origin?: { x: number; y: number }) => {
 
 const openContextMenu = (event: MouseEvent, node?: GraphNode) => {
     event.preventDefault();
+    closeNodeSearch();
     const nodesToCopy = nodesForCopy(node ? [node] : []);
     const menuWidth = 176;
     const menuHeight = 72;
@@ -354,15 +580,31 @@ const onCopyPasteKeydown = (event: KeyboardEvent) => {
         event.preventDefault();
         pasteNodes();
         closeContextMenu();
+        closeNodeSearch();
     }
 };
 
+const onNodeSearchKeydown = (event: KeyboardEvent) => {
+    if (event.repeat) return;
+    if (event.code !== 'Space' && event.key !== ' ') return;
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (isEditableShortcutTarget(event.target)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (nodeSearch.value.open) return;
+    openNodeSearch(lastPointer.value.x, lastPointer.value.y);
+};
+
 const onPointerDownCloseMenu = (event: PointerEvent) => {
-    if (!contextMenu.value.open) return;
-    if (event.target instanceof Element && event.target.closest('[data-graph-context-menu]')) {
+    const target = event.target;
+    if (target instanceof Element && target.closest('[data-graph-context-menu]')) {
+        return;
+    }
+    if (target instanceof Element && target.closest('[data-graph-node-search]')) {
         return;
     }
     closeContextMenu();
+    closeNodeSearch();
 };
 
 const modelOptions = computed(() => [...models.entries()]);
@@ -418,6 +660,7 @@ onMounted(() => {
     window.addEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.addEventListener('openbimrl:graph-add-node', onGraphAddNode);
     window.addEventListener('keydown', onCopyPasteKeydown);
+    window.addEventListener('keydown', onNodeSearchKeydown, true);
     window.addEventListener('pointerdown', onPointerDownCloseMenu, true);
 });
 
@@ -425,6 +668,7 @@ onUnmounted(() => {
     window.removeEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.removeEventListener('openbimrl:graph-add-node', onGraphAddNode);
     window.removeEventListener('keydown', onCopyPasteKeydown);
+    window.removeEventListener('keydown', onNodeSearchKeydown, true);
     window.removeEventListener('pointerdown', onPointerDownCloseMenu, true);
     mouseResizeStop();
 });
