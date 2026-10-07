@@ -1,7 +1,7 @@
 {
     "name": "open_bimrl-creator",
     "private": true,
-    "version": "0.5.7",
+    "version": "0.6.0",
     "packageManager": "pnpm@9.15.9",
     "type": "module",
     "scripts": {
@@ -14,11 +14,11 @@
     },
     "dependencies": {
         "@heroicons/vue": "^2.0.17",
-        "@thatopen/components": "3.4.6",
-        "@thatopen/components-front": "3.4.3",
-        "@thatopen/fragments": "3.4.6",
-        "@thatopen/ui": "^3.4.5",
-        "@thatopen/ui-obc": "^3.4.2",
+        "@thatopen/components": "3.4.9",
+        "@thatopen/components-front": "3.4.5",
+        "@thatopen/fragments": "3.4.8",
+        "@thatopen/ui": "^3.4.14",
+        "@thatopen/ui-obc": "^3.4.3",
         "@vue-flow/background": "^1.2.0",
         "@vue-flow/controls": "^1.0.6",
         "@vue-flow/core": "^1.19.0",
@@ -26,7 +26,7 @@
         "camera-controls": "^3.1.2",
         "dagre": "^0.8.5",
         "stream": "^0.0.2",
-        "three": "^0.182.0",
+        "three": "0.185.0",
         "uuid": "^9.0.0",
         "vue": "^3.3.4",
         "vue-json-viewer": "^3.0.4",
@@ -39,7 +39,7 @@
     "devDependencies": {
         "@babel/types": "^7.24.9",
         "@types/dagre": "^0.7.48",
-        "@types/three": "^0.182.0",
+        "@types/three": "^0.185.0",
         "@types/uuid": "^9.0.1",
         "@typescript-eslint/eslint-plugin": "^7.17.0",
         "@vitejs/plugin-vue": "^5.0",

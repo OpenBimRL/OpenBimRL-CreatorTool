@@ -10,11 +10,7 @@ import * as WEBIFC from 'web-ifc';
 
 import { Color, Group, Vector3 } from 'three';
 import { deleteStoredFragment, getStoredFragment, storeFragment } from './fragmentCache';
-import {
-    bindViewerClickSelect,
-    setupViewerSelection,
-    unbindViewerClickSelect,
-} from './viewerElementSelection';
+import { setupViewerSelection } from './viewerElementSelection';
 import { refreshVisuals } from './visualizer';
 
 /** web-ifc SetWasmPath expects a directory containing a file named web-ifc.wasm */
@@ -226,7 +222,6 @@ function reattachRenderer(container: HTMLElement) {
 
     renderer.setupEvents(true);
     renderer.resize();
-    bindViewerClickSelect(canvas, components.get(OBCF.Highlighter));
 }
 
 async function attachViewer(container: HTMLElement) {
@@ -282,22 +277,25 @@ async function createViewer(container: HTMLElement) {
     const ifcLoader = components.get(OBC.IfcLoader);
     await configureIfcLoader(ifcLoader);
 
+    // GPU picker path (default). Explicit world registration matches ThatOpen's
+    // Highlighter tutorial and ensures FastModelPicker is bound to this canvas.
+    components.get(OBC.Raycasters).get(world);
+
     const highlighter = components.get(OBCF.Highlighter);
+    // Match ThatOpen Highlighter tutorial; keep preserveOriginalMaterial so
+    // highlight only overrides color/opacity (needed for stable GPU picking).
     highlighter.setup({
         world,
-        selectName: 'select',
-        selectEnabled: true,
-        // Safari drops mouseup after camera-controls preventDefault on pointermove.
-        autoHighlightOnClick: false,
         selectMaterialDefinition: {
             color: new Color('#bcf124'),
             opacity: 1,
             transparent: false,
-            renderedFaces: FRAGS.RenderedFaces.TWO,
+            renderedFaces: 0,
+            preserveOriginalMaterial: true,
+            _explicitProps: ['color', 'opacity', 'transparent'],
         },
     });
     setupViewerSelection(highlighter, components);
-    bindViewerClickSelect(world.renderer.three.domElement, highlighter);
 
     syncLoadedModelsFromFragments();
     ready = true;
@@ -315,7 +313,6 @@ const init = async (container: HTMLElement) => {
 };
 
 function detachViewer() {
-    unbindViewerClickSelect();
     if (!ready || !world?.renderer) return;
 
     try {
