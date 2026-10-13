@@ -129,6 +129,7 @@ import {
     type LibraryNodeEntry,
 } from '@/modules/nodeLibrary';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
+import { compileScripts, isConnected as apiIsConnected } from '@/modules/apiConnection';
 import { runGraphCheck, stopGraphCheck } from '@/modules/runGraphCheck';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
 import { Background, BackgroundVariant } from '@vue-flow/background';
@@ -641,10 +642,53 @@ const stopCheck = () => {
     stopGraphCheck();
 };
 
-const compileGraph = () => {
+const compileGraph = async () => {
     checkStatusText.value = 'Compiling graph wiring...';
     appendConsole(`[${new Date().toLocaleTimeString()}] Compile requested\n`);
     window.dispatchEvent(new CustomEvent('openbimrl:compile-graph'));
+
+    const hasScriptNodes = graph.value.elements.some(
+        el =>
+            isNode(el) &&
+            (el.type === 'codeType' ||
+                (typeof el.data?.name === 'string' && el.data.name.startsWith('script.'))),
+    );
+    if (!hasScriptNodes) return;
+
+    const connected = await apiIsConnected();
+    if (!connected) {
+        appendConsole(
+            `[${new Date().toLocaleTimeString()}] Script compile skipped (Engine API not connected)\n\n`,
+        );
+        return;
+    }
+
+    checkStatusText.value = 'Compiling scripts...';
+    appendConsole(`[${new Date().toLocaleTimeString()}] Compiling scripts via Engine API...\n`);
+    try {
+        const graphXml = parser.build(
+            graph.value.elements,
+            graph.value.subChecks,
+            graph.value.resultSets,
+            'graph.openbimrl',
+        );
+        const result = await compileScripts(graphXml);
+        if (result.console?.length) {
+            appendConsole(result.console.join('\n') + '\n');
+        }
+        const failed = result.reports.filter(r => !r.ok).length;
+        checkStatusText.value =
+            failed === 0
+                ? `Scripts compiled OK (${result.reports.length})`
+                : `Script compile found ${failed} issue(s)`;
+        appendConsole(`[${new Date().toLocaleTimeString()}] ${checkStatusText.value}\n\n`);
+    } catch (error) {
+        console.error(error);
+        checkStatusText.value = 'Script compile failed';
+        appendConsole(
+            `[${new Date().toLocaleTimeString()}] Script compile failed\n${String(error)}\n\n`,
+        );
+    }
 };
 
 watch(selectedModelId, modelId => {

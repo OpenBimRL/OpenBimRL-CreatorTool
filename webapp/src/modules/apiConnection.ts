@@ -54,6 +54,20 @@ interface CheckResult {
     nodes: { [key: string]: Node };
     results: { [key: string]: unknown };
     checks: string;
+    /** Script println / compile messages from the Engine. */
+    console?: string[];
+}
+
+export interface ScriptCompileReport {
+    nodeId: string;
+    scriptName: string;
+    ok: boolean;
+    reports: string[];
+}
+
+export interface ScriptCompileResponse {
+    reports: ScriptCompileReport[];
+    console: string[];
 }
 
 interface CheckSubmission {
@@ -182,6 +196,20 @@ export async function deleteModel(id: string): Promise<ApiAnswer<boolean | null>
 
 export async function getFunctions(): Promise<Array<ApiFunctionGroup>> {
     const response = await getApi<Array<ApiFunctionGroup>>('/functions');
+    return response.content;
+}
+
+/** Compile-only Kotlin Code nodes in a graph XML string. */
+export async function compileScripts(
+    graphXml: string,
+    signal?: AbortSignal,
+): Promise<ScriptCompileResponse> {
+    const fd = new FormData();
+    fd.append('file', graphXml);
+    const response = await postApi<ScriptCompileResponse>('/script/compile', fd, signal);
+    if (!response.content) {
+        throw new Error(response.status || 'Script compile failed');
+    }
     return response.content;
 }
 

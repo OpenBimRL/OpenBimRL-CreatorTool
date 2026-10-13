@@ -87,6 +87,14 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
         }
 
         applyPerNodeResults(graph, response.content);
+
+        const scriptConsole = (response.content as { console?: string[] } | null)?.console;
+        if (scriptConsole && scriptConsole.length > 0) {
+            appendConsole(
+                `[${new Date().toLocaleTimeString()}] Script output\n${scriptConsole.join('\n')}\n\n`,
+            );
+        }
+
         appendConsole(
             `[${new Date().toLocaleTimeString()}] Check complete\n${summarizeCheckContent(
                 response.content,
