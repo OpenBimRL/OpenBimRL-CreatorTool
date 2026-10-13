@@ -207,6 +207,16 @@ export default class Parser {
             }
         }
 
+        // Drop RuleIdentifiers that were never wired to a precalculation output.
+        // Emitting them without source/sourceHandle makes the engine NPE on check.
+        for (const id of Object.keys(ruleIdentifierIds)) {
+            const n = ruleIdentifierIds[id];
+            if (!n.getAttribute('source')) {
+                nodeRuleIdentifiers.removeChild(n);
+                delete ruleIdentifierIds[id];
+            }
+        }
+
         let nodeModelSubChecks = xmlDoc.createElementNS(
             'http://inf.bi.rub.de/OpenBimRL',
             'ModelSubChecks',
