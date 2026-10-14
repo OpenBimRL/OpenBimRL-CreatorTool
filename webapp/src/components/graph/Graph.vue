@@ -130,6 +130,7 @@ import {
 } from '@/modules/nodeLibrary';
 import { models, selected, updateModels } from '@/modules/ifcViewer';
 import { compileScripts, isConnected as apiIsConnected } from '@/modules/apiConnection';
+import { registerLiveGraphEditor } from '@/modules/graphEditorBridge';
 import { runGraphCheck, stopGraphCheck } from '@/modules/runGraphCheck';
 import { TableCellsIcon } from '@heroicons/vue/24/outline';
 import { Background, BackgroundVariant } from '@vue-flow/background';
@@ -204,6 +205,9 @@ const {
     vueFlowRef,
     removeEdges,
     removeNodes,
+    updateNode,
+    updateNodeInternals,
+    fitView,
 } = useVueFlow({
     maxZoom: 2,
     minZoom: 0.1,
@@ -699,8 +703,22 @@ watch(selected, modelId => {
     selectedModelId.value = modelId;
 });
 
+let unregisterLiveEditor: (() => void) | undefined;
+
 onMounted(() => {
     updateModels();
+    unregisterLiveEditor = registerLiveGraphEditor({
+        nodes,
+        edges,
+        addNodes,
+        removeNodes,
+        addEdges,
+        removeEdges,
+        updateNode,
+        updateNodeInternals,
+        fitView,
+        selectedNodeId: () => selectedDetailNodeId.value ?? getSelectedNodes.value[0]?.id ?? null,
+    });
     window.addEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.addEventListener('openbimrl:graph-add-node', onGraphAddNode);
     window.addEventListener('keydown', onCopyPasteKeydown);
@@ -709,6 +727,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    unregisterLiveEditor?.();
     window.removeEventListener('openbimrl:compile-graph:done', onCompileFinished);
     window.removeEventListener('openbimrl:graph-add-node', onGraphAddNode);
     window.removeEventListener('keydown', onCopyPasteKeydown);

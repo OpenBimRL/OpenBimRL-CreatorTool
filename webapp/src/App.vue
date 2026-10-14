@@ -37,12 +37,13 @@
             class="min-h-0 overflow-hidden bg-surface-muted dark:bg-default-darkest"
             @click="closeAllPanels()"
         />
+        <AiChatPanel style="grid-area: chat" />
     </main>
 </template>
 
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from 'vue';
-import { GraphNodeMenu, SideNavigation, TopNavigation } from './components';
+import { AiChatPanel, GraphNodeMenu, SideNavigation, TopNavigation } from './components';
 import type { GraphInject } from './components/graph/Types';
 import { Dialog, DialogReturnValue } from './components/modals';
 import { Help } from './components/side_panels';
@@ -111,10 +112,10 @@ onMounted(() => {
 
 <style scoped>
 main {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto 1fr;
     grid-template-areas:
-        'side nav'
-        'side main';
+        'side nav chat'
+        'side main chat';
 }
 </style>

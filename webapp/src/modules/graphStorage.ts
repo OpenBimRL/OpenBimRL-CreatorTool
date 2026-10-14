@@ -1,5 +1,5 @@
 import defaultGraphExample from '@/assets/graph/defaultGraphExample.json';
-import type { CustomNode, GraphJSON, NodeData } from '@/components/graph/Types';
+import type { CodeNodeData, CustomNode, GraphJSON, NodeData } from '@/components/graph/Types';
 import type { Edge } from '@vue-flow/core';
 import type { Ref } from 'vue';
 import { watch } from 'vue';
@@ -25,6 +25,8 @@ function persistHandle(handle: Record<string, unknown>): Record<string, unknown>
 
     if (handle.name !== undefined) persisted.name = handle.name;
     if (handle.value !== undefined) persisted.value = handle.value;
+    if (handle.typeHint !== undefined) persisted.typeHint = handle.typeHint;
+    if (handle.collectionType !== undefined) persisted.collectionType = handle.collectionType;
 
     return persisted;
 }
@@ -37,6 +39,10 @@ function persistNodeData(data: NodeDataLike): NodeDataLike {
         label: data.label,
         selected: data.selected ?? false,
     };
+
+    const scriptData = data as CodeNodeData;
+    if (scriptData.scriptSource) persisted.scriptSource = scriptData.scriptSource;
+    if (scriptData.scriptLanguage) persisted.scriptLanguage = scriptData.scriptLanguage;
 
     if (Array.isArray(data.inputs)) {
         persisted.inputs = data.inputs.map(input =>

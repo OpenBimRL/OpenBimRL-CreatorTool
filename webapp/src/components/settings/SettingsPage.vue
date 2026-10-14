@@ -20,6 +20,13 @@
                 </SettingsSection>
 
                 <SettingsSection
+                    title="AI Chatbot"
+                    description="OpenAI-compatible LLM. Chat requests go through the OpenBIMRL Engine; the API key stays in this browser."
+                >
+                    <AiChatbotSettings />
+                </SettingsSection>
+
+                <SettingsSection
                     title="Appearance"
                     description="Visual preferences for the Creator Tool interface."
                 >
@@ -45,6 +52,7 @@
 </template>
 
 <script setup lang="ts">
+import AiChatbotSettings from './AiChatbotSettings.vue';
 import ApiConnectionSettings from './ApiConnectionSettings.vue';
 import AppearanceSettings from './AppearanceSettings.vue';
 import BuildInfoSettings from './BuildInfoSettings.vue';

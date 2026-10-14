@@ -41,6 +41,7 @@
 
 <script setup lang="ts">
 import { NodeProps, Position } from '@vue-flow/core';
+import { computed } from 'vue';
 import { CustomHandle } from '.';
 import { calcNodeMinWidth, calcTopOffsetStyle, minHeight as heightFunction } from '..';
 import type { CodeNodeData } from '../Types';
@@ -48,13 +49,16 @@ import NodeBase from './NodeBase.vue';
 
 const props = defineProps<NodeProps<CodeNodeData>>();
 
-const minHeight = heightFunction(props.data.inputs, props.data.outputs);
-const minWidth = calcNodeMinWidth({
-    name: props.data.name,
-    inputs: props.data.inputs,
-    outputs: props.data.outputs,
-    label: props.data.label,
-});
+// Ports are editable (code editor, AI assistant), so the size has to follow them.
+const minHeight = computed(() => heightFunction(props.data.inputs, props.data.outputs));
+const minWidth = computed(() =>
+    calcNodeMinWidth({
+        name: props.data.name,
+        inputs: props.data.inputs,
+        outputs: props.data.outputs,
+        label: props.data.label,
+    }),
+);
 </script>
 
 <style scoped></style>
