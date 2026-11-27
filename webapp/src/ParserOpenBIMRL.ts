@@ -14,6 +14,34 @@ import type {
 
 type Elements = Array<CustomNode | Edge>;
 
+/** Schema version written by the creator. Matches current creator exports such as Expositionsklassen. */
+export const CURRENT_SCHEMA_VERSION = '2026.3.1';
+
+export interface BuildOptions {
+    uuid?: string;
+    description?: string;
+    version?: string;
+}
+
+function escapeAttr(value: string): string {
+    return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function asArray<T>(value: T | T[] | undefined | null): T[] {
+    if (value == null) return [];
+    return Array.isArray(value) ? value : [value];
+}
+
+function collectClusterContents(container: any, nodes: any[], edges: any[]) {
+    for (const cluster of asArray(container?.Cluster)) {
+        const sub = cluster?.SubGraph;
+        if (!sub) continue;
+        nodes.push(...asArray(sub.Node));
+        edges.push(...asArray(sub.Edge));
+        collectClusterContents(sub, nodes, edges);
+    }
+}
+
 /**
  * @author Marcel Stepien
  * @modifiedBy Florian Mirko Becker
@@ -27,15 +55,24 @@ export default class Parser {
      *
      * @param elements
      */
-    build(elements: Elements, subChecks: SubChecks, resultSets: ResultSets, name: string): string {
+    build(
+        elements: Elements,
+        subChecks: SubChecks,
+        resultSets: ResultSets,
+        name: string,
+        options: BuildOptions = {},
+    ): string {
+        const version = options.version || CURRENT_SCHEMA_VERSION;
         let rootString =
-            "<?xml version='1.0' encoding='utf-8'?>" +
-            '<BIMRule ' +
-            "schemaVersion='0.1' " +
-            "xmlns='http://inf.bi.rub.de/OpenBimRL' " +
-            "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' " +
-            "xsi:schemaLocation='http://inf.bi.rub.de/OpenBimRL OpenBimRL.xsd'>" +
-            '</BIMRule>';
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+            '<openBIMRLType version="' +
+            escapeAttr(version) +
+            '" xmlns="http://inf.bi.rub.de/OpenBimRL">' +
+            '<BIMRule name="' +
+            escapeAttr(name) +
+            '"' +
+            (options.description ? ' description="' + escapeAttr(options.description) + '"' : '') +
+            '></BIMRule></openBIMRLType>';
 
         let parser = new DOMParser();
         let xmlDoc = parser.parseFromString(rootString, 'text/xml');
@@ -69,6 +106,13 @@ export default class Parser {
             if (el.type === 'ruleIdentifier') {
                 let n = xmlDoc.createElementNS('http://inf.bi.rub.de/OpenBimRL', 'RuleIdentifier');
                 n.setAttribute('label', el.data.label);
+                if (el.position) {
+                    n.setAttribute('xPos', String(Math.round(el.position.x || 0)));
+                    n.setAttribute('yPos', String(Math.round(el.position.y || 0)));
+                }
+                if (typeof el.data?.hidden === 'boolean') {
+                    n.setAttribute('hidden', String(el.data.hidden));
+                }
 
                 //memorize id for filtering
                 ruleIdentifierIds[el.id] = n;
@@ -77,6 +121,13 @@ export default class Parser {
             } else {
                 let n = xmlDoc.createElementNS('http://inf.bi.rub.de/OpenBimRL', 'Node');
                 n.setAttribute('id', el.id);
+                if (el.position) {
+                    n.setAttribute('xPos', String(Math.round(el.position.x || 0)));
+                    n.setAttribute('yPos', String(Math.round(el.position.y || 0)));
+                }
+                if (typeof el.data?.debug === 'boolean') {
+                    n.setAttribute('debug', String(el.data.debug));
+                }
 
                 if (el.data) {
                     n.setAttribute('function', el.data.name);
@@ -230,6 +281,9 @@ export default class Parser {
                 'ModelSubCheck',
             );
             nodeModelSubCheck.setAttribute('name', subCheck.name);
+            if (subCheck.description) {
+                nodeModelSubCheck.setAttribute('description', String(subCheck.description));
+            }
             nodeModelSubChecks.appendChild(nodeModelSubCheck);
 
             if (typeof subCheck.applicability !== 'undefined') {
@@ -267,6 +321,10 @@ export default class Parser {
             nodeResultSet.setAttribute('filter', resultSet.filter);
             nodeResultSets.appendChild(nodeResultSet);
         }
+
+        const uuid = xmlDoc.createElementNS('http://inf.bi.rub.de/OpenBimRL', 'uuid');
+        uuid.textContent = options.uuid || createUniqueID();
+        root[0].appendChild(uuid);
 
         const serializer = new XMLSerializer();
         const xmlString = serializer.serializeToString(xmlDoc);
@@ -323,10 +381,27 @@ export default class Parser {
      * @returns
      */
     parse(data: any, opts: ParseOptions): GraphJSON {
-        let bimRule = data['BIMRule'];
-        let precalculations = bimRule['Precalculations'];
-        let ns = precalculations['Node'];
-        let es = precalculations['Edge'];
+        const wrapped = data['openBIMRLType'] || data['OpenBIMRL'];
+        let bimRule = wrapped ? wrapped['BIMRule'] : data['BIMRule'];
+        if (Array.isArray(bimRule)) {
+            bimRule = bimRule[0];
+        }
+        if (!bimRule) {
+            throw new Error(
+                'Unrecognized OpenBimRL document. Expected BIMRule, OpenBIMRL, or openBIMRLType.',
+            );
+        }
+        const ruleAttributes = bimRule._attributes || {};
+        const ruleUuid =
+            typeof bimRule.uuid === 'string'
+                ? bimRule.uuid
+                : typeof bimRule.uuid?._text === 'string'
+                ? bimRule.uuid._text
+                : undefined;
+        let precalculations = bimRule['Precalculations'] || {};
+        let ns = asArray(precalculations['Node']);
+        let es = asArray(precalculations['Edge']);
+        collectClusterContents(precalculations, ns, es);
 
         var graphElements: Elements = [];
         var nodeMap: { [key: string]: any } = {};
@@ -406,15 +481,22 @@ export default class Parser {
                             : undefined;
                 }
 
-                //TODO: should be identified by a specific type identifier, not inputs and outputs
-                if (nT !== 'codeType' && inputHandles.length == 0 && outputHandles.length == 1) {
+                const fileX = n._attributes.xPos;
+                const fileY = n._attributes.yPos;
+                const hasFilePosition = fileX !== undefined && fileY !== undefined;
+                const debugAttr = n._attributes.debug;
+
+                // input.* nodes stay input nodes even when they carry UI inputs (width, height, …).
+                if (nT !== 'codeType' && (nNameLbl === 'input.textInput' || nNameLbl?.startsWith('input.'))) {
                     nT = 'inputType';
-                    nCustomLbl = n['Outputs']['Output']._attributes['value'];
-                } else {
-                    //Set an Alias for function nodes, if it exists
-                    if (n._attributes.alias) {
-                        nCustomLbl = n._attributes.alias;
-                    }
+                    const outs = asArray(n['Outputs']?.['Output']);
+                    nCustomLbl = outs[0]?._attributes?.value || n._attributes.alias || nCustomLbl;
+                } else if (nT !== 'codeType' && inputHandles.length == 0 && outputHandles.length == 1) {
+                    nT = 'inputType';
+                    const outs = asArray(n['Outputs']?.['Output']);
+                    nCustomLbl = outs[0]?._attributes?.value;
+                } else if (n._attributes.alias) {
+                    nCustomLbl = n._attributes.alias;
                 }
 
                 graphElements.push({
@@ -428,11 +510,17 @@ export default class Parser {
                         inputs: inputHandles,
                         outputs: outputHandles,
                         selected: false,
+                        hasFilePosition,
+                        ...(debugAttr === 'true' || debugAttr === 'false'
+                            ? { debug: debugAttr === 'true' }
+                            : {}),
                         ...(scriptSource !== undefined
                             ? { scriptSource, scriptLanguage: scriptLanguage || 'kotlin' }
                             : {}),
                     },
-                    position: { x: 0, y: 0 },
+                    position: hasFilePosition
+                        ? { x: Number(fileX), y: Number(fileY) }
+                        : { x: 0, y: 0 },
                 });
 
                 nodeMap[n._attributes.id] = n;
@@ -489,7 +577,7 @@ export default class Parser {
         let modelCheck = bimRule['ModelCheck'];
         let ruleIdentifiers = modelCheck['RuleIdentifiers'];
         if (opts.enableRuleIdentifier) {
-            let rIArr = ruleIdentifiers['RuleIdentifier'];
+            let rIArr = asArray(ruleIdentifiers['RuleIdentifier']);
 
             for (let index in rIArr) {
                 let rI = rIArr[index];
@@ -499,6 +587,9 @@ export default class Parser {
 
                 let rIAttributes = rI._attributes ? rI._attributes : rI; //check if information are packaged as _attributes
 
+                const riX = rIAttributes.xPos;
+                const riY = rIAttributes.yPos;
+                const riPlaced = riX !== undefined && riY !== undefined;
                 let identifierNode = {
                     id: rIAttributes.label,
                     type: 'ruleIdentifier', // Custom Node Type
@@ -507,6 +598,8 @@ export default class Parser {
                         icon: nIcon,
                         description: nDescription,
                         label: rIAttributes.label,
+                        hidden: rIAttributes.hidden === 'true',
+                        hasFilePosition: riPlaced,
                         inputs: [
                             {
                                 index: '0',
@@ -523,7 +616,7 @@ export default class Parser {
                         ],
                         selected: false,
                     },
-                    position: { x: 0, y: 0 },
+                    position: riPlaced ? { x: Number(riX), y: Number(riY) } : { x: 0, y: 0 },
                 };
 
                 graphElements.push(identifierNode);
@@ -579,6 +672,7 @@ export default class Parser {
                     let subCheckItem = {
                         label: uuidv4(),
                         name: subCheckAttributes.name,
+                        description: subCheckAttributes.description,
                         applicability: newApplicabilityList,
                         rulesOrRuleSets: newRulesOrRuleSetsList,
                         resultSets: newResultSetsList,
@@ -590,9 +684,8 @@ export default class Parser {
                         subCheckItem.applicability = this.parseRulesAndRuleSets(applicability);
                     }
 
-                    //RulesOrRuleSets
-                    let rulesOrRuleSets = subCheck['Rules'];
-                    if (rulesOrRuleSets) {
+                    //RulesOrRuleSets — new documents may place a bare Rule directly under ModelSubCheck.
+                    if (subCheck['Rules'] || subCheck['Rule']) {
                         subCheckItem.rulesOrRuleSets = this.parseRulesAndRuleSets(subCheck);
                     }
 
@@ -632,6 +725,9 @@ export default class Parser {
             elements: this.getLayoutedElements(graphElements, 'LR')!,
             subChecks: subChecks,
             resultSets: resultSetsArr,
+            ruleName: ruleAttributes.name,
+            ruleDescription: ruleAttributes.description,
+            ruleUuid: ruleUuid,
         }; //Apply layout and register elements
 
         /*
@@ -701,6 +797,20 @@ export default class Parser {
         const nodeWidth = 450;
         const nodeHeight = 150;
 
+        const placedNodes = elements.filter(element => isNode(element));
+        const allPlaced =
+            placedNodes.length > 0 && placedNodes.every(node => node.data?.hasFilePosition);
+        if (allPlaced) {
+            const isHorizontal = direction === 'LR';
+            return elements.map(el => {
+                if (isNode(el)) {
+                    el.targetPosition = isHorizontal ? Position.Left : Position.Top;
+                    el.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
+                }
+                return el;
+            });
+        }
+
         if (graphlib) {
             const dagreGraph = new graphlib.Graph();
             dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -734,6 +844,23 @@ export default class Parser {
             });
         }
     }
+}
+
+export function buildCurrentSchema(
+    parser: Parser,
+    graph: GraphJSON,
+    fallbackName = 'graph.openbimrl',
+): string {
+    return parser.build(
+        graph.elements,
+        graph.subChecks,
+        graph.resultSets,
+        graph.ruleName || fallbackName,
+        {
+            uuid: graph.ruleUuid,
+            description: graph.ruleDescription,
+        },
+    );
 }
 
 export function createUniqueID() {

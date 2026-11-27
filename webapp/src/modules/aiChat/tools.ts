@@ -1,3 +1,4 @@
+import { buildCurrentSchema } from '@/ParserOpenBIMRL';
 import type { CodeNodeData, CodePortConnectorType, CustomNode } from '@/components/graph/Types';
 import { compileScripts, isConnected as engineIsConnected } from '@/modules/apiConnection';
 import { isTruncatedNodeResult } from '@/modules/checkResultLimits';
@@ -1309,12 +1310,7 @@ const TOOL_SPECS: ToolSpec[] = [
             }
 
             const graph = captureGraph(ctx);
-            const xml = ctx.parser.build(
-                graph.elements,
-                graph.subChecks,
-                graph.resultSets,
-                'graph.openbimrl',
-            );
+            const xml = buildCurrentSchema(ctx.parser, graph);
             const time = () => new Date().toLocaleTimeString();
             appendConsole(`[${time()}] Compiling scripts via Engine API (AI assistant)...\n`);
             const result = await compileScripts(xml);

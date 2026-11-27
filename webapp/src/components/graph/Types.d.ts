@@ -6,6 +6,10 @@ export interface GraphJSON {
     elements: Array<CustomNode | Edge>;
     subChecks: SubChecks;
     resultSets: ResultSets;
+    /** BIMRule @name from an imported document. */
+    ruleName?: string;
+    ruleDescription?: string;
+    ruleUuid?: string;
 }
 
 // Nodes
@@ -20,6 +24,9 @@ export interface NodeData<InputConnectorType = unknown, OutputConnectorType = un
     invalid?: boolean;
     invalidReason?: string;
     nodeResult?: unknown;
+    debug?: boolean;
+    hidden?: boolean;
+    hasFilePosition?: boolean;
 }
 
 interface BaseConnectorType {

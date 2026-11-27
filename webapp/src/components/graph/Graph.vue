@@ -99,7 +99,7 @@
 </template>
 
 <script lang="ts" setup>
-import Parser from '@/ParserOpenBIMRL';
+import Parser, { buildCurrentSchema } from '@/ParserOpenBIMRL';
 import { darkModeKey, graphInjectionKey, parserInjectionKey } from '@/keys';
 import {
     appendConsole,
@@ -670,12 +670,7 @@ const compileGraph = async () => {
     checkStatusText.value = 'Compiling scripts...';
     appendConsole(`[${new Date().toLocaleTimeString()}] Compiling scripts via Engine API...\n`);
     try {
-        const graphXml = parser.build(
-            graph.value.elements,
-            graph.value.subChecks,
-            graph.value.resultSets,
-            'graph.openbimrl',
-        );
+        const graphXml = buildCurrentSchema(parser, graph.value);
         const result = await compileScripts(graphXml);
         if (result.console?.length) {
             appendConsole(result.console.join('\n') + '\n');

@@ -1,4 +1,4 @@
-import Parser from '@/ParserOpenBIMRL';
+import Parser, { buildCurrentSchema } from '@/ParserOpenBIMRL';
 import type { GraphJSON } from '@/components/graph/Types';
 import { isNode } from '@vue-flow/core';
 import { checkGraph as apiCheckGraph } from './apiConnection';
@@ -64,12 +64,7 @@ export function stopGraphCheck() {
 export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: string) {
     if (!modelId || checkLoading.value) return;
 
-    const graphString = parser.build(
-        graph.elements,
-        graph.subChecks,
-        graph.resultSets,
-        'graph.openbimrl',
-    );
+    const graphString = buildCurrentSchema(parser, graph);
 
     checkLoading.value = true;
     checkStatusText.value = 'Running check...';

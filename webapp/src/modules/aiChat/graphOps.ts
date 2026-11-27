@@ -171,6 +171,9 @@ export function captureGraph(ctx: EditorContext): GraphJSON {
         elements: [...nodes, ...edges],
         subChecks: ctx.graph.graph.value.subChecks ?? [],
         resultSets: ctx.graph.graph.value.resultSets ?? [],
+        ruleName: ctx.graph.graph.value.ruleName,
+        ruleDescription: ctx.graph.graph.value.ruleDescription,
+        ruleUuid: ctx.graph.graph.value.ruleUuid,
     }) as GraphJSON;
 }
 

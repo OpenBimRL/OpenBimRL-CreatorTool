@@ -10,6 +10,8 @@
         "preview": "vite preview",
         "format": "npx prettier --config ./prod.prettierrc.json --write .",
         "check-types": "vue-tsc --noEmit",
+        "test": "node --test scripts",
+        "migrate": "node scripts/migrate-openbimrl.mjs",
         "postinstall": "node scripts/copy-webifc-wasm.mjs"
     },
     "dependencies": {

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import Parser from '@/ParserOpenBIMRL';
+import Parser, { buildCurrentSchema } from '@/ParserOpenBIMRL';
 import { GraphInject } from '@/components/graph/Types';
 import { graphInjectionKey, parserInjectionKey } from '@/keys';
 import { Ref, inject, ref } from 'vue';
@@ -34,12 +34,7 @@ const downloadFile = (filedata: string, filename: string) => {
 const downloadModalItems: Ref<DropdownProps> = ref({
     XML: () =>
         downloadFile(
-            parser.build(
-                graph.value.elements,
-                graph.value.subChecks,
-                graph.value.resultSets,
-                'graph.openbimrl',
-            ),
+            buildCurrentSchema(parser, graph.value),
             'graph.openbimrl',
         ),
     JSON: () => downloadFile(JSON.stringify(graph.value), 'graph.json'),
