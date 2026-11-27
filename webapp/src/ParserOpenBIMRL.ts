@@ -487,11 +487,18 @@ export default class Parser {
                 const debugAttr = n._attributes.debug;
 
                 // input.* nodes stay input nodes even when they carry UI inputs (width, height, …).
-                if (nT !== 'codeType' && (nNameLbl === 'input.textInput' || nNameLbl?.startsWith('input.'))) {
+                if (
+                    nT !== 'codeType' &&
+                    (nNameLbl === 'input.textInput' || nNameLbl?.startsWith('input.'))
+                ) {
                     nT = 'inputType';
                     const outs = asArray(n['Outputs']?.['Output']);
                     nCustomLbl = outs[0]?._attributes?.value || n._attributes.alias || nCustomLbl;
-                } else if (nT !== 'codeType' && inputHandles.length == 0 && outputHandles.length == 1) {
+                } else if (
+                    nT !== 'codeType' &&
+                    inputHandles.length == 0 &&
+                    outputHandles.length == 1
+                ) {
                     nT = 'inputType';
                     const outs = asArray(n['Outputs']?.['Output']);
                     nCustomLbl = outs[0]?._attributes?.value;

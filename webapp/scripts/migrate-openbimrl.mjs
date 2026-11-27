@@ -28,7 +28,9 @@ export function migrateOpenBimRL(xml, options = {}) {
         return { xml: source, changed: false, version: attributeValue(source, root, 'version') };
     }
     if (root !== 'BIMRule') {
-        throw new Error(`Unrecognized OpenBimRL root <${root}>. Expected BIMRule, OpenBIMRL, or openBIMRLType.`);
+        throw new Error(
+            `Unrecognized OpenBimRL root <${root}>. Expected BIMRule, OpenBIMRL, or openBIMRLType.`,
+        );
     }
 
     const open = source.match(/<BIMRule\b([^>]*)>/);
@@ -138,7 +140,9 @@ function main(argv) {
     const inPlace = args.includes('--in-place');
     const paths = args.filter(arg => arg !== '--in-place');
     if (paths.length === 0) {
-        console.error('Usage: node scripts/migrate-openbimrl.mjs [--in-place] <file-or-directory>...');
+        console.error(
+            'Usage: node scripts/migrate-openbimrl.mjs [--in-place] <file-or-directory>...',
+        );
         process.exit(1);
     }
     const files = collectFiles(paths);

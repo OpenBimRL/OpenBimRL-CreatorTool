@@ -86,7 +86,9 @@ export async function runGraphCheck(graph: GraphJSON, parser: Parser, modelId: s
         const scriptConsole = (response.content as { console?: string[] } | null)?.console;
         if (scriptConsole && scriptConsole.length > 0) {
             appendConsole(
-                `[${new Date().toLocaleTimeString()}] Script output\n${scriptConsole.join('\n')}\n\n`,
+                `[${new Date().toLocaleTimeString()}] Script output\n${scriptConsole.join(
+                    '\n',
+                )}\n\n`,
             );
         }
 

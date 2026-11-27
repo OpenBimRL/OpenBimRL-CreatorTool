@@ -32,11 +32,7 @@ const downloadFile = (filedata: string, filename: string) => {
 };
 
 const downloadModalItems: Ref<DropdownProps> = ref({
-    XML: () =>
-        downloadFile(
-            buildCurrentSchema(parser, graph.value),
-            'graph.openbimrl',
-        ),
+    XML: () => downloadFile(buildCurrentSchema(parser, graph.value), 'graph.openbimrl'),
     JSON: () => downloadFile(JSON.stringify(graph.value), 'graph.json'),
 });
 </script>
